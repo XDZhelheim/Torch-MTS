@@ -7,6 +7,7 @@ import datetime
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from torchinfo import summary
+import yaml
 
 import sys
 
@@ -14,7 +15,7 @@ sys.path.append("..")
 from utils.utils import masked_mae_loss
 from utils.metrics import RMSE_MAE_MAPE
 from utils.data_prepare import read_df, read_numpy, get_dataloaders
-from model.LSTM import LSTM
+from model import * # import all models
 
 # ! X shape: (B, T, N, C)
 
@@ -183,10 +184,10 @@ def train(
 
 
 @torch.no_grad()
-def test_model(model, testset_loader, meta_data, log="train.log"):
+def test_model(model, testset_loader, log="train.log"):
     model.eval()
     print("--------- Test ---------")
-    y_true, y_pred = predict(model, testset_loader, meta_data)
+    y_true, y_pred = predict(model, testset_loader)
     rmse_all, mae_all, mape_all = RMSE_MAE_MAPE(y_true, y_pred)
     out_str = "All Steps RMSE = %.5f, MAE = %.5f, MAPE = %.5f\n" % (
         rmse_all,
@@ -212,7 +213,8 @@ def test_model(model, testset_loader, meta_data, log="train.log"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--dataset", type=str, default="metrla")
+    parser.add_argument("-d", "--dataset", type=str, default="METRLA")
+    parser.add_argument("-m", "--model", type=str, default="LSTM")
     parser.add_argument("-g", "--gpu_num", type=int, default=1)
     args = parser.parse_args()
 
@@ -221,26 +223,21 @@ if __name__ == "__main__":
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     dataset = args.dataset
-    dataset = dataset.lower()
-    print(dataset.upper())
+    dataset = dataset.upper()
+    print(dataset)
+    DATA_PATH = f"../data/{dataset}"
 
-    if dataset == "metrla":
-        num_nodes = 207
-    elif dataset == "pemsd7m":
-        num_nodes = 228
-    elif dataset == "pemsbay":
-        num_nodes = 325
-    DATA_PATH = f"../data/{dataset.upper()}"
+    with open("../config/datasets.yaml", "r") as f:
+        dataset_cfg = yaml.safe_load(f)
+
+    dataset_cfg = dataset_cfg[dataset]
+    num_nodes = dataset_cfg["num_nodes"]
+    in_steps = dataset_cfg["in_steps"]
+    out_steps = dataset_cfg["out_steps"]
+    batch_size = dataset_cfg["batch_size"]
+    max_epochs = dataset_cfg["max_epochs"]
 
     SCALER = StandardScaler()
-
-    in_steps = 12
-    out_steps = 12
-    batch_size = 64
-    max_epochs = 200
-    lr = 0.0001
-    num_cpu = 8
-
     data = read_numpy(
         os.path.join(DATA_PATH, f"{dataset}.npy")
     )  # (all_steps, num_nodes)
@@ -253,15 +250,17 @@ if __name__ == "__main__":
         out_steps,
         batch_size=batch_size,
         with_time_embeddings=False,
-        num_cpu=num_cpu,
+        num_cpu=8,
     )
 
-    model = LSTM(
+    with open(f"../config/{args.model}.yaml", "r") as f:
+        model_cfg = yaml.safe_load(f)
+
+    model = eval(args.model)(
         num_nodes=num_nodes,
         in_steps=in_steps,
         out_steps=out_steps,
-        lstm_input_dim=1,
-        lstm_hidden_dim=64,
+        **model_cfg["kwargs"],
     )
 
     now = datetime.datetime.now()
@@ -269,18 +268,18 @@ if __name__ == "__main__":
     log_path = f"../logs/{model._get_name()}"
     if not os.path.exists(log_path):
         os.makedirs(log_path)
-    log = os.path.join(log_path, f"{model._get_name()}-{dataset.upper()}-{now}.log")
+    log = os.path.join(log_path, f"{model._get_name()}-{dataset}-{now}.log")
 
     save_path = f"../saved_models/{model._get_name()}"
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    save = os.path.join(save_path, f"{model._get_name()}-{dataset.upper()}-{now}.pt")
+    save = os.path.join(save_path, f"{model._get_name()}-{dataset}-{now}.pt")
 
-    if dataset == "metrla":
+    if dataset == "METRLA":
         criterion = masked_mae_loss
     else:
         criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+    optimizer = torch.optim.Adam(model.parameters(), lr=model_cfg["lr"])
 
     model = train(
         model,

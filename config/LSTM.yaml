@@ -1,0 +1,6 @@
+lr: 0.0001
+
+kwargs:
+  lstm_input_dim: 1
+  lstm_hidden_dim: 64
+  

@@ -1,0 +1,19 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+  batch_size: 64
+  max_epochs: 200
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+  batch_size: 64
+  max_epochs: 200
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+  batch_size: 64
+  max_epochs: 200
+  
