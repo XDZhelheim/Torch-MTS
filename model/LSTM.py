@@ -1,8 +1,10 @@
 import torch.nn as nn
+from torchinfo import summary
 
-class LSTMPredictor(nn.Module):
+
+class LSTM(nn.Module):
     def __init__(self, num_nodes, in_steps, out_steps, lstm_input_dim, lstm_hidden_dim):
-        super(LSTMPredictor, self).__init__()
+        super(LSTM, self).__init__()
 
         self.num_nodes = num_nodes
         self.in_steps = in_steps
@@ -30,6 +32,7 @@ class LSTMPredictor(nn.Module):
 
     def forward(self, x):
         # x: (batch_size, in_steps, num_nodes, lstm_input_dim=1)
+        x = x.transpose(1, 2).contiguous()  # (batch_size, num_nodes, in_steps, 1)
         batch_size = x.shape[0]
         x = x.view(batch_size * self.num_nodes, self.in_steps, self.lstm_input_dim)
 
@@ -44,8 +47,12 @@ class LSTMPredictor(nn.Module):
             ]  # (batch_size * num_nodes, hidden_dim) use last step's output
 
         out = self.fc(out).view(
-            batch_size, self.out_steps, self.num_nodes, self.lstm_input_dim
+            batch_size, self.num_nodes, self.out_steps, self.lstm_input_dim
         )
 
-        return out
-    
+        return out.transpose(1, 2)
+
+
+if __name__ == "__main__":
+    model = LSTM(207, 12, 12, 1, 64)
+    summary(model, [128, 207, 12, 1])

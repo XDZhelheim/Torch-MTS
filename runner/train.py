@@ -14,7 +14,7 @@ sys.path.append("..")
 from utils.utils import masked_mae_loss
 from utils.metrics import RMSE_MAE_MAPE
 from utils.data_prepare import read_df, read_numpy, get_dataloaders
-from model.LSTM import LSTMPredictor
+from model.LSTM import LSTM
 
 # ! X shape: (B, T, N, C)
 
@@ -91,7 +91,7 @@ def train(
     verbose=1,
     plot=False,
     log="train.log",
-    save=False,
+    save=None,
 ):
     if log:
         log = open(log, "a")
@@ -178,10 +178,7 @@ def train(
         plt.show()
 
     if save:
-        torch.save(
-            best_state_dict,
-            DATA_PATH + f"{model._get_name()}-{datetime.datetime.now()}.pt",
-        )
+        torch.save(best_state_dict, save)
     return model
 
 
@@ -259,7 +256,7 @@ if __name__ == "__main__":
         num_cpu=num_cpu,
     )
 
-    model = LSTMPredictor(
+    model = LSTM(
         num_nodes=num_nodes,
         in_steps=in_steps,
         out_steps=out_steps,
@@ -267,12 +264,17 @@ if __name__ == "__main__":
         lstm_hidden_dim=64,
     )
 
+    now = datetime.datetime.now()
+
     log_path = f"../logs/{model._get_name()}"
     if not os.path.exists(log_path):
         os.makedirs(log_path)
-    log = os.path.join(
-        log_path, f"{model._get_name()}-{dataset.upper()}-{datetime.datetime.now()}.log"
-    )
+    log = os.path.join(log_path, f"{model._get_name()}-{dataset.upper()}-{now}.log")
+
+    save_path = f"../saved_models/{model._get_name()}"
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    save = os.path.join(save_path, f"{model._get_name()}-{dataset.upper()}-{now}.pt")
 
     if dataset == "metrla":
         criterion = masked_mae_loss
@@ -289,7 +291,7 @@ if __name__ == "__main__":
         max_epochs=max_epochs,
         verbose=1,
         log=log,
-        save=False,
+        save=save,
     )
 
     test_model(model, testset_loader, log=log)
