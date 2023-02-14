@@ -12,10 +12,10 @@ import yaml
 import sys
 
 sys.path.append("..")
-from utils.utils import masked_mae_loss
+from utils.utils import masked_mae_loss, print_log
 from utils.metrics import RMSE_MAE_MAPE
 from utils.data_prepare import read_df, read_numpy, get_dataloaders
-from model import * # import all models
+from model import *  # import all models
 
 # ! X shape: (B, T, N, C)
 
@@ -54,8 +54,6 @@ def predict(model, loader):
 
     out = np.vstack(out).squeeze()  # (samples, out_steps, num_nodes)
     y = np.vstack(y).squeeze()
-    # out = out.transpose(0, 2, 1)
-    # y = y.transpose(0, 2, 1)
 
     out = SCALER.inverse_transform(out)
     y = SCALER.inverse_transform(y)  # (samples, out_steps, num_nodes)
@@ -94,13 +92,8 @@ def train(
     log="train.log",
     save=None,
 ):
-    if log:
-        log = open(log, "a")
-        log.seek(0)
-        log.truncate()
-
     model = model.to(DEVICE)
-    print("---------", model._get_name(), "---------")
+    print_log("---------", model._get_name(), "---------", log=log)
 
     wait = 0
     min_val_loss = np.inf
@@ -116,24 +109,14 @@ def train(
         val_loss_list.append(val_loss)
 
         if (epoch + 1) % verbose == 0:
-            print(
+            print_log(
                 datetime.datetime.now(),
                 "Epoch",
                 epoch + 1,
                 "\tTrain Loss = %.5f" % train_loss,
                 "Val Loss = %.5f" % val_loss,
+                log=log,
             )
-
-            if log:
-                print(
-                    datetime.datetime.now(),
-                    "Epoch",
-                    epoch + 1,
-                    "\tTrain Loss = %.5f" % train_loss,
-                    "Val Loss = %.5f" % val_loss,
-                    file=log,
-                )
-                log.flush()
 
         if val_loss < min_val_loss:
             wait = 0
@@ -163,11 +146,7 @@ def train(
         val_mae,
         val_mape,
     )
-    print(out_str)
-    if log:
-        print(out_str, file=log)
-        log.flush()
-        log.close()
+    print_log(out_str, log=log)
 
     if plot:
         plt.plot(range(0, epoch + 1), train_loss_list, "-", label="Train Loss")
@@ -186,7 +165,7 @@ def train(
 @torch.no_grad()
 def test_model(model, testset_loader, log="train.log"):
     model.eval()
-    print("--------- Test ---------")
+    print_log("--------- Test ---------", log=log)
     y_true, y_pred = predict(model, testset_loader)
     rmse_all, mae_all, mape_all = RMSE_MAE_MAPE(y_true, y_pred)
     out_str = "All Steps RMSE = %.5f, MAE = %.5f, MAPE = %.5f\n" % (
@@ -204,11 +183,7 @@ def test_model(model, testset_loader, log="train.log"):
             mape,
         )
 
-    print(out_str, end="")
-    if log:
-        log = open(log, "a")
-        print(out_str, end="", file=log)
-        log.flush()
+    print_log(out_str, log=log, end="")
 
 
 if __name__ == "__main__":
@@ -224,9 +199,8 @@ if __name__ == "__main__":
 
     dataset = args.dataset
     dataset = dataset.upper()
-    print(dataset)
     DATA_PATH = f"../data/{dataset}"
-
+    
     with open("../config/datasets.yaml", "r") as f:
         dataset_cfg = yaml.safe_load(f)
 
@@ -236,22 +210,6 @@ if __name__ == "__main__":
     out_steps = dataset_cfg["out_steps"]
     batch_size = dataset_cfg["batch_size"]
     max_epochs = dataset_cfg["max_epochs"]
-
-    SCALER = StandardScaler()
-    data = read_numpy(
-        os.path.join(DATA_PATH, f"{dataset}.npy")
-    )  # (all_steps, num_nodes)
-    data = SCALER.fit_transform(data)
-    data = data[:, :, np.newaxis]  # (all_steps, num_nodes, 1)
-
-    trainset_loader, valset_loader, testset_loader = get_dataloaders(
-        data,
-        in_steps,
-        out_steps,
-        batch_size=batch_size,
-        with_time_embeddings=False,
-        num_cpu=8,
-    )
 
     with open(f"../config/{args.model}.yaml", "r") as f:
         model_cfg = yaml.safe_load(f)
@@ -263,12 +221,31 @@ if __name__ == "__main__":
         **model_cfg["kwargs"],
     )
 
-    now = datetime.datetime.now()
-
+    now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
     log_path = f"../logs/{model._get_name()}"
     if not os.path.exists(log_path):
         os.makedirs(log_path)
     log = os.path.join(log_path, f"{model._get_name()}-{dataset}-{now}.log")
+    log = open(log, "a")
+    log.seek(0)
+    log.truncate()
+    
+    print_log(dataset, log=log)
+    SCALER = StandardScaler()
+    data = read_numpy(
+        os.path.join(DATA_PATH, f"{dataset}.npy"), log=log
+    )  # (all_steps, num_nodes)
+    data = SCALER.fit_transform(data)
+    data = data[:, :, np.newaxis]  # (all_steps, num_nodes, 1)
+    trainset_loader, valset_loader, testset_loader = get_dataloaders(
+        data,
+        in_steps,
+        out_steps,
+        batch_size=batch_size,
+        with_time_embeddings=False,
+        num_cpu=8,
+        log=log,
+    )
 
     save_path = f"../saved_models/{model._get_name()}"
     if not os.path.exists(save_path):

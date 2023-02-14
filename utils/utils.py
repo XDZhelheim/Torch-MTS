@@ -39,3 +39,11 @@ def masked_mae_loss(preds, labels, null_val=0.0):
 
 def onehot_decode(label):
     return torch.argmax(label, dim=1)
+
+def print_log(*values, log=None, end="\n"):
+    print(*values, end=end)
+    if log:
+        if isinstance(log, str):
+            log = open(log, "a")
+        print(*values, file=log, end=end)
+        log.flush()

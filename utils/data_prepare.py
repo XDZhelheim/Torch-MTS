@@ -2,10 +2,12 @@ import sys
 import torch
 import pandas as pd
 import numpy as np
+from .utils import print_log
 
 # ! X shape: (B, T, N, C)
 
-def read_df(data_path, file_type="pickle", transpose=False):
+
+def read_df(data_path, file_type="pickle", transpose=False, log="train.log"):
     """
     Returns
     ---
@@ -22,11 +24,11 @@ def read_df(data_path, file_type="pickle", transpose=False):
     data = data.values.astype(np.float)
     if transpose:
         data = data.T
-    print("Original data shape", data.shape)
+    print_log("Original data shape", data.shape, log=log)
     return data
 
 
-def read_numpy(data_path, transpose=False):
+def read_numpy(data_path, transpose=False, log="train.log"):
     """
     Returns
     ---
@@ -36,7 +38,7 @@ def read_numpy(data_path, transpose=False):
     data = np.load(data_path)
     if transpose:
         data = data.T
-    print("Original data shape", data.shape)
+    print_log("Original data shape", data.shape, log=log)
     return data
 
 
@@ -86,6 +88,7 @@ def get_dataloaders(
     batch_size=32,
     with_time_embeddings=False,
     num_cpu=8,
+    log="train.log",
 ):
     """
     Parameters
@@ -104,9 +107,9 @@ def get_dataloaders(
     x_val, y_val = gen_xy(val_data, in_steps, out_steps, with_time_embeddings)
     x_test, y_test = gen_xy(test_data, in_steps, out_steps, with_time_embeddings)
 
-    print(f"Trainset:\tx-{x_train.size()}\ty-{y_train.size()}")
-    print(f"Valset:  \tx-{x_val.size()}  \ty-{y_val.size()}")
-    print(f"Testset:\tx-{x_test.size()}\ty-{y_test.size()}")
+    print_log(f"Trainset:\tx-{x_train.size()}\ty-{y_train.size()}", log=log)
+    print_log(f"Valset:  \tx-{x_val.size()}  \ty-{y_val.size()}", log=log)
+    print_log(f"Testset:\tx-{x_test.size()}\ty-{y_test.size()}", log=log)
 
     trainset = torch.utils.data.TensorDataset(x_train, y_train)
     valset = torch.utils.data.TensorDataset(x_val, y_val)
