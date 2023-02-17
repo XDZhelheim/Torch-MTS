@@ -93,7 +93,6 @@ def train(
     save=None,
 ):
     model = model.to(DEVICE)
-    print_log("---------", model._get_name(), "---------", log=log)
 
     wait = 0
     min_val_loss = np.inf
@@ -221,7 +220,7 @@ if __name__ == "__main__":
         **model_cfg["kwargs"],
     )
 
-    now = datetime.datetime.now().strftime("%Y-%m-%d-%H:%M:%S")
+    now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     log_path = f"../logs/{model._get_name()}"
     if not os.path.exists(log_path):
         os.makedirs(log_path)
@@ -257,6 +256,9 @@ if __name__ == "__main__":
     else:
         criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=model_cfg["lr"])
+    
+    print_log("---------", model._get_name(), "---------", log=log)
+    summary(model, [batch_size, in_steps, num_nodes, 1])
 
     model = train(
         model,

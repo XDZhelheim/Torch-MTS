@@ -1,3 +1,4 @@
-from .LSTM import LSTM as LSTM
+from .LSTM import LSTM
+from .AGCRN import AGCRN
 
-__all__ = ["LSTM"]
+__all__ = ["LSTM", "AGCRN"]

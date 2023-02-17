@@ -1,0 +1,10 @@
+lr: 0.001
+
+kwargs:
+  input_dim: 1
+  output_dim: 1
+  embed_dim: 10
+  rnn_units: 64
+  num_layers: 2
+  cheb_k: 2
+  default_graph: True
