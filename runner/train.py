@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from torchinfo import summary
 import yaml
+import pandas as pd
 
 import sys
 
@@ -15,7 +16,7 @@ sys.path.append("..")
 from utils.utils import masked_mae_loss, print_log
 from utils.metrics import RMSE_MAE_MAPE
 from utils.data_prepare import read_df, read_numpy, get_dataloaders
-from model import *  # import all models
+from model import model_select
 
 # ! X shape: (B, T, N, C)
 
@@ -200,25 +201,16 @@ if __name__ == "__main__":
     dataset = dataset.upper()
     DATA_PATH = f"../data/{dataset}"
     
-    with open("../config/datasets.yaml", "r") as f:
-        dataset_cfg = yaml.safe_load(f)
-
-    dataset_cfg = dataset_cfg[dataset]
-    num_nodes = dataset_cfg["num_nodes"]
-    in_steps = dataset_cfg["in_steps"]
-    out_steps = dataset_cfg["out_steps"]
-    batch_size = dataset_cfg["batch_size"]
-    max_epochs = dataset_cfg["max_epochs"]
-
     with open(f"../config/{args.model}.yaml", "r") as f:
-        model_cfg = yaml.safe_load(f)
+        cfg = yaml.safe_load(f)
+    cfg = cfg[dataset]
 
-    model = eval(args.model)(
-        num_nodes=num_nodes,
-        in_steps=in_steps,
-        out_steps=out_steps,
-        **model_cfg["kwargs"],
-    )
+    if cfg["load_adj"]:
+        adj = pd.read_csv(cfg["adj_path"]).values
+        cfg["model_args"]["adj"] = adj
+        cfg["model_args"]["adj_device"] = DEVICE
+
+    model = model_select(args.model)(**cfg["model_args"])
 
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     log_path = f"../logs/{model._get_name()}"
@@ -228,7 +220,7 @@ if __name__ == "__main__":
     log = open(log, "a")
     log.seek(0)
     log.truncate()
-    
+
     print_log(dataset, log=log)
     SCALER = StandardScaler()
     data = read_numpy(
@@ -238,13 +230,14 @@ if __name__ == "__main__":
     data = data[:, :, np.newaxis]  # (all_steps, num_nodes, 1)
     trainset_loader, valset_loader, testset_loader = get_dataloaders(
         data,
-        in_steps,
-        out_steps,
-        batch_size=batch_size,
+        cfg["in_steps"],
+        cfg["out_steps"],
+        batch_size=cfg["batch_size"],
         with_time_embeddings=False,
         num_cpu=8,
         log=log,
     )
+    print_log(log=log)
 
     save_path = f"../saved_models/{model._get_name()}"
     if not os.path.exists(save_path):
@@ -255,10 +248,12 @@ if __name__ == "__main__":
         criterion = masked_mae_loss
     else:
         criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=model_cfg["lr"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"])
     
     print_log("---------", model._get_name(), "---------", log=log)
-    summary(model, [batch_size, in_steps, num_nodes, 1])
+    print_log(cfg["model_args"], log=log)
+    summary(model, [cfg["batch_size"], cfg["in_steps"], cfg["num_nodes"], 1])
+    print_log(log=log)
 
     model = train(
         model,
@@ -266,10 +261,12 @@ if __name__ == "__main__":
         valset_loader,
         optimizer,
         criterion,
-        max_epochs=max_epochs,
+        max_epochs=cfg["max_epochs"],
         verbose=1,
         log=log,
         save=save,
     )
 
     test_model(model, testset_loader, log=log)
+
+    log.close()
