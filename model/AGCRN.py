@@ -87,7 +87,7 @@ class AVWDCRNN(nn.Module):
         return torch.stack(init_states, dim=0)      #(num_layers, B, N, hidden_dim)
 
 class AGCRN(nn.Module):
-    def __init__(self, num_nodes, in_steps, out_steps, input_dim, embed_dim, rnn_units, output_dim, cheb_k, num_layers, default_graph):
+    def __init__(self, num_nodes, out_steps, input_dim, embed_dim, rnn_units, output_dim, cheb_k, num_layers, default_graph):
         super(AGCRN, self).__init__()
         self.num_nodes = num_nodes
         self.input_dim = input_dim

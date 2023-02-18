@@ -4,6 +4,7 @@ METRLA:
   out_steps: 12
   batch_size: 64
   max_epochs: 200
+  adj_path: "../data/METRLA/W_metrla.csv"
 PEMSD7M:
   num_nodes: 228
   in_steps: 12

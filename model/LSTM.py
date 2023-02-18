@@ -3,7 +3,7 @@ from torchinfo import summary
 
 
 class LSTM(nn.Module):
-    def __init__(self, num_nodes, in_steps, out_steps, lstm_input_dim, lstm_hidden_dim):
+    def __init__(self, num_nodes, in_steps, out_steps, lstm_input_dim=1, lstm_hidden_dim=64):
         super(LSTM, self).__init__()
 
         self.num_nodes = num_nodes

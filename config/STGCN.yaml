@@ -1,0 +1,22 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+  
+  lr: 0.001
+  batch_size: 64
+  max_epochs: 200
+
+  load_adj: True
+  adj_path: "../data/METRLA/W_metrla.csv"
+
+  model_args:
+    num_nodes: 207
+    in_steps: 12
+    adj: null
+    adj_device: null
+    ks: 3
+    kt: 3
+    bs: [[1, 16, 64], [64, 16, 64]]
+    p: 0
+  

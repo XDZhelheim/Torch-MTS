@@ -1,6 +1,19 @@
-lr: 0.0001
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+  
+  lr: 0.0001
+  batch_size: 64
+  max_epochs: 200
 
-kwargs:
-  lstm_input_dim: 1
-  lstm_hidden_dim: 64
+  load_adj: False
+  adj_path: null
+
+  model_args:
+    num_nodes: 207
+    in_steps: 12
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
   

@@ -1,0 +1,11 @@
+METRLA
+Original data shape (34272, 207)
+Trainset:	x-torch.Size([23967, 12, 207, 1])	y-torch.Size([23967, 12, 207, 1])
+Valset:  	x-torch.Size([3404, 12, 207, 1])  	y-torch.Size([3404, 12, 207, 1])
+Testset:	x-torch.Size([6832, 12, 207, 1])	y-torch.Size([6832, 12, 207, 1])
+
+--------- AGCRN ---------
+{'num_nodes': 207, 'out_steps': 12, 'input_dim': 1, 'output_dim': 1, 'embed_dim': 10, 'rnn_units': 64, 'num_layers': 2, 'cheb_k': 2, 'default_graph': True}
+
+2023-02-18 16:59:27.936458 Epoch 1 	Train Loss = 0.29667 Val Loss = 0.24555
+2023-02-18 17:00:07.002451 Epoch 2 	Train Loss = 0.23767 Val Loss = 0.23824
