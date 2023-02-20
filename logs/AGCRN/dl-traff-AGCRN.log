@@ -1,4 +1,4 @@
-data.shape (34272, 207)
+`data.shape (34272, 207)
 pred_METR-LA_AGCRN_2302171724 training started Fri Feb 17 17:24:12 2023
 TRAIN XS.shape YS,shape (27394, 12, 207, 1) (27394, 12, 207, 1)
 Model Training Started ... Fri Feb 17 17:24:12 2023

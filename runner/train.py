@@ -13,7 +13,7 @@ import pandas as pd
 import sys
 
 sys.path.append("..")
-from utils.utils import masked_mae_loss, print_log
+from utils.utils import masked_mae_loss, print_log, seed_everything
 from utils.metrics import RMSE_MAE_MAPE
 from utils.data_prepare import read_df, read_numpy, get_dataloaders
 from model import model_select
@@ -187,6 +187,8 @@ def test_model(model, testset_loader, log="train.log"):
 
 
 if __name__ == "__main__":
+    seed_everything(100)
+    
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
     parser.add_argument("-m", "--model", type=str, default="LSTM")

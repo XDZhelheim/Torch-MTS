@@ -9,6 +9,7 @@ METRLA:
 
   load_adj: False
   adj_path: null
+  pass_device: False
 
   model_args:
     num_nodes: 207
