@@ -142,13 +142,13 @@ class output_layer(nn.Module):
         return self.fc(x_t2)
 
 class STGCN(nn.Module):
-    def __init__(self, num_nodes, in_steps, adj, adj_device, ks=3, kt=3, bs=[[1, 16, 64], [64, 16, 64]], p=0):
+    def __init__(self, num_nodes, in_steps, adj, device, ks=3, kt=3, bs=[[1, 16, 64], [64, 16, 64]], p=0):
         super(STGCN, self).__init__()
         
         W = weight_matrix(adj)
         L = scaled_laplacian(W)
         Lk = cheb_poly(L, ks)
-        Lk = torch.Tensor(Lk.astype(np.float32)).to(adj_device)
+        Lk = torch.Tensor(Lk.astype(np.float32)).to(device)
         
         self.st_conv1 = st_conv_block(ks, kt, num_nodes, bs[0], p, Lk)
         self.st_conv2 = st_conv_block(ks, kt, num_nodes, bs[1], p, Lk)

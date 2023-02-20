@@ -7,17 +7,15 @@ METRLA:
   batch_size: 64
   max_epochs: 200
 
-  load_adj: True
-  adj_path: "../data/METRLA/W_metrla.csv"
+  load_adj: False
   pass_device: True
 
   model_args:
     num_nodes: 207
-    in_steps: 12
-    adj: null # will be updated
+    in_dim: 1
+    out_dim: 12
+    # adj_path: "../data/METRLA/adj_mx.pkl"
+    adj_path: null
+    adj_type: "doubletransition"
     device: null # will be updated
-    ks: 3
-    kt: 3
-    bs: [[1, 16, 64], [64, 16, 64]]
-    p: 0
-  
+    

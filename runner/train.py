@@ -200,17 +200,19 @@ if __name__ == "__main__":
     dataset = args.dataset
     dataset = dataset.upper()
     DATA_PATH = f"../data/{dataset}"
+    model_name = args.model.upper()
     
-    with open(f"../config/{args.model}.yaml", "r") as f:
+    with open(f"../config/{model_name}.yaml", "r") as f:
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
 
     if cfg["load_adj"]:
         adj = pd.read_csv(cfg["adj_path"]).values
         cfg["model_args"]["adj"] = adj
-        cfg["model_args"]["adj_device"] = DEVICE
+    if cfg["pass_device"]:
+        cfg["model_args"]["device"] = DEVICE
 
-    model = model_select(args.model)(**cfg["model_args"])
+    model = model_select(model_name)(**cfg["model_args"])
 
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     log_path = f"../logs/{model._get_name()}"
