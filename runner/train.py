@@ -226,7 +226,7 @@ if __name__ == "__main__":
     log.truncate()
 
     print_log(dataset, log=log)
-    SCALER = StandardScaler()
+    SCALER = StandardScaler() # TODO 这里应该用 trainset 的 std 和 mean
     data = read_numpy(
         os.path.join(DATA_PATH, f"{dataset}.npy"), log=log
     )  # (all_steps, num_nodes)
