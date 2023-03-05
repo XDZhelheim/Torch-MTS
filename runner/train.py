@@ -5,7 +5,6 @@ import torch
 import torch.nn as nn
 import datetime
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
 from torchinfo import summary
 import yaml
 import pandas as pd
@@ -13,9 +12,9 @@ import pandas as pd
 import sys
 
 sys.path.append("..")
-from utils.utils import masked_mae_loss, print_log, seed_everything
+from utils.utils import masked_mae_loss, print_log, seed_everything, StandardScaler
 from utils.metrics import RMSE_MAE_MAPE
-from utils.data_prepare import read_df, read_numpy, get_dataloaders
+from utils.data_prepare import get_dataloaders_from_npz
 from model import model_select
 
 # ! X shape: (B, T, N, C)
@@ -187,8 +186,8 @@ def test_model(model, testset_loader, log="train.log"):
 
 
 if __name__ == "__main__":
-    seed_everything(100)
-    
+    seed_everything(233)
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
     parser.add_argument("-m", "--model", type=str, default="LSTM")
@@ -199,11 +198,19 @@ if __name__ == "__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = f"{GPU_ID}"
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+    cpu_num = 1
+    os.environ["OMP_NUM_THREADS"] = str(cpu_num)
+    os.environ["OPENBLAS_NUM_THREADS"] = str(cpu_num)
+    os.environ["MKL_NUM_THREADS"] = str(cpu_num)
+    os.environ["VECLIB_MAXIMUM_THREADS"] = str(cpu_num)
+    os.environ["NUMEXPR_NUM_THREADS"] = str(cpu_num)
+    torch.set_num_threads(cpu_num)
+
     dataset = args.dataset
     dataset = dataset.upper()
-    DATA_PATH = f"../data/{dataset}"
+    data_path = f"../data/{dataset}"
     model_name = args.model.upper()
-    
+
     with open(f"../config/{model_name}.yaml", "r") as f:
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
@@ -226,20 +233,8 @@ if __name__ == "__main__":
     log.truncate()
 
     print_log(dataset, log=log)
-    SCALER = StandardScaler() # TODO 这里应该用 trainset 的 std 和 mean
-    data = read_numpy(
-        os.path.join(DATA_PATH, f"{dataset}.npy"), log=log
-    )  # (all_steps, num_nodes)
-    data = SCALER.fit_transform(data)
-    data = data[:, :, np.newaxis]  # (all_steps, num_nodes, 1)
-    trainset_loader, valset_loader, testset_loader = get_dataloaders(
-        data,
-        cfg["in_steps"],
-        cfg["out_steps"],
-        batch_size=cfg["batch_size"],
-        with_time_embeddings=False,
-        num_cpu=8,
-        log=log,
+    trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders_from_npz(
+        data_path, batch_size=cfg["batch_size"], log=log
     )
     print_log(log=log)
 
@@ -253,10 +248,10 @@ if __name__ == "__main__":
     else:
         criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"])
-    
+
     print_log("---------", model._get_name(), "---------", log=log)
     print_log(cfg["model_args"], log=log)
-    summary(model, [cfg["batch_size"], cfg["in_steps"], cfg["num_nodes"], 1])
+    summary(model, [cfg["batch_size"], cfg["in_steps"], cfg["num_nodes"], 2])
     print_log(log=log)
 
     model = train(

@@ -10,14 +10,17 @@ class StandardScaler():
     https://github.com/nnzhan/Graph-WaveNet/blob/master/util.py
     """
     
-    # def __init__(self, mean, std):
-    #     self.mean = mean
-    #     self.std = std
+    def __init__(self, mean, std):
+        self.mean = mean
+        self.std = std
 
     def fit_transform(self, data):
         self.mean = data.mean()
         self.std = data.std()
         
+        return (data - self.mean) / self.std
+    
+    def transform(self, data):
         return (data - self.mean) / self.std
 
     def inverse_transform(self, data):

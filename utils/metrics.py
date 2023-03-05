@@ -63,8 +63,8 @@ def MAE(y_true, y_pred):
 
 
 def MAPE(y_true, y_pred, null_val=0):
-    y_true[y_true < 1e-5] = 0
-    y_pred[y_pred < 1e-5] = 0
+    # y_true[y_true < 1e-5] = 0
+    # y_pred[y_pred < 1e-5] = 0
     with np.errstate(divide="ignore", invalid="ignore"):
         if np.isnan(null_val):
             mask = ~np.isnan(y_true)

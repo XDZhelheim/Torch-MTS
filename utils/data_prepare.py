@@ -2,7 +2,8 @@ import sys
 import torch
 import pandas as pd
 import numpy as np
-from .utils import print_log
+import os
+from .utils import print_log, StandardScaler
 
 # ! X shape: (B, T, N, C)
 
@@ -41,9 +42,11 @@ def read_numpy(data_path, transpose=False, log="train.log"):
     print_log("Original data shape", data.shape, log=log)
     return data
 
-
 def gen_xy(data, in_steps, out_steps, with_time_embeddings=False):
     """
+    !!deprecated
+    ---
+    
     Parameter
     ---
     data: (all_timesteps, num_nodes, 1+time_embedding_dim) if with_time_embeddings, else features=1
@@ -91,6 +94,8 @@ def get_dataloaders(
     log="train.log",
 ):
     """
+    !!deprecated
+    ---
     Parameters
     ---
     data: (all_timesteps, num_nodes, 1+time_embedding_dim or 1) numpy
@@ -119,10 +124,57 @@ def get_dataloaders(
         trainset, batch_size=batch_size, shuffle=True, num_workers=num_cpu
     )
     valset_loader = torch.utils.data.DataLoader(
-        valset, batch_size=batch_size, shuffle=True, num_workers=num_cpu
+        valset, batch_size=batch_size, shuffle=False, num_workers=num_cpu
     )
     testset_loader = torch.utils.data.DataLoader(
         testset, batch_size=batch_size, shuffle=False, num_workers=num_cpu
     )
 
     return trainset_loader, valset_loader, testset_loader
+
+
+def get_dataloaders_from_npz(
+    data_path, batch_size=32, log="train.log",
+):
+    data = {}
+    for category in ["train", "val", "test"]:
+        cat_data = np.load(os.path.join(data_path, category + ".npz"))
+        data["x_" + category] = cat_data["x"]
+        data["y_" + category] = cat_data["y"]
+
+    scaler = StandardScaler(
+        mean=data["x_train"][..., 0].mean(), std=data["x_train"][..., 0].std()
+    )
+    for category in ["train", "val", "test"]:
+        data["x_" + category][..., 0] = scaler.transform(data["x_" + category][..., 0])
+        data["y_" + category][..., 0] = scaler.transform(data["y_" + category][..., 0])
+        
+    for category in ["train", "val", "test"]:
+        data["x_" + category]=torch.FloatTensor(data["x_" + category])
+        data["y_" + category]=torch.FloatTensor(data["y_" + category][..., :1]) # no time embedding
+        
+    trainset = torch.utils.data.TensorDataset(data["x_train"], data["y_train"])
+    valset = torch.utils.data.TensorDataset(data["x_val"], data["y_val"])
+    testset = torch.utils.data.TensorDataset(data["x_test"], data["y_test"])
+
+    trainset_loader = torch.utils.data.DataLoader(
+        trainset, batch_size=batch_size, shuffle=True
+    )
+    valset_loader = torch.utils.data.DataLoader(
+        valset, batch_size=batch_size, shuffle=False
+    )
+    testset_loader = torch.utils.data.DataLoader(
+        testset, batch_size=batch_size, shuffle=False
+    )
+
+    print_log(
+        f"Trainset:\tx-{data['x_train'].size()}\ty-{data['y_train'].size()}", log=log
+    )
+    print_log(
+        f"Valset:  \tx-{data['x_val'].size()}  \ty-{data['y_val'].size()}", log=log
+    )
+    print_log(
+        f"Testset:\tx-{data['x_test'].size()}\ty-{data['y_test'].size()}", log=log
+    )
+
+    return trainset_loader, valset_loader, testset_loader, scaler

@@ -129,3 +129,4 @@ dmypy.json
 
 temp*
 *.pt
+*.npz
