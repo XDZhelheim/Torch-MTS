@@ -7,13 +7,16 @@ METRLA:
   batch_size: 64
   max_epochs: 200
 
+  load_npz: False
+  with_embeddings: False
+  
   load_adj: False
   pass_device: False
 
   model_args:
     num_nodes: 207
     out_steps: 12
-    input_dim: 2
+    input_dim: 1
     output_dim: 1
     embed_dim: 8
     rnn_units: 64

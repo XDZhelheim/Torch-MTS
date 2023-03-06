@@ -22,7 +22,7 @@ def read_df(data_path, file_type="pickle", transpose=False, log="train.log"):
         print("Invalid file type.")
         sys.exit(1)
 
-    data = data.values.astype(np.float)
+    data = data.values.astype(np.float32)
     if transpose:
         data = data.T
     print_log("Original data shape", data.shape, log=log)
@@ -36,25 +36,22 @@ def read_numpy(data_path, transpose=False, log="train.log"):
     X: (all_timesteps, num_nodes) numpy
     """
 
-    data = np.load(data_path)
+    data = np.load(data_path).astype(np.float32)
     if transpose:
         data = data.T
     print_log("Original data shape", data.shape, log=log)
     return data
 
-def gen_xy(data, in_steps, out_steps, with_time_embeddings=False):
+def gen_xy(data, in_steps, out_steps, with_embeddings=False):
     """
-    !!deprecated
-    ---
-    
     Parameter
     ---
-    data: (all_timesteps, num_nodes, 1+time_embedding_dim) if with_time_embeddings, else features=1
+    data: (all_timesteps, num_nodes, 1+embedding_dim) if with_embeddings, else features=1
 
     Returns
     ---
-    x: (num_samples, in_steps, num_nodes, num_features=1+time_embedding_dim or 1) Tensor
-    y: (num_samples, out_steps, num_nodes, num_features=1) Tensor
+    x: (num_samples, in_steps, num_nodes, num_features=1+time_embedding_dim or 1) Numpy
+    y: (num_samples, out_steps, num_nodes, num_features=1) Numpy
         num_samples is determined by `timesteps` and `in_steps+out_steps`
     """
     # Generate the beginning index and the ending index of a sample, which
@@ -76,10 +73,10 @@ def gen_xy(data, in_steps, out_steps, with_time_embeddings=False):
     x = np.array(x)
     y = np.array(y)
 
-    if with_time_embeddings:
+    if with_embeddings:
         y = y[..., 0][..., np.newaxis]
 
-    return torch.Tensor(x), torch.Tensor(y)
+    return x, y
 
 
 def get_dataloaders(
@@ -89,13 +86,10 @@ def get_dataloaders(
     train_size=0.7,
     val_size=0.1,
     batch_size=32,
-    with_time_embeddings=False,
-    num_cpu=8,
+    with_embeddings=False,
     log="train.log",
 ):
     """
-    !!deprecated
-    ---
     Parameters
     ---
     data: (all_timesteps, num_nodes, 1+time_embedding_dim or 1) numpy
@@ -108,29 +102,40 @@ def get_dataloaders(
     val_data = data[split1:split2]
     test_data = data[split2:]
 
-    x_train, y_train = gen_xy(train_data, in_steps, out_steps, with_time_embeddings)
-    x_val, y_val = gen_xy(val_data, in_steps, out_steps, with_time_embeddings)
-    x_test, y_test = gen_xy(test_data, in_steps, out_steps, with_time_embeddings)
+    x_train, y_train = gen_xy(train_data, in_steps, out_steps, with_embeddings)
+    x_val, y_val = gen_xy(val_data, in_steps, out_steps, with_embeddings)
+    x_test, y_test = gen_xy(test_data, in_steps, out_steps, with_embeddings)
+    
+    scaler = StandardScaler(
+        mean=x_train[..., 0].mean(), std=x_train[..., 0].std()
+    )
+    
+    x_train[..., 0]=scaler.transform(x_train[..., 0])
+    y_train[..., 0]=scaler.transform(y_train[..., 0])
+    x_val[..., 0]=scaler.transform(x_val[..., 0])
+    y_val[..., 0]=scaler.transform(y_val[..., 0])
+    x_test[..., 0]=scaler.transform(x_test[..., 0])
+    y_test[..., 0]=scaler.transform(y_test[..., 0])
 
-    print_log(f"Trainset:\tx-{x_train.size()}\ty-{y_train.size()}", log=log)
-    print_log(f"Valset:  \tx-{x_val.size()}  \ty-{y_val.size()}", log=log)
-    print_log(f"Testset:\tx-{x_test.size()}\ty-{y_test.size()}", log=log)
+    print_log(f"Trainset:\tx-{x_train.shape}\ty-{y_train.shape}", log=log)
+    print_log(f"Valset:  \tx-{x_val.shape}  \ty-{y_val.shape}", log=log)
+    print_log(f"Testset:\tx-{x_test.shape}\ty-{y_test.shape}", log=log)
 
-    trainset = torch.utils.data.TensorDataset(x_train, y_train)
-    valset = torch.utils.data.TensorDataset(x_val, y_val)
-    testset = torch.utils.data.TensorDataset(x_test, y_test)
+    trainset = torch.utils.data.TensorDataset(torch.FloatTensor(x_train), torch.FloatTensor(y_train))
+    valset = torch.utils.data.TensorDataset(torch.FloatTensor(x_val), torch.FloatTensor(y_val))
+    testset = torch.utils.data.TensorDataset(torch.FloatTensor(x_test), torch.FloatTensor(y_test))
 
     trainset_loader = torch.utils.data.DataLoader(
-        trainset, batch_size=batch_size, shuffle=True, num_workers=num_cpu
+        trainset, batch_size=batch_size, shuffle=True
     )
     valset_loader = torch.utils.data.DataLoader(
-        valset, batch_size=batch_size, shuffle=False, num_workers=num_cpu
+        valset, batch_size=batch_size, shuffle=False
     )
     testset_loader = torch.utils.data.DataLoader(
-        testset, batch_size=batch_size, shuffle=False, num_workers=num_cpu
+        testset, batch_size=batch_size, shuffle=False
     )
 
-    return trainset_loader, valset_loader, testset_loader
+    return trainset_loader, valset_loader, testset_loader, scaler
 
 
 def get_dataloaders_from_npz(
@@ -139,8 +144,12 @@ def get_dataloaders_from_npz(
     data = {}
     for category in ["train", "val", "test"]:
         cat_data = np.load(os.path.join(data_path, category + ".npz"))
-        data["x_" + category] = cat_data["x"]
-        data["y_" + category] = cat_data["y"]
+        data["x_" + category] = cat_data["x"].astype(np.float32)
+        data["y_" + category] = cat_data["y"].astype(np.float32)
+        
+    print_log(f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log)
+    print_log(f"Valset:  \tx-{data['x_val'].shape}  \ty-{data['y_val'].shape}", log=log)
+    print_log(f"Testset:\tx-{data['x_test'].shape}\ty-{data['y_test'].shape}", log=log)
 
     scaler = StandardScaler(
         mean=data["x_train"][..., 0].mean(), std=data["x_train"][..., 0].std()
@@ -165,16 +174,6 @@ def get_dataloaders_from_npz(
     )
     testset_loader = torch.utils.data.DataLoader(
         testset, batch_size=batch_size, shuffle=False
-    )
-
-    print_log(
-        f"Trainset:\tx-{data['x_train'].size()}\ty-{data['y_train'].size()}", log=log
-    )
-    print_log(
-        f"Valset:  \tx-{data['x_val'].size()}  \ty-{data['y_val'].size()}", log=log
-    )
-    print_log(
-        f"Testset:\tx-{data['x_test'].size()}\ty-{data['y_test'].size()}", log=log
     )
 
     return trainset_loader, valset_loader, testset_loader, scaler

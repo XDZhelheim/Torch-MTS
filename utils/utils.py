@@ -9,6 +9,8 @@ class StandardScaler():
     Standard the input
     https://github.com/nnzhan/Graph-WaveNet/blob/master/util.py
     """
+    def __init__(self):
+        pass
     
     def __init__(self, mean, std):
         self.mean = mean

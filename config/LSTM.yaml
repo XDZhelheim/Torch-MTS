@@ -7,6 +7,9 @@ METRLA:
   batch_size: 64
   max_epochs: 200
 
+  load_npz: False
+  with_embeddings: False
+  
   load_adj: False
   adj_path: null
   pass_device: False

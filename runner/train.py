@@ -12,9 +12,9 @@ import pandas as pd
 import sys
 
 sys.path.append("..")
-from utils.utils import masked_mae_loss, print_log, seed_everything, StandardScaler
+from utils.utils import masked_mae_loss, print_log, seed_everything
 from utils.metrics import RMSE_MAE_MAPE
-from utils.data_prepare import get_dataloaders_from_npz
+from utils.data_prepare import read_numpy, get_dataloaders, get_dataloaders_from_npz
 from model import model_select
 
 # ! X shape: (B, T, N, C)
@@ -233,9 +233,31 @@ if __name__ == "__main__":
     log.truncate()
 
     print_log(dataset, log=log)
-    trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders_from_npz(
-        data_path, batch_size=cfg["batch_size"], log=log
-    )
+    if cfg["load_npz"]:
+        (
+            trainset_loader,
+            valset_loader,
+            testset_loader,
+            SCALER,
+        ) = get_dataloaders_from_npz(data_path, batch_size=cfg["batch_size"], log=log)
+    else:
+        if cfg["with_embeddings"]:
+            data = read_numpy(
+                os.path.join(data_path, f"{dataset}_embedded.npy"), log=log
+            )  #!!! (all_steps, num_nodes, 1+time_embedding_dim+node_embedding_dim)
+        else:
+            data = read_numpy(
+                os.path.join(data_path, f"{dataset}.npy"), log=log
+            )  # (all_steps, num_nodes)
+            data = data[..., np.newaxis]  # (all_steps, num_nodes, 1)
+        trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders(
+            data,
+            cfg["in_steps"],
+            cfg["out_steps"],
+            batch_size=cfg["batch_size"],
+            with_embeddings=cfg["with_embeddings"],
+            log=log,
+        )
     print_log(log=log)
 
     save_path = f"../saved_models/{model._get_name()}"
@@ -251,7 +273,15 @@ if __name__ == "__main__":
 
     print_log("---------", model._get_name(), "---------", log=log)
     print_log(cfg["model_args"], log=log)
-    summary(model, [cfg["batch_size"], cfg["in_steps"], cfg["num_nodes"], 2])
+    summary(
+        model,
+        [
+            cfg["batch_size"],
+            cfg["in_steps"],
+            cfg["num_nodes"],
+            next(iter(trainset_loader))[0].shape[-1],
+        ],
+    )
     print_log(log=log)
 
     model = train(
