@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from .utils import onehot_decode
 
+
 def accuracy(predictions, targets):
     """
     Computes the prediction accuracy, i.e., the average of correct predictions
@@ -92,4 +93,3 @@ def MSE_RMSE_MAE_MAPE(y_true, y_pred):
         MAE(y_true, y_pred),
         MAPE(y_true, y_pred),
     )
-    

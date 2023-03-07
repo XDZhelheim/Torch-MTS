@@ -42,6 +42,7 @@ def read_numpy(data_path, transpose=False, log="train.log"):
     print_log("Original data shape", data.shape, log=log)
     return data
 
+
 def gen_xy(data, in_steps, out_steps, with_embeddings=False):
     """
     Parameter
@@ -68,13 +69,16 @@ def gen_xy(data, in_steps, out_steps, with_embeddings=False):
     x, y = [], []
     for begin, end in indices:
         x.append(data[begin : begin + in_steps])
-        y.append(data[begin + in_steps : end])
+        if with_embeddings:
+            y.append(data[begin + in_steps : end, :, 0])
+        else:
+            y.append(data[begin + in_steps : end])
 
     x = np.array(x)
     y = np.array(y)
 
     if with_embeddings:
-        y = y[..., 0][..., np.newaxis]
+        y = y[..., np.newaxis]
 
     return x, y
 
@@ -105,25 +109,29 @@ def get_dataloaders(
     x_train, y_train = gen_xy(train_data, in_steps, out_steps, with_embeddings)
     x_val, y_val = gen_xy(val_data, in_steps, out_steps, with_embeddings)
     x_test, y_test = gen_xy(test_data, in_steps, out_steps, with_embeddings)
-    
-    scaler = StandardScaler(
-        mean=x_train[..., 0].mean(), std=x_train[..., 0].std()
-    )
-    
-    x_train[..., 0]=scaler.transform(x_train[..., 0])
-    y_train[..., 0]=scaler.transform(y_train[..., 0])
-    x_val[..., 0]=scaler.transform(x_val[..., 0])
-    y_val[..., 0]=scaler.transform(y_val[..., 0])
-    x_test[..., 0]=scaler.transform(x_test[..., 0])
-    y_test[..., 0]=scaler.transform(y_test[..., 0])
+
+    scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
+
+    x_train[..., 0] = scaler.transform(x_train[..., 0])
+    y_train[..., 0] = scaler.transform(y_train[..., 0])
+    x_val[..., 0] = scaler.transform(x_val[..., 0])
+    y_val[..., 0] = scaler.transform(y_val[..., 0])
+    x_test[..., 0] = scaler.transform(x_test[..., 0])
+    y_test[..., 0] = scaler.transform(y_test[..., 0])
 
     print_log(f"Trainset:\tx-{x_train.shape}\ty-{y_train.shape}", log=log)
     print_log(f"Valset:  \tx-{x_val.shape}  \ty-{y_val.shape}", log=log)
     print_log(f"Testset:\tx-{x_test.shape}\ty-{y_test.shape}", log=log)
 
-    trainset = torch.utils.data.TensorDataset(torch.FloatTensor(x_train), torch.FloatTensor(y_train))
-    valset = torch.utils.data.TensorDataset(torch.FloatTensor(x_val), torch.FloatTensor(y_val))
-    testset = torch.utils.data.TensorDataset(torch.FloatTensor(x_test), torch.FloatTensor(y_test))
+    trainset = torch.utils.data.TensorDataset(
+        torch.FloatTensor(x_train), torch.FloatTensor(y_train)
+    )
+    valset = torch.utils.data.TensorDataset(
+        torch.FloatTensor(x_val), torch.FloatTensor(y_val)
+    )
+    testset = torch.utils.data.TensorDataset(
+        torch.FloatTensor(x_test), torch.FloatTensor(y_test)
+    )
 
     trainset_loader = torch.utils.data.DataLoader(
         trainset, batch_size=batch_size, shuffle=True
@@ -146,7 +154,7 @@ def get_dataloaders_from_npz(
         cat_data = np.load(os.path.join(data_path, category + ".npz"))
         data["x_" + category] = cat_data["x"].astype(np.float32)
         data["y_" + category] = cat_data["y"].astype(np.float32)
-        
+
     print_log(f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log)
     print_log(f"Valset:  \tx-{data['x_val'].shape}  \ty-{data['y_val'].shape}", log=log)
     print_log(f"Testset:\tx-{data['x_test'].shape}\ty-{data['y_test'].shape}", log=log)
@@ -157,11 +165,11 @@ def get_dataloaders_from_npz(
     for category in ["train", "val", "test"]:
         data["x_" + category][..., 0] = scaler.transform(data["x_" + category][..., 0])
         data["y_" + category][..., 0] = scaler.transform(data["y_" + category][..., 0])
-        
+
     for category in ["train", "val", "test"]:
-        data["x_" + category]=torch.FloatTensor(data["x_" + category])
-        data["y_" + category]=torch.FloatTensor(data["y_" + category][..., :1]) # no time embedding
-        
+        data["x_" + category] = torch.FloatTensor(data["x_" + category])
+        data["y_" + category] = torch.FloatTensor(data["y_" + category][..., :1])  # no time embedding
+
     trainset = torch.utils.data.TensorDataset(data["x_train"], data["y_train"])
     valset = torch.utils.data.TensorDataset(data["x_val"], data["y_val"])
     testset = torch.utils.data.TensorDataset(data["x_test"], data["y_test"])
