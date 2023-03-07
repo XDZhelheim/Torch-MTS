@@ -16,9 +16,12 @@ METRLA:
 
   model_args:
     num_nodes: 207
+    in_steps: 12
     out_steps: 12
     lstm_input_dim: 1
     lstm_hidden_dim: 64
     st_embedding_dim: 96
     learner_hidden_dim: 64
+    z_dim: 32
+    towards: True
   
