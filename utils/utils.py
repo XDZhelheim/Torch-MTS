@@ -32,8 +32,6 @@ class StandardScaler:
 
 
 def masked_mae_loss(preds, labels, null_val=0.0):
-    # preds[preds < 1e-5] = 0
-    # labels[labels < 1e-5] = 0
     if np.isnan(null_val):
         mask = ~torch.isnan(labels)
     else:

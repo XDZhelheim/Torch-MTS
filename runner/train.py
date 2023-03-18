@@ -61,7 +61,7 @@ def predict(model, loader):
     return y, out
 
 
-def train_one_epoch(model, trainset_loader, optimizer, criterion):
+def train_one_epoch(model, trainset_loader, optimizer, scheduler, criterion, clip_grad):
     model.train()
     batch_loss_list = []
     for x_batch, y_batch in trainset_loader:
@@ -74,9 +74,14 @@ def train_one_epoch(model, trainset_loader, optimizer, criterion):
 
         optimizer.zero_grad()
         loss.backward()
+        if clip_grad:
+            torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad)
         optimizer.step()
 
-    return np.mean(batch_loss_list)
+    epoch_loss = np.mean(batch_loss_list)
+    scheduler.step()
+
+    return epoch_loss
 
 
 def train(
@@ -84,7 +89,9 @@ def train(
     trainset_loader,
     valset_loader,
     optimizer,
+    scheduler,
     criterion,
+    clip_grad=5,
     max_epochs=500,
     early_stop=10,
     verbose=1,
@@ -101,7 +108,9 @@ def train(
     val_loss_list = []
 
     for epoch in range(max_epochs):
-        train_loss = train_one_epoch(model, trainset_loader, optimizer, criterion)
+        train_loss = train_one_epoch(
+            model, trainset_loader, optimizer, scheduler, criterion, clip_grad
+        )
         train_loss_list.append(train_loss)
 
         val_loss = eval_model(model, valset_loader, criterion)
@@ -269,7 +278,22 @@ if __name__ == "__main__":
         criterion = masked_mae_loss
     else:
         criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"])
+    # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+    #     optimizer,
+    #     mode="min",
+    #     factor=0.1,
+    #     patience=15,
+    #     min_lr=1e-4,
+    #     # threshold=0.01,
+    #     # threshold_mode="abs",
+    #     threshold=0.05,
+    #     threshold_mode="rel",
+    #     verbose=True,
+    # )
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(
+        optimizer, milestones=cfg["milestones"], gamma=0.1, verbose=True
+    )
 
     print_log("---------", model._get_name(), "---------", log=log)
     print_log(cfg["model_args"], log=log)
@@ -289,6 +313,7 @@ if __name__ == "__main__":
         trainset_loader,
         valset_loader,
         optimizer,
+        scheduler,
         criterion,
         max_epochs=cfg["max_epochs"],
         verbose=1,
