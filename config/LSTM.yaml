@@ -6,6 +6,7 @@ METRLA:
   lr: 0.01
   weight_decay: 0.0001
   milestones: [10, 30]
+  clip_grad: 5
   batch_size: 64
   max_epochs: 200
 

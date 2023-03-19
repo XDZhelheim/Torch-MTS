@@ -29,6 +29,7 @@ def eval_model(model, valset_loader, criterion):
         y_batch = y_batch.to(DEVICE)
 
         out_batch = model(x_batch)
+        out_batch = SCALER.inverse_transform(out_batch)
         loss = criterion(out_batch, y_batch)
         batch_loss_list.append(loss.item())
 
@@ -46,6 +47,7 @@ def predict(model, loader):
         y_batch = y_batch.to(DEVICE)
 
         out_batch = model(x_batch)
+        out_batch = SCALER.inverse_transform(out_batch)
 
         out_batch = out_batch.cpu().numpy()
         y_batch = y_batch.cpu().numpy()
@@ -55,8 +57,8 @@ def predict(model, loader):
     out = np.vstack(out).squeeze()  # (samples, out_steps, num_nodes)
     y = np.vstack(y).squeeze()
 
-    out = SCALER.inverse_transform(out)
-    y = SCALER.inverse_transform(y)  # (samples, out_steps, num_nodes)
+    # out = SCALER.inverse_transform(out)
+    # y = SCALER.inverse_transform(y)
 
     return y, out
 
@@ -69,6 +71,7 @@ def train_one_epoch(model, trainset_loader, optimizer, scheduler, criterion, cli
         y_batch = y_batch.to(DEVICE)
 
         out_batch = model(x_batch)
+        out_batch = SCALER.inverse_transform(out_batch)
         loss = criterion(out_batch, y_batch)
         batch_loss_list.append(loss.item())
 
@@ -94,11 +97,14 @@ def train(
     clip_grad=5,
     max_epochs=500,
     early_stop=10,
+    compile_model=False,
     verbose=1,
     plot=False,
     log="train.log",
     save=None,
 ):
+    if torch.__version__ >= "2.0.0" and compile_model:
+        model = torch.compile(model)
     model = model.to(DEVICE)
 
     wait = 0
@@ -201,6 +207,7 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
     parser.add_argument("-m", "--model", type=str, default="LSTM")
     parser.add_argument("-g", "--gpu_num", type=int, default=1)
+    parser.add_argument("-c", "--compile", action="store_true")
     args = parser.parse_args()
 
     GPU_ID = args.gpu_num
@@ -278,13 +285,13 @@ if __name__ == "__main__":
         criterion = masked_mae_loss
     else:
         criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"])
+    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"], eps=1e-3)
     # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     #     optimizer,
     #     mode="min",
     #     factor=0.1,
     #     patience=15,
-    #     min_lr=1e-4,
+    #     min_lr=1e-5,
     #     # threshold=0.01,
     #     # threshold_mode="abs",
     #     threshold=0.05,
@@ -292,11 +299,11 @@ if __name__ == "__main__":
     #     verbose=True,
     # )
     scheduler = torch.optim.lr_scheduler.MultiStepLR(
-        optimizer, milestones=cfg["milestones"], gamma=0.1, verbose=True
+        optimizer, milestones=cfg["milestones"], gamma=0.1, verbose=False
     )
 
     print_log("---------", model._get_name(), "---------", log=log)
-    print_log(cfg["model_args"], log=log)
+    print_log(cfg, log=log)
     summary(
         model,
         [
@@ -315,7 +322,9 @@ if __name__ == "__main__":
         optimizer,
         scheduler,
         criterion,
+        clip_grad=cfg["clip_grad"],
         max_epochs=cfg["max_epochs"],
+        compile_model=args.compile,
         verbose=1,
         log=log,
         save=save,

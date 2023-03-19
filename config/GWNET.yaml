@@ -3,9 +3,10 @@ METRLA:
   in_steps: 12
   out_steps: 12
   
-  lr: 0.01
+  lr: 0.001
   weight_decay: 0.0001
-  milestones: [10, 30]
+  milestones: [40]
+  clip_grad: False
   batch_size: 64
   max_epochs: 200
 

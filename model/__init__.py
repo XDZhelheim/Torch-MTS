@@ -6,6 +6,7 @@ from .MTGNN import MTGNN
 from .STMetaLSTM import STMetaLSTM
 from .SMetaLSTM import SMetaLSTM
 from .TMetaLSTM import TMetaLSTM
+from .GCLSTM import GCLSTM
 
 # __all__ = ["LSTM", "AGCRN", "STGCN"]
 
@@ -30,6 +31,8 @@ def model_select(name):
         return SMetaLSTM
     elif name == "TMETALSTM":
         return TMetaLSTM
+    elif name == "GCLSTM":
+        return GCLSTM
 
     else:
         raise NotImplementedError

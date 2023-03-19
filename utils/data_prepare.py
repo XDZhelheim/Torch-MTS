@@ -113,11 +113,11 @@ def get_dataloaders(
     scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
 
     x_train[..., 0] = scaler.transform(x_train[..., 0])
-    y_train[..., 0] = scaler.transform(y_train[..., 0])
+    # y_train[..., 0] = scaler.transform(y_train[..., 0])
     x_val[..., 0] = scaler.transform(x_val[..., 0])
-    y_val[..., 0] = scaler.transform(y_val[..., 0])
+    # y_val[..., 0] = scaler.transform(y_val[..., 0])
     x_test[..., 0] = scaler.transform(x_test[..., 0])
-    y_test[..., 0] = scaler.transform(y_test[..., 0])
+    # y_test[..., 0] = scaler.transform(y_test[..., 0])
 
     print_log(f"Trainset:\tx-{x_train.shape}\ty-{y_train.shape}", log=log)
     print_log(f"Valset:  \tx-{x_val.shape}  \ty-{y_val.shape}", log=log)
@@ -164,7 +164,7 @@ def get_dataloaders_from_npz(
     )
     for category in ["train", "val", "test"]:
         data["x_" + category][..., 0] = scaler.transform(data["x_" + category][..., 0])
-        data["y_" + category][..., 0] = scaler.transform(data["y_" + category][..., 0])
+        # data["y_" + category][..., 0] = scaler.transform(data["y_" + category][..., 0])
 
     for category in ["train", "val", "test"]:
         data["x_" + category] = torch.FloatTensor(data["x_" + category])

@@ -6,7 +6,6 @@ import torch.nn.init as init
 import torch.nn.functional as F
 import numpy as np
 import pandas as pd
-from torchsummary import summary
 
 '''
 align主要是对数据格式进行一个处理 类似于reshape
