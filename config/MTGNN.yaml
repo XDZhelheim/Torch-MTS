@@ -3,15 +3,16 @@ METRLA:
   in_steps: 12
   out_steps: 12
   
-  lr: 0.01
+  lr: 0.001
   weight_decay: 0.0001
-  milestones: [10, 40]
+  milestones: [80]
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
+  use_cl: True
+  cl_step_size: 2500
 
   load_npz: True
-  load_adj: False
   pass_device: True
 
   model_args:
@@ -36,5 +37,5 @@ METRLA:
     layers: 3
     propalpha: 0.05
     tanhalpha: 3
-    layer_norm_affline: null
+    layer_norm_affline: True
     

@@ -3,6 +3,7 @@ import torch
 import pickle
 import random
 import os
+import json
 
 
 class StandardScaler:
@@ -10,11 +11,7 @@ class StandardScaler:
     Standard the input
     https://github.com/nnzhan/Graph-WaveNet/blob/master/util.py
     """
-
-    def __init__(self):
-        pass
-
-    def __init__(self, mean, std):
+    def __init__(self, mean=None, std=None):
         self.mean = mean
         self.std = std
 
@@ -80,3 +77,24 @@ def seed_everything(seed):
     torch.cuda.manual_seed_all(seed)  # multi-GPU
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = False
+    
+def set_cpu_num(cpu_num: int):
+    os.environ["OMP_NUM_THREADS"] = str(cpu_num)
+    os.environ["OPENBLAS_NUM_THREADS"] = str(cpu_num)
+    os.environ["MKL_NUM_THREADS"] = str(cpu_num)
+    os.environ["VECLIB_MAXIMUM_THREADS"] = str(cpu_num)
+    os.environ["NUMEXPR_NUM_THREADS"] = str(cpu_num)
+    torch.set_num_threads(cpu_num)
+    
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return f"Shape: {obj.shape}"
+        elif isinstance(obj, torch.device):
+            return str(obj)
+        else:
+            return super(CustomJSONEncoder, self).default(obj)

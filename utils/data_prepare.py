@@ -113,10 +113,12 @@ def get_dataloaders(
     scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
 
     x_train[..., 0] = scaler.transform(x_train[..., 0])
-    # y_train[..., 0] = scaler.transform(y_train[..., 0])
     x_val[..., 0] = scaler.transform(x_val[..., 0])
-    # y_val[..., 0] = scaler.transform(y_val[..., 0])
     x_test[..., 0] = scaler.transform(x_test[..., 0])
+    
+    # ! do not transform y
+    # y_train[..., 0] = scaler.transform(y_train[..., 0])
+    # y_val[..., 0] = scaler.transform(y_val[..., 0])
     # y_test[..., 0] = scaler.transform(y_test[..., 0])
 
     print_log(f"Trainset:\tx-{x_train.shape}\ty-{y_train.shape}", log=log)

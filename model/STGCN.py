@@ -141,8 +141,10 @@ class output_layer(nn.Module):
         return self.fc(x_t2)
 
 class STGCN(nn.Module):
-    def __init__(self, num_nodes, in_steps, adj, device, ks=3, kt=3, bs=[[1, 16, 64], [64, 16, 64]], p=0):
+    def __init__(self, num_nodes, in_steps, adj_path, device, ks=3, kt=3, bs=[[1, 16, 64], [64, 16, 64]], p=0):
         super(STGCN, self).__init__()
+        
+        adj = pd.read_csv(adj_path).values
         
         W = weight_matrix(adj)
         L = scaled_laplacian(W)

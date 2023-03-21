@@ -9,15 +9,14 @@ METRLA:
   clip_grad: False
   batch_size: 64
   max_epochs: 200
+  use_cl: False
 
-  load_adj: True
-  adj_path: "../data/METRLA/W_metrla.csv"
   pass_device: True
 
   model_args:
     num_nodes: 207
     in_steps: 12
-    adj: null # will be updated
+    adj_path: "../data/METRLA/W_metrla.csv"
     device: null # will be updated
     ks: 3
     kt: 3

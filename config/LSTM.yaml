@@ -9,11 +9,11 @@ METRLA:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
+  use_cl: False
 
   load_npz: False
   with_embeddings: False
   
-  load_adj: False
   adj_path: null
   pass_device: False
 

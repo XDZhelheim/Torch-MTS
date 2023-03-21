@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import pandas as pd
 import os
 import torch
 import torch.nn as nn
@@ -7,12 +8,17 @@ import datetime
 import matplotlib.pyplot as plt
 from torchinfo import summary
 import yaml
-import pandas as pd
-
+import json
 import sys
 
 sys.path.append("..")
-from utils.utils import masked_mae_loss, print_log, seed_everything
+from utils.utils import (
+    masked_mae_loss,
+    print_log,
+    seed_everything,
+    set_cpu_num,
+    CustomJSONEncoder,
+)
 from utils.metrics import RMSE_MAE_MAPE
 from utils.data_prepare import read_numpy, get_dataloaders, get_dataloaders_from_npz
 from model import model_select
@@ -57,13 +63,14 @@ def predict(model, loader):
     out = np.vstack(out).squeeze()  # (samples, out_steps, num_nodes)
     y = np.vstack(y).squeeze()
 
-    # out = SCALER.inverse_transform(out)
-    # y = SCALER.inverse_transform(y)
-
     return y, out
 
 
-def train_one_epoch(model, trainset_loader, optimizer, scheduler, criterion, clip_grad):
+def train_one_epoch(
+    model, trainset_loader, optimizer, scheduler, criterion, clip_grad, log=None
+):
+    global cfg, global_iter_count, global_target_length
+    
     model.train()
     batch_loss_list = []
     for x_batch, y_batch in trainset_loader:
@@ -72,7 +79,21 @@ def train_one_epoch(model, trainset_loader, optimizer, scheduler, criterion, cli
 
         out_batch = model(x_batch)
         out_batch = SCALER.inverse_transform(out_batch)
-        loss = criterion(out_batch, y_batch)
+
+        if cfg["use_cl"]:
+            if (
+                global_iter_count % cfg["cl_step_size"] == 0
+                and global_target_length < cfg["out_steps"]
+            ):
+                global_target_length += 1
+                print_log(f"CL target length = {global_target_length}", log=log)
+            loss = criterion(
+                out_batch[:, :global_target_length, ...],
+                y_batch[:, :global_target_length, ...],
+            )
+        else:
+            loss = criterion(out_batch, y_batch)
+
         batch_loss_list.append(loss.item())
 
         optimizer.zero_grad()
@@ -80,6 +101,8 @@ def train_one_epoch(model, trainset_loader, optimizer, scheduler, criterion, cli
         if clip_grad:
             torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad)
         optimizer.step()
+
+        global_iter_count += 1
 
     epoch_loss = np.mean(batch_loss_list)
     scheduler.step()
@@ -100,7 +123,7 @@ def train(
     compile_model=False,
     verbose=1,
     plot=False,
-    log="train.log",
+    log=None,
     save=None,
 ):
     if torch.__version__ >= "2.0.0" and compile_model:
@@ -115,7 +138,7 @@ def train(
 
     for epoch in range(max_epochs):
         train_loss = train_one_epoch(
-            model, trainset_loader, optimizer, scheduler, criterion, clip_grad
+            model, trainset_loader, optimizer, scheduler, criterion, clip_grad, log=log
         )
         train_loss_list.append(train_loss)
 
@@ -202,6 +225,7 @@ def test_model(model, testset_loader, log="train.log"):
 
 if __name__ == "__main__":
     seed_everything(233)
+    set_cpu_num(1)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
@@ -214,14 +238,6 @@ if __name__ == "__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = f"{GPU_ID}"
     DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    cpu_num = 1
-    os.environ["OMP_NUM_THREADS"] = str(cpu_num)
-    os.environ["OPENBLAS_NUM_THREADS"] = str(cpu_num)
-    os.environ["MKL_NUM_THREADS"] = str(cpu_num)
-    os.environ["VECLIB_MAXIMUM_THREADS"] = str(cpu_num)
-    os.environ["NUMEXPR_NUM_THREADS"] = str(cpu_num)
-    torch.set_num_threads(cpu_num)
-
     dataset = args.dataset
     dataset = dataset.upper()
     data_path = f"../data/{dataset}"
@@ -231,9 +247,6 @@ if __name__ == "__main__":
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
 
-    if cfg["load_adj"]:
-        adj = pd.read_csv(cfg["adj_path"]).values
-        cfg["model_args"]["adj"] = adj
     if cfg["pass_device"]:
         cfg["model_args"]["device"] = DEVICE
 
@@ -285,7 +298,9 @@ if __name__ == "__main__":
         criterion = masked_mae_loss
     else:
         criterion = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"], eps=1e-3)
+    optimizer = torch.optim.Adam(
+        model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"], eps=1e-8
+    )
     # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
     #     optimizer,
     #     mode="min",
@@ -303,7 +318,9 @@ if __name__ == "__main__":
     )
 
     print_log("---------", model._get_name(), "---------", log=log)
-    print_log(cfg, log=log)
+    print_log(
+        json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
+    )
     summary(
         model,
         [
@@ -314,6 +331,11 @@ if __name__ == "__main__":
         ],
     )
     print_log(log=log)
+
+    if cfg["use_cl"]:
+        global_iter_count = 1
+        global_target_length = 1
+        print_log(f"CL target length = {global_target_length}", log=log)
 
     model = train(
         model,

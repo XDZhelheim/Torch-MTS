@@ -5,13 +5,14 @@ METRLA:
   
   lr: 0.001
   weight_decay: 0.0001
-  milestones: [40]
+  milestones: [80]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
+  use_cl: True
+  cl_step_size: 2500
 
   load_npz: True
-  load_adj: False
   pass_device: True
 
   model_args:
