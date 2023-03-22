@@ -11,6 +11,7 @@ class StandardScaler:
     Standard the input
     https://github.com/nnzhan/Graph-WaveNet/blob/master/util.py
     """
+
     def __init__(self, mean=None, std=None):
         self.mean = mean
         self.std = std
@@ -26,6 +27,14 @@ class StandardScaler:
 
     def inverse_transform(self, data):
         return (data * self.std) + self.mean
+
+
+class MaskedMAELoss:
+    def __call__(self, preds, labels, null_val=0.0):
+        return masked_mae_loss(preds, labels, null_val)
+        
+    def _get_name(self):
+        return self.__class__.__name__
 
 
 def masked_mae_loss(preds, labels, null_val=0.0):
@@ -77,7 +86,8 @@ def seed_everything(seed):
     torch.cuda.manual_seed_all(seed)  # multi-GPU
     # torch.backends.cudnn.deterministic = True
     # torch.backends.cudnn.benchmark = False
-    
+
+
 def set_cpu_num(cpu_num: int):
     os.environ["OMP_NUM_THREADS"] = str(cpu_num)
     os.environ["OPENBLAS_NUM_THREADS"] = str(cpu_num)
@@ -85,7 +95,8 @@ def set_cpu_num(cpu_num: int):
     os.environ["VECLIB_MAXIMUM_THREADS"] = str(cpu_num)
     os.environ["NUMEXPR_NUM_THREADS"] = str(cpu_num)
     torch.set_num_threads(cpu_num)
-    
+
+
 class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.integer):

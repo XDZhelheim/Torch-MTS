@@ -8,7 +8,7 @@ from .utils import print_log, StandardScaler
 # ! X shape: (B, T, N, C)
 
 
-def read_df(data_path, file_type="pickle", transpose=False, log="train.log"):
+def read_df(data_path, file_type="pickle", transpose=False, log=None):
     """
     Returns
     ---
@@ -29,14 +29,19 @@ def read_df(data_path, file_type="pickle", transpose=False, log="train.log"):
     return data
 
 
-def read_numpy(data_path, transpose=False, log="train.log"):
+def read_numpy(data_path, transpose=False, log=None):
     """
     Returns
     ---
     X: (all_timesteps, num_nodes) numpy
     """
 
-    data = np.load(data_path).astype(np.float32)
+    if data_path.endswith("npy"):
+        data = np.load(data_path).astype(np.float32)
+    elif data_path.endswith("npz"):
+        data = np.load(data_path)["data"].astype(np.float32)
+    else:
+        raise TypeError("Unsupported file type.")
     if transpose:
         data = data.T
     print_log("Original data shape", data.shape, log=log)
@@ -91,7 +96,7 @@ def get_dataloaders(
     val_size=0.1,
     batch_size=32,
     with_embeddings=False,
-    log="train.log",
+    log=None,
 ):
     """
     Parameters
@@ -115,7 +120,7 @@ def get_dataloaders(
     x_train[..., 0] = scaler.transform(x_train[..., 0])
     x_val[..., 0] = scaler.transform(x_val[..., 0])
     x_test[..., 0] = scaler.transform(x_test[..., 0])
-    
+
     # ! do not transform y
     # y_train[..., 0] = scaler.transform(y_train[..., 0])
     # y_val[..., 0] = scaler.transform(y_val[..., 0])
@@ -149,7 +154,7 @@ def get_dataloaders(
 
 
 def get_dataloaders_from_npz(
-    data_path, batch_size=32, log="train.log",
+    data_path, batch_size=32, log=None,
 ):
     data = {}
     for category in ["train", "val", "test"]:
@@ -157,7 +162,9 @@ def get_dataloaders_from_npz(
         data["x_" + category] = cat_data["x"].astype(np.float32)
         data["y_" + category] = cat_data["y"].astype(np.float32)
 
-    print_log(f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log)
+    print_log(
+        f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log
+    )
     print_log(f"Valset:  \tx-{data['x_val'].shape}  \ty-{data['y_val'].shape}", log=log)
     print_log(f"Testset:\tx-{data['x_test'].shape}\ty-{data['y_test'].shape}", log=log)
 
@@ -170,7 +177,9 @@ def get_dataloaders_from_npz(
 
     for category in ["train", "val", "test"]:
         data["x_" + category] = torch.FloatTensor(data["x_" + category])
-        data["y_" + category] = torch.FloatTensor(data["y_" + category][..., :1])  # no time embedding
+        data["y_" + category] = torch.FloatTensor(
+            data["y_" + category][..., :1]
+        )  # no time embedding
 
     trainset = torch.utils.data.TensorDataset(data["x_train"], data["y_train"])
     valset = torch.utils.data.TensorDataset(data["x_val"], data["y_val"])

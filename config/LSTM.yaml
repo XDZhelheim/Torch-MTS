@@ -4,9 +4,9 @@ METRLA:
   out_steps: 12
   
   lr: 0.01
-  weight_decay: 0.0001
+  weight_decay: 0
   milestones: [10, 30]
-  clip_grad: 5
+  clip_grad: 0
   batch_size: 64
   max_epochs: 200
   use_cl: False
@@ -14,11 +14,35 @@ METRLA:
   load_npz: False
   with_embeddings: False
   
-  adj_path: null
   pass_device: False
 
   model_args:
     num_nodes: 207
+    in_steps: 12
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+  
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: False
+  
+  pass_device: False
+
+  model_args:
+    num_nodes: 325
     in_steps: 12
     out_steps: 12
     lstm_input_dim: 1

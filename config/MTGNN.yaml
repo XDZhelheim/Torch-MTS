@@ -38,4 +38,45 @@ METRLA:
     propalpha: 0.05
     tanhalpha: 3
     layer_norm_affline: True
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+  
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  use_cl: True
+  cl_step_size: 2500
+
+  load_npz: True
+  pass_device: True
+
+  model_args:
+    num_nodes: 325
+    in_dim: 2
+    seq_length: 12
+    out_dim: 12
+    device: null # will be updated
+    gcn_true: True
+    buildA_true: True
+    gcn_depth: 2
+    predefined_A: null
+    static_feat: null
+    dropout: 0.3
+    subgraph_size: 20 # topk
+    node_dim: 40
+    dilation_exponential: 1
+    conv_channels: 32
+    residual_channels: 32
+    skip_channels: 64
+    end_channels: 128
+    layers: 3
+    propalpha: 0.05
+    tanhalpha: 3
+    layer_norm_affline: True
     

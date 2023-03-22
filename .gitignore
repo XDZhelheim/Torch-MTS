@@ -129,5 +129,10 @@ dmypy.json
 
 temp*
 *.pt
-*.npz
 *_embedded.npy
+
+train.npz
+val.npz
+test.npz
+pems-bay.h5
+PEMSBAY.npy
