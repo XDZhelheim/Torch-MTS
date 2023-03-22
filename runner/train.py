@@ -13,7 +13,7 @@ import sys
 
 sys.path.append("..")
 from utils.utils import (
-    masked_mae_loss,
+    MaskedMAELoss,
     print_log,
     seed_everything,
     set_cpu_num,
@@ -91,6 +91,7 @@ def train_one_epoch(
                 out_batch[:, :global_target_length, ...],
                 y_batch[:, :global_target_length, ...],
             )
+            global_iter_count += 1
         else:
             loss = criterion(out_batch, y_batch)
 
@@ -101,8 +102,6 @@ def train_one_epoch(
         if clip_grad:
             torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad)
         optimizer.step()
-
-        global_iter_count += 1
 
     epoch_loss = np.mean(batch_loss_list)
     scheduler.step()
@@ -150,7 +149,7 @@ def train(
                 datetime.datetime.now(),
                 "Epoch",
                 epoch + 1,
-                "\tTrain Loss = %.5f" % train_loss,
+                " \tTrain Loss = %.5f" % train_loss,
                 "Val Loss = %.5f" % val_loss,
                 log=log,
             )
@@ -200,7 +199,7 @@ def train(
 
 
 @torch.no_grad()
-def test_model(model, testset_loader, log="train.log"):
+def test_model(model, testset_loader, log=None):
     model.eval()
     print_log("--------- Test ---------", log=log)
     y_true, y_pred = predict(model, testset_loader)
@@ -276,7 +275,7 @@ if __name__ == "__main__":
             )  #!!! (all_steps, num_nodes, 1+time_embedding_dim+node_embedding_dim)
         else:
             data = read_numpy(
-                os.path.join(data_path, f"{dataset}.npy"), log=log
+                os.path.join(data_path, f"{dataset}.npz"), log=log
             )  # (all_steps, num_nodes)
             data = data[..., np.newaxis]  # (all_steps, num_nodes, 1)
         trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders(
@@ -294,8 +293,8 @@ if __name__ == "__main__":
         os.makedirs(save_path)
     save = os.path.join(save_path, f"{model._get_name()}-{dataset}-{now}.pt")
 
-    if dataset == "METRLA":
-        criterion = masked_mae_loss
+    if dataset in ("METRLA", "PEMSBAY"):
+        criterion = MaskedMAELoss()
     else:
         criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(
@@ -330,6 +329,8 @@ if __name__ == "__main__":
             next(iter(trainset_loader))[0].shape[-1],
         ],
     )
+    print_log(log=log)
+    print_log(f"Loss: {criterion._get_name()}", log=log)
     print_log(log=log)
 
     if cfg["use_cl"]:
