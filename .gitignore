@@ -130,6 +130,7 @@ dmypy.json
 temp*
 *.pt
 *_embedded.npy
+*_embedded.npz
 
 train.npz
 val.npz

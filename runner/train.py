@@ -223,15 +223,17 @@ def test_model(model, testset_loader, log=None):
 
 
 if __name__ == "__main__":
-    seed_everything(233)
-    set_cpu_num(1)
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
     parser.add_argument("-m", "--model", type=str, default="LSTM")
     parser.add_argument("-g", "--gpu_num", type=int, default=1)
     parser.add_argument("-c", "--compile", action="store_true")
+    parser.add_argument("--seed", type=int, default=233)
+    parser.add_argument("--cpus", type=int, default=1)
     args = parser.parse_args()
+    
+    seed_everything(args.seed)
+    set_cpu_num(args.cpus)
 
     GPU_ID = args.gpu_num
     os.environ["CUDA_VISIBLE_DEVICES"] = f"{GPU_ID}"
@@ -271,7 +273,7 @@ if __name__ == "__main__":
     else:
         if cfg["with_embeddings"]:
             data = read_numpy(
-                os.path.join(data_path, f"{dataset}_embedded.npy"), log=log
+                os.path.join(data_path, f"{dataset}_embedded.npz"), log=log
             )  #!!! (all_steps, num_nodes, 1+time_embedding_dim+node_embedding_dim)
         else:
             data = read_numpy(

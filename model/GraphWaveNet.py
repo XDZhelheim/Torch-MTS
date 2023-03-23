@@ -131,7 +131,7 @@ class GWNET(nn.Module):
     def __init__(self, 
                  device, 
                  num_nodes, 
-                 dropout=0.0, 
+                 dropout=0.3, 
                  adj_path=None,
                  adj_type=None, 
                  gcn_bool=True, 

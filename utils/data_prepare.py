@@ -18,9 +18,10 @@ def read_df(data_path, file_type="pickle", transpose=False, log=None):
         data = pd.read_pickle(data_path)
     elif file_type == "csv":
         data = pd.read_csv(data_path)
+    elif file_type == "h5":
+        data = pd.read_hdf(data_path)
     else:
-        print("Invalid file type.")
-        sys.exit(1)
+        raise TypeError("Unsupported file type.")
 
     data = data.values.astype(np.float32)
     if transpose:

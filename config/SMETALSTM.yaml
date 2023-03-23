@@ -14,11 +14,36 @@ METRLA:
   load_npz: False
   with_embeddings: True
   
-  adj_path: null
   pass_device: False
 
   model_args:
     num_nodes: 207
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
+    s_embedding_dim: 64
+    learner_hidden_dim: 64
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+  
+  lr: 0.01
+  weight_decay: 0.0001
+  milestones: [10, 40]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: True
+  
+  pass_device: False
+
+  model_args:
+    num_nodes: 325
     out_steps: 12
     lstm_input_dim: 1
     lstm_hidden_dim: 64

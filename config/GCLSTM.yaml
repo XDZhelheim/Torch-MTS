@@ -26,4 +26,33 @@ METRLA:
     adj_path: "../data/METRLA/adj_mx.pkl"
     adj_type: "doubletransition"
     device: null # will be updated
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+  
+  lr: 0.01
+  weight_decay: 0.0001
+  milestones: [12, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: False
+  pass_device: True
+
+  model_args:
+    num_nodes: 325
+    input_dim: 1
+    output_dim: 1
+    horizon: 12
+    rnn_units: 64
+    num_layers: 1
+    cheb_k: 3
+    adj_path: "../data/METRLA/adj_mx.pkl"
+    adj_type: "doubletransition"
+    device: null # will be updated
     
