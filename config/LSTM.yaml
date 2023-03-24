@@ -2,6 +2,9 @@ METRLA:
   num_nodes: 207
   in_steps: 12
   out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
   
   lr: 0.01
   weight_decay: 0
@@ -27,6 +30,9 @@ PEMSBAY:
   num_nodes: 325
   in_steps: 12
   out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
   
   lr: 0.01
   weight_decay: 0
@@ -47,4 +53,116 @@ PEMSBAY:
     out_steps: 12
     lstm_input_dim: 1
     lstm_hidden_dim: 64
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
   
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: False
+  
+  pass_device: False
+
+  model_args:
+    num_nodes: 358
+    in_steps: 12
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: False
+  
+  pass_device: False
+
+  model_args:
+    num_nodes: 307
+    in_steps: 12
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: False
+  
+  pass_device: False
+
+  model_args:
+    num_nodes: 883
+    in_steps: 12
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  with_embeddings: False
+  
+  pass_device: False
+
+  model_args:
+    num_nodes: 170
+    in_steps: 12
+    out_steps: 12
+    lstm_input_dim: 1
+    lstm_hidden_dim: 64
+    

@@ -29,14 +29,6 @@ class StandardScaler:
         return (data * self.std) + self.mean
 
 
-class MaskedMAELoss:
-    def __call__(self, preds, labels, null_val=0.0):
-        return masked_mae_loss(preds, labels, null_val)
-        
-    def _get_name(self):
-        return self.__class__.__name__
-
-
 def masked_mae_loss(preds, labels, null_val=0.0):
     if np.isnan(null_val):
         mask = ~torch.isnan(labels)
@@ -49,6 +41,32 @@ def masked_mae_loss(preds, labels, null_val=0.0):
     loss = loss * mask
     loss = torch.where(torch.isnan(loss), torch.zeros_like(loss), loss)
     return torch.mean(loss)
+
+
+class MaskedMAELoss:
+    def _get_name(self):
+        return self.__class__.__name__
+
+    def __call__(self, preds, labels, null_val=0.0):
+        return masked_mae_loss(preds, labels, null_val)
+
+
+def masked_mae_loss_vDCRNN(y_pred, y_true):
+    mask = (y_true != 0).float()
+    mask /= mask.mean()
+    loss = torch.abs(y_pred - y_true)
+    loss = loss * mask
+    # trick for nans: https://discuss.pytorch.org/t/how-to-set-nan-in-tensor-to-0/3918/3
+    loss[loss != loss] = 0
+    return loss.mean()
+
+
+class MaskedMAELoss_vDCRNN:
+    def _get_name(self):
+        return self.__class__.__name__
+
+    def __call__(self, y_pred, y_true):
+        return masked_mae_loss_vDCRNN(y_pred, y_true)
 
 
 def onehot_decode(label):

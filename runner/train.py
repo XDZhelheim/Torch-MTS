@@ -70,7 +70,7 @@ def train_one_epoch(
     model, trainset_loader, optimizer, scheduler, criterion, clip_grad, log=None
 ):
     global cfg, global_iter_count, global_target_length
-    
+
     model.train()
     batch_loss_list = []
     for x_batch, y_batch in trainset_loader:
@@ -231,7 +231,7 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=233)
     parser.add_argument("--cpus", type=int, default=1)
     args = parser.parse_args()
-    
+
     seed_everything(args.seed)
     set_cpu_num(args.cpus)
 
@@ -279,11 +279,12 @@ if __name__ == "__main__":
             data = read_numpy(
                 os.path.join(data_path, f"{dataset}.npz"), log=log
             )  # (all_steps, num_nodes)
-            data = data[..., np.newaxis]  # (all_steps, num_nodes, 1)
         trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders(
             data,
             cfg["in_steps"],
             cfg["out_steps"],
+            train_size=cfg["train_size"],
+            val_size=cfg["val_size"],
             batch_size=cfg["batch_size"],
             with_embeddings=cfg["with_embeddings"],
             log=log,
@@ -297,23 +298,14 @@ if __name__ == "__main__":
 
     if dataset in ("METRLA", "PEMSBAY"):
         criterion = MaskedMAELoss()
+    elif dataset in ("PEMS03", "PEMS04", "PEMS07", "PEMS08"):
+        criterion = nn.HuberLoss()
     else:
-        criterion = nn.MSELoss()
+        raise KeyError("Unsupported dataset.")
+
     optimizer = torch.optim.Adam(
         model.parameters(), lr=cfg["lr"], weight_decay=cfg["weight_decay"], eps=1e-8
     )
-    # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    #     optimizer,
-    #     mode="min",
-    #     factor=0.1,
-    #     patience=15,
-    #     min_lr=1e-5,
-    #     # threshold=0.01,
-    #     # threshold_mode="abs",
-    #     threshold=0.05,
-    #     threshold_mode="rel",
-    #     verbose=True,
-    # )
     scheduler = torch.optim.lr_scheduler.MultiStepLR(
         optimizer, milestones=cfg["milestones"], gamma=0.1, verbose=False
     )
@@ -322,14 +314,18 @@ if __name__ == "__main__":
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
     )
-    summary(
-        model,
-        [
-            cfg["batch_size"],
-            cfg["in_steps"],
-            cfg["num_nodes"],
-            next(iter(trainset_loader))[0].shape[-1],
-        ],
+    print_log(
+        summary(
+            model,
+            [
+                cfg["batch_size"],
+                cfg["in_steps"],
+                cfg["num_nodes"],
+                next(iter(trainset_loader))[0].shape[-1],
+            ],
+            verbose=0,  # avoid print twice
+        ),
+        log=log,
     )
     print_log(log=log)
     print_log(f"Loss: {criterion._get_name()}", log=log)

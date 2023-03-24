@@ -104,6 +104,11 @@ def get_dataloaders(
     ---
     data: (all_timesteps, num_nodes, 1+time_embedding_dim or 1) numpy
     """
+    if data.ndim == 2:
+        data = data[:, :, np.newaxis]
+    elif data.shape[2] > 1:
+        data = data[..., :1]  # for PEMS04 and 08, only use traffic flow
+
     all_steps = data.shape[0]
     split1 = int(all_steps * train_size)
     split2 = int(all_steps * (train_size + val_size))

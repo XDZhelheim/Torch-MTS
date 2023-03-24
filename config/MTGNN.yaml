@@ -2,6 +2,9 @@ METRLA:
   num_nodes: 207
   in_steps: 12
   out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
   
   lr: 0.001
   weight_decay: 0.0001
@@ -43,6 +46,9 @@ PEMSBAY:
   num_nodes: 325
   in_steps: 12
   out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
   
   lr: 0.001
   weight_decay: 0.0001
