@@ -21,7 +21,7 @@ def read_df(data_path, file_type="pickle", transpose=False, log=None):
     elif file_type == "h5":
         data = pd.read_hdf(data_path)
     else:
-        raise TypeError("Unsupported file type.")
+        raise ValueError("Unsupported file type.")
 
     data = data.values.astype(np.float32)
     if transpose:
@@ -106,7 +106,7 @@ def get_dataloaders(
     """
     if data.ndim == 2:
         data = data[:, :, np.newaxis]
-    elif data.shape[2] > 1:
+    elif data.shape[2] > 1 and not with_embeddings:
         data = data[..., :1]  # for PEMS04 and 08, only use traffic flow
 
     all_steps = data.shape[0]

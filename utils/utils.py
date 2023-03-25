@@ -69,10 +69,6 @@ class MaskedMAELoss_vDCRNN:
         return masked_mae_loss_vDCRNN(y_pred, y_true)
 
 
-def onehot_decode(label):
-    return torch.argmax(label, dim=1)
-
-
 def print_log(*values, log=None, end="\n"):
     print(*values, end=end)
     if log:

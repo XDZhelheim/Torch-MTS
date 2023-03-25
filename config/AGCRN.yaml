@@ -6,25 +6,24 @@ METRLA:
   train_size: 0.7
   val_size: 0.1
   
-  lr: 0.01
-  weight_decay: 0.0001
-  milestones: [10, 30]
+  lr: 0.003
+  weight_decay: 0
+  milestones: [5, 20, 40, 70]
+  lr_decay_rate: 0.3
   clip_grad: False
   batch_size: 64
   max_epochs: 200
   use_cl: False
+  cl_step_size: 2500
 
   load_npz: False
-  with_embeddings: False
   
-  pass_device: False
-
   model_args:
     num_nodes: 207
     out_steps: 12
     input_dim: 1
     output_dim: 1
-    embed_dim: 8
+    embed_dim: 10
     rnn_units: 64
     num_layers: 2
     cheb_k: 2
@@ -56,7 +55,7 @@ PEMSBAY:
     out_steps: 12
     input_dim: 1
     output_dim: 1
-    embed_dim: 8
+    embed_dim: 10
     rnn_units: 64
     num_layers: 2
     cheb_k: 2

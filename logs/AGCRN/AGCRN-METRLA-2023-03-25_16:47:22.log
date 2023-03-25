@@ -1,0 +1,148 @@
+METRLA
+Original data shape (34272, 207)
+Trainset:	x-(23967, 12, 207, 1)	y-(23967, 12, 207, 1)
+Valset:  	x-(3404, 12, 207, 1)  	y-(3404, 12, 207, 1)
+Testset:	x-(6832, 12, 207, 1)	y-(6832, 12, 207, 1)
+
+--------- AGCRN ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "lr": 0.003,
+    "weight_decay": 0,
+    "milestones": [
+        5,
+        20,
+        40,
+        70
+    ],
+    "lr_decay_rate": 0.3,
+    "clip_grad": false,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "use_cl": false,
+    "cl_step_size": 2500,
+    "load_npz": false,
+    "model_args": {
+        "num_nodes": 207,
+        "out_steps": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "embed_dim": 10,
+        "rnn_units": 64,
+        "num_layers": 2,
+        "cheb_k": 2,
+        "default_graph": true
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+AGCRN                                    --                        --
+├─AVWDCRNN: 1                            --                        --
+│    └─ModuleList: 2-1                   --                        --
+├─AVWDCRNN: 1-1                          [64, 12, 207, 64]         --
+│    └─ModuleList: 2-1                   --                        --
+│    │    └─AGCRNCell: 3-1               [64, 207, 64]             251,520
+│    │    └─AGCRNCell: 3-2               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-3               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-4               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-5               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-6               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-7               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-8               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-9               [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-10              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-11              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-12              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-13              [64, 207, 64]             493,440
+│    │    └─AGCRNCell: 3-14              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-15              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-16              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-17              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-18              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-19              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-20              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-21              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-22              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-23              [64, 207, 64]             (recursive)
+│    │    └─AGCRNCell: 3-24              [64, 207, 64]             (recursive)
+├─Conv2d: 1-2                            [64, 12, 207, 1]          780
+==========================================================================================
+Total params: 745,740
+Trainable params: 745,740
+Non-trainable params: 0
+Total mult-adds (G): 118.44
+==========================================================================================
+Input size (MB): 0.64
+Forward/backward pass size (MB): 41.97
+Params size (MB): 2.98
+Estimated Total Size (MB): 45.59
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-03-25 16:48:06.581407 Epoch 1  	Train Loss = 4.64748 Val Loss = 3.61151
+2023-03-25 16:48:46.764652 Epoch 2  	Train Loss = 3.66897 Val Loss = 3.47456
+2023-03-25 16:49:26.863839 Epoch 3  	Train Loss = 3.53574 Val Loss = 3.31256
+2023-03-25 16:50:06.944805 Epoch 4  	Train Loss = 3.43296 Val Loss = 3.24562
+2023-03-25 16:50:47.086678 Epoch 5  	Train Loss = 3.35065 Val Loss = 3.17842
+2023-03-25 16:51:27.515835 Epoch 6  	Train Loss = 3.23921 Val Loss = 3.10941
+2023-03-25 16:52:07.619744 Epoch 7  	Train Loss = 3.20173 Val Loss = 3.08161
+2023-03-25 16:52:47.888146 Epoch 8  	Train Loss = 3.17721 Val Loss = 3.07784
+2023-03-25 16:53:27.930160 Epoch 9  	Train Loss = 3.15375 Val Loss = 3.07466
+2023-03-25 16:54:08.012281 Epoch 10  	Train Loss = 3.13314 Val Loss = 3.06496
+2023-03-25 16:54:48.282509 Epoch 11  	Train Loss = 3.11236 Val Loss = 3.04618
+2023-03-25 16:55:28.217781 Epoch 12  	Train Loss = 3.09696 Val Loss = 3.05572
+2023-03-25 16:56:08.402370 Epoch 13  	Train Loss = 3.08042 Val Loss = 3.04346
+2023-03-25 16:56:48.312418 Epoch 14  	Train Loss = 3.06327 Val Loss = 3.02290
+2023-03-25 16:57:28.274962 Epoch 15  	Train Loss = 3.04893 Val Loss = 3.01470
+2023-03-25 16:58:08.526457 Epoch 16  	Train Loss = 3.03548 Val Loss = 3.00442
+2023-03-25 16:58:48.344634 Epoch 17  	Train Loss = 3.02306 Val Loss = 3.01973
+2023-03-25 16:59:28.127342 Epoch 18  	Train Loss = 3.01211 Val Loss = 3.01881
+2023-03-25 17:00:08.214337 Epoch 19  	Train Loss = 2.99928 Val Loss = 3.01415
+2023-03-25 17:00:48.149256 Epoch 20  	Train Loss = 2.98909 Val Loss = 3.01016
+2023-03-25 17:01:28.348021 Epoch 21  	Train Loss = 2.94562 Val Loss = 2.99889
+2023-03-25 17:02:08.433953 Epoch 22  	Train Loss = 2.93559 Val Loss = 3.00231
+2023-03-25 17:02:48.461080 Epoch 23  	Train Loss = 2.93103 Val Loss = 2.99793
+2023-03-25 17:03:28.539506 Epoch 24  	Train Loss = 2.92701 Val Loss = 3.00914
+2023-03-25 17:04:08.609298 Epoch 25  	Train Loss = 2.92151 Val Loss = 2.99854
+2023-03-25 17:04:48.727507 Epoch 26  	Train Loss = 2.91777 Val Loss = 3.00169
+2023-03-25 17:05:28.756432 Epoch 27  	Train Loss = 2.91316 Val Loss = 3.00656
+2023-03-25 17:06:08.855821 Epoch 28  	Train Loss = 2.91000 Val Loss = 3.00997
+2023-03-25 17:06:48.887125 Epoch 29  	Train Loss = 2.90743 Val Loss = 2.99252
+2023-03-25 17:07:28.860123 Epoch 30  	Train Loss = 2.90352 Val Loss = 2.99313
+2023-03-25 17:08:08.749276 Epoch 31  	Train Loss = 2.89962 Val Loss = 2.98552
+2023-03-25 17:08:48.665879 Epoch 32  	Train Loss = 2.89518 Val Loss = 3.01647
+2023-03-25 17:09:29.040736 Epoch 33  	Train Loss = 2.89210 Val Loss = 2.99971
+2023-03-25 17:10:08.913424 Epoch 34  	Train Loss = 2.88984 Val Loss = 3.00037
+2023-03-25 17:10:48.883332 Epoch 35  	Train Loss = 2.88651 Val Loss = 3.00078
+2023-03-25 17:11:28.894205 Epoch 36  	Train Loss = 2.88291 Val Loss = 2.99520
+2023-03-25 17:12:08.949610 Epoch 37  	Train Loss = 2.88059 Val Loss = 3.00525
+2023-03-25 17:12:49.035617 Epoch 38  	Train Loss = 2.87709 Val Loss = 3.00175
+2023-03-25 17:13:29.214021 Epoch 39  	Train Loss = 2.87515 Val Loss = 2.99459
+2023-03-25 17:14:09.337279 Epoch 40  	Train Loss = 2.87233 Val Loss = 3.00423
+2023-03-25 17:14:49.291162 Epoch 41  	Train Loss = 2.85464 Val Loss = 2.99502
+Early stopping at epoch: 41
+Best at epoch 31:
+Train Loss = 2.89962
+Train RMSE = 5.70885, MAE = 2.85037, MAPE = 7.73056
+Val Loss = 2.98552
+Val RMSE = 6.41785, MAE = 3.05014, MAPE = 8.87297
+--------- Test ---------
+All Steps RMSE = 6.82730, MAE = 3.35585, MAPE = 9.44805
+Step 1 RMSE = 4.48196, MAE = 2.50622, MAPE = 6.45462
+Step 2 RMSE = 5.24346, MAE = 2.77393, MAPE = 7.33683
+Step 3 RMSE = 5.76751, MAE = 2.97469, MAPE = 8.05211
+Step 4 RMSE = 6.20098, MAE = 3.14552, MAPE = 8.68038
+Step 5 RMSE = 6.57889, MAE = 3.28593, MAPE = 9.20346
+Step 6 RMSE = 6.90245, MAE = 3.40410, MAPE = 9.63129
+Step 7 RMSE = 7.16222, MAE = 3.50120, MAPE = 9.98244
+Step 8 RMSE = 7.37876, MAE = 3.58480, MAPE = 10.28378
+Step 9 RMSE = 7.55723, MAE = 3.66050, MAPE = 10.55169
+Step 10 RMSE = 7.72123, MAE = 3.73465, MAPE = 10.80968
+Step 11 RMSE = 7.87960, MAE = 3.80925, MAPE = 11.06057
+Step 12 RMSE = 8.03501, MAE = 3.88957, MAPE = 11.33001

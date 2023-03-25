@@ -17,8 +17,6 @@ METRLA:
   load_npz: False
   with_embeddings: True
   
-  pass_device: False
-
   model_args:
     num_nodes: 207
     in_steps: 12

@@ -6,13 +6,14 @@ METRLA:
   train_size: 0.7
   val_size: 0.1
   
-  lr: 0.01
+  lr: 0.001
   weight_decay: 0.0001
-  milestones: [12, 50]
+  milestones: [80]
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  use_cl: False
+  use_cl: True
+  cl_step_size: 2500
 
   load_npz: False
   with_embeddings: False
