@@ -82,7 +82,12 @@ def calculate_scaled_laplacian(adj_mx, lambda_max=2, undirected=True):
 def load_adj(filepath, filetype, adjtype):
     print(filepath, filetype, adjtype)
     if filetype == "pkl":
-        sensor_ids, sensor_id_to_ind, adj_mx = load_pickle(filepath)
+        try:
+            # METRLA and PEMSBAY
+            _, _, adj_mx = load_pickle(filepath)
+        except ValueError:
+            # PEMS3478
+            adj_mx = load_pickle(filepath)
     elif filetype == "csv":
         adj_mx = pd.read_csv(filepath).values
     else:

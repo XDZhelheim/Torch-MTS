@@ -68,7 +68,13 @@ def calculate_scaled_laplacian(adj_mx, lambda_max=2, undirected=True):
     return L.astype(np.float32).todense()
 
 def load_adj(pkl_filename, adjtype):
-    sensor_ids, sensor_id_to_ind, adj_mx = load_pickle(pkl_filename)
+    try:
+        # METRLA and PEMSBAY
+        _, _, adj_mx = load_pickle(pkl_filename)
+    except ValueError:
+        # PEMS3478
+        adj_mx = load_pickle(pkl_filename)
+        
     if adjtype == "scalap":
         adj = [calculate_scaled_laplacian(adj_mx)]
     elif adjtype == "normlap":

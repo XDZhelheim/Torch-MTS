@@ -13,16 +13,16 @@ import json
 import sys
 
 sys.path.append("..")
-from utils.utils import (
+from lib.utils import (
     MaskedMAELoss,
     print_log,
     seed_everything,
     set_cpu_num,
     CustomJSONEncoder,
 )
-from utils.metrics import RMSE_MAE_MAPE
-from utils.data_prepare import read_numpy, get_dataloaders, get_dataloaders_from_npz
-from model import model_select
+from lib.metrics import RMSE_MAE_MAPE
+from lib.data_prepare import read_numpy, get_dataloaders, get_dataloaders_from_npz
+from models import model_select
 
 # ! X shape: (B, T, N, C)
 
@@ -203,11 +203,11 @@ def train(
 def test_model(model, testset_loader, log=None):
     model.eval()
     print_log("--------- Test ---------", log=log)
-    
+
     start = time.time()
     y_true, y_pred = predict(model, testset_loader)
     end = time.time()
-    
+
     rmse_all, mae_all, mape_all = RMSE_MAE_MAPE(y_true, y_pred)
     out_str = "All Steps RMSE = %.5f, MAE = %.5f, MAPE = %.5f\n" % (
         rmse_all,
@@ -225,14 +225,14 @@ def test_model(model, testset_loader, log=None):
         )
 
     print_log(out_str, log=log, end="")
-    print_log("Inference time: {:.2f}s" % (end - start), log=log)
+    print_log("Inference time: %.2f s" % (end - start), log=log)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
     parser.add_argument("-m", "--model", type=str, default="LSTM")
-    parser.add_argument("-g", "--gpu_num", type=int, default=1)
+    parser.add_argument("-g", "--gpu_num", type=int, default=0)
     parser.add_argument("-c", "--compile", action="store_true")
     parser.add_argument("--seed", type=int, default=233)
     parser.add_argument("--cpus", type=int, default=1)
@@ -250,7 +250,7 @@ if __name__ == "__main__":
     data_path = f"../data/{dataset}"
     model_name = args.model.upper()
 
-    with open(f"../config/{model_name}.yaml", "r") as f:
+    with open(f"../configs/{model_name}.yaml", "r") as f:
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
 
@@ -309,7 +309,7 @@ if __name__ == "__main__":
     elif dataset in ("PEMS03", "PEMS04", "PEMS07", "PEMS08"):
         criterion = nn.HuberLoss()
     else:
-        raise ValueError("Unsupported dataset.")
+        raise ValueError("Unsupported dataset.")  # acctually this line is not reachable
 
     optimizer = torch.optim.Adam(
         model.parameters(),
