@@ -86,7 +86,7 @@ PEMS03:
     num_nodes: 358
     in_dim: 1
     out_dim: 12
-    adj_path: null
+    adj_path: "../data/PEMS03/adj_PEMS03_distance.pkl"
     adj_type: "doubletransition"
     device: null # will be updated
     dropout: 0.3
@@ -105,9 +105,10 @@ PEMS04:
   lr: 0.001
   weight_decay: 0.0001
   milestones: [175]
+  early_stop: 15
   clip_grad: False
   batch_size: 64
-  max_epochs: 200
+  max_epochs: 500
   use_cl: True
   cl_step_size: 2500
 
@@ -118,7 +119,7 @@ PEMS04:
     num_nodes: 307
     in_dim: 1
     out_dim: 12
-    adj_path: null
+    adj_path: "../data/PEMS04/adj_PEMS04_distance.pkl"
     adj_type: "doubletransition"
     device: null # will be updated
     dropout: 0.3
@@ -150,7 +151,7 @@ PEMS07:
     num_nodes: 883
     in_dim: 1
     out_dim: 12
-    adj_path: null
+    adj_path: "../data/PEMS07/adj_PEMS07_distance.pkl"
     adj_type: "doubletransition"
     device: null # will be updated
     dropout: 0.3
@@ -169,6 +170,7 @@ PEMS08:
   lr: 0.001
   weight_decay: 0.0001
   milestones: [168]
+  early_stop: 15
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -182,7 +184,7 @@ PEMS08:
     num_nodes: 170
     in_dim: 1
     out_dim: 12
-    adj_path: null
+    adj_path: "../data/PEMS08/adj_PEMS08_distance.pkl"
     adj_type: "doubletransition"
     device: null # will be updated
     dropout: 0.3
