@@ -1,0 +1,115 @@
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.001
+  milestones: [60]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  pass_device: True
+
+  model_args:
+    num_nodes: 358
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.001
+  milestones: [60]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  pass_device: True
+
+  model_args:
+    num_nodes: 307
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.001
+  milestones: [60]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  pass_device: True
+
+  model_args:
+    num_nodes: 883
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.6
+  val_size: 0.2
+  
+  lr: 0.001
+  milestones: [60]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  load_npz: False
+  pass_device: True
+
+  model_args:
+    num_nodes: 170
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True

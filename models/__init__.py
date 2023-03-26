@@ -6,6 +6,7 @@ from .STMetaLSTM import STMetaLSTM
 from .SMetaLSTM import SMetaLSTM
 from .TMetaLSTM import TMetaLSTM
 from .GCLSTM import GCLSTM
+from .STWA import STWA
 
 
 def model_select(name):
@@ -27,6 +28,8 @@ def model_select(name):
         return TMetaLSTM
     elif name == "GCLSTM":
         return GCLSTM
+    elif name == "STWA":
+        return STWA
 
     else:
         raise NotImplementedError
