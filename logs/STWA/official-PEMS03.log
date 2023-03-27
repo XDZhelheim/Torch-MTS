@@ -1,0 +1,131 @@
+nohup: ignoring input
+Load PEMS3 Dataset shaped:  (26208, 358, 1) 1852.0 0.0 179.26076 136.0
+Normalize the dataset by Standard Normalization
+Train:  (15702, 12, 358, 1) (15702, 12, 358, 1)
+Val:  (5219, 12, 358, 1) (5219, 12, 358, 1)
+Test:  (5218, 12, 358, 1) (5218, 12, 358, 1)
+Y_true min 1.5258789e-05
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+Using DYNAMIC
+model initialization
+*****************Model Parameter*****************
+Total params num: 467236
+*****************Finish Parameter****************
+start training...
+Epoch: 001, Prediction Loss: 27.1625, Reconstruction Loss: 0.0000, KLD Loss: 9126.6516, Valid Loss: 19.3968, LR: 0.0010,  Training Time: 221.7358/epoch
+Epoch: 002, Prediction Loss: 18.7458, Reconstruction Loss: 0.0000, KLD Loss: 4507.1460, Valid Loss: 19.3184, LR: 0.0010,  Training Time: 225.3772/epoch
+Epoch: 003, Prediction Loss: 17.6985, Reconstruction Loss: 0.0000, KLD Loss: 2866.4374, Valid Loss: 17.3158, LR: 0.0010,  Training Time: 225.2749/epoch
+Epoch: 004, Prediction Loss: 16.9271, Reconstruction Loss: 0.0000, KLD Loss: 1966.6608, Valid Loss: 16.7400, LR: 0.0010,  Training Time: 225.6881/epoch
+Epoch: 005, Prediction Loss: 16.3292, Reconstruction Loss: 0.0000, KLD Loss: 1335.8236, Valid Loss: 16.3701, LR: 0.0010,  Training Time: 253.8351/epoch
+Epoch: 006, Prediction Loss: 15.8890, Reconstruction Loss: 0.0000, KLD Loss: 860.5982, Valid Loss: 16.4235, LR: 0.0010,  Training Time: 353.3773/epoch
+Epoch: 007, Prediction Loss: 15.3347, Reconstruction Loss: 0.0000, KLD Loss: 520.6257, Valid Loss: 16.1844, LR: 0.0010,  Training Time: 225.4865/epoch
+Epoch: 008, Prediction Loss: 14.8948, Reconstruction Loss: 0.0000, KLD Loss: 297.1885, Valid Loss: 15.8684, LR: 0.0010,  Training Time: 223.2520/epoch
+Epoch: 009, Prediction Loss: 14.6832, Reconstruction Loss: 0.0000, KLD Loss: 160.5320, Valid Loss: 15.0010, LR: 0.0010,  Training Time: 223.6927/epoch
+Epoch: 010, Prediction Loss: 14.4846, Reconstruction Loss: 0.0000, KLD Loss: 82.8302, Valid Loss: 15.1201, LR: 0.0010,  Training Time: 224.9634/epoch
+Epoch: 011, Prediction Loss: 14.3852, Reconstruction Loss: 0.0000, KLD Loss: 41.0599, Valid Loss: 14.9027, LR: 0.0010,  Training Time: 224.8757/epoch
+Epoch: 012, Prediction Loss: 14.2654, Reconstruction Loss: 0.0000, KLD Loss: 19.6702, Valid Loss: 14.7444, LR: 0.0010,  Training Time: 222.9588/epoch
+Epoch: 013, Prediction Loss: 14.1419, Reconstruction Loss: 0.0000, KLD Loss: 9.2684, Valid Loss: 14.8875, LR: 0.0010,  Training Time: 224.8033/epoch
+Epoch: 014, Prediction Loss: 14.0370, Reconstruction Loss: 0.0000, KLD Loss: 4.4364, Valid Loss: 14.9187, LR: 0.0010,  Training Time: 225.8320/epoch
+Epoch: 015, Prediction Loss: 14.0063, Reconstruction Loss: 0.0000, KLD Loss: 2.4844, Valid Loss: 14.7457, LR: 0.0010,  Training Time: 224.1366/epoch
+Epoch: 016, Prediction Loss: 13.9021, Reconstruction Loss: 0.0000, KLD Loss: 1.5933, Valid Loss: 14.8828, LR: 0.0010,  Training Time: 223.3120/epoch
+Epoch: 017, Prediction Loss: 13.9058, Reconstruction Loss: 0.0000, KLD Loss: 1.2424, Valid Loss: 14.8889, LR: 0.0010,  Training Time: 224.8693/epoch
+Epoch: 018, Prediction Loss: 13.8041, Reconstruction Loss: 0.0000, KLD Loss: 0.9845, Valid Loss: 14.6144, LR: 0.0010,  Training Time: 225.9157/epoch
+Epoch: 019, Prediction Loss: 13.7984, Reconstruction Loss: 0.0000, KLD Loss: 0.9197, Valid Loss: 14.5618, LR: 0.0010,  Training Time: 223.6813/epoch
+Epoch: 020, Prediction Loss: 13.6884, Reconstruction Loss: 0.0000, KLD Loss: 0.7235, Valid Loss: 14.5045, LR: 0.0010,  Training Time: 223.8790/epoch
+Epoch: 021, Prediction Loss: 13.7142, Reconstruction Loss: 0.0000, KLD Loss: 0.7318, Valid Loss: 14.5267, LR: 0.0010,  Training Time: 225.1947/epoch
+Epoch: 022, Prediction Loss: 13.6336, Reconstruction Loss: 0.0000, KLD Loss: 0.6046, Valid Loss: 14.4652, LR: 0.0010,  Training Time: 223.8422/epoch
+Epoch: 023, Prediction Loss: 13.6063, Reconstruction Loss: 0.0000, KLD Loss: 0.5366, Valid Loss: 14.5219, LR: 0.0010,  Training Time: 222.2922/epoch
+Epoch: 024, Prediction Loss: 13.5788, Reconstruction Loss: 0.0000, KLD Loss: 0.5651, Valid Loss: 14.3898, LR: 0.0010,  Training Time: 223.7050/epoch
+Epoch: 025, Prediction Loss: 13.5688, Reconstruction Loss: 0.0000, KLD Loss: 0.5429, Valid Loss: 14.4014, LR: 0.0010,  Training Time: 224.3828/epoch
+Epoch: 026, Prediction Loss: 13.5675, Reconstruction Loss: 0.0000, KLD Loss: 0.5622, Valid Loss: 14.7051, LR: 0.0010,  Training Time: 222.6648/epoch
+Epoch: 027, Prediction Loss: 13.4919, Reconstruction Loss: 0.0000, KLD Loss: 0.4785, Valid Loss: 14.3494, LR: 0.0010,  Training Time: 222.5378/epoch
+Epoch: 028, Prediction Loss: 13.4685, Reconstruction Loss: 0.0000, KLD Loss: 0.4635, Valid Loss: 14.5455, LR: 0.0010,  Training Time: 224.1171/epoch
+Epoch: 029, Prediction Loss: 13.4486, Reconstruction Loss: 0.0000, KLD Loss: 0.4615, Valid Loss: 14.4028, LR: 0.0010,  Training Time: 224.3115/epoch
+Epoch: 030, Prediction Loss: 13.4511, Reconstruction Loss: 0.0000, KLD Loss: 0.4545, Valid Loss: 14.3653, LR: 0.0010,  Training Time: 221.9742/epoch
+Epoch: 031, Prediction Loss: 13.3914, Reconstruction Loss: 0.0000, KLD Loss: 0.4069, Valid Loss: 14.4303, LR: 0.0010,  Training Time: 222.0161/epoch
+Epoch: 032, Prediction Loss: 13.3951, Reconstruction Loss: 0.0000, KLD Loss: 0.4390, Valid Loss: 14.3915, LR: 0.0010,  Training Time: 223.6992/epoch
+Epoch: 033, Prediction Loss: 13.3655, Reconstruction Loss: 0.0000, KLD Loss: 0.3827, Valid Loss: 14.3320, LR: 0.0010,  Training Time: 224.2252/epoch
+Epoch: 034, Prediction Loss: 13.3212, Reconstruction Loss: 0.0000, KLD Loss: 0.3619, Valid Loss: 14.4624, LR: 0.0010,  Training Time: 222.9825/epoch
+Epoch: 035, Prediction Loss: 13.3524, Reconstruction Loss: 0.0000, KLD Loss: 0.3747, Valid Loss: 14.3938, LR: 0.0010,  Training Time: 223.1975/epoch
+Epoch: 036, Prediction Loss: 13.3029, Reconstruction Loss: 0.0000, KLD Loss: 0.3488, Valid Loss: 14.2647, LR: 0.0010,  Training Time: 224.8860/epoch
+Epoch: 037, Prediction Loss: 13.2718, Reconstruction Loss: 0.0000, KLD Loss: 0.3556, Valid Loss: 14.2517, LR: 0.0010,  Training Time: 223.5043/epoch
+Epoch: 038, Prediction Loss: 13.2957, Reconstruction Loss: 0.0000, KLD Loss: 0.3613, Valid Loss: 14.1715, LR: 0.0010,  Training Time: 222.8151/epoch
+Epoch: 039, Prediction Loss: 13.2842, Reconstruction Loss: 0.0000, KLD Loss: 0.3292, Valid Loss: 14.3969, LR: 0.0010,  Training Time: 223.6520/epoch
+Epoch: 040, Prediction Loss: 13.2599, Reconstruction Loss: 0.0000, KLD Loss: 0.3336, Valid Loss: 14.3790, LR: 0.0010,  Training Time: 224.8865/epoch
+Epoch: 041, Prediction Loss: 13.2402, Reconstruction Loss: 0.0000, KLD Loss: 0.3394, Valid Loss: 14.1944, LR: 0.0010,  Training Time: 222.8540/epoch
+Epoch: 042, Prediction Loss: 13.2331, Reconstruction Loss: 0.0000, KLD Loss: 0.3259, Valid Loss: 14.3018, LR: 0.0010,  Training Time: 223.5193/epoch
+Epoch: 043, Prediction Loss: 13.1963, Reconstruction Loss: 0.0000, KLD Loss: 0.2809, Valid Loss: 14.2789, LR: 0.0010,  Training Time: 224.3414/epoch
+Epoch: 044, Prediction Loss: 13.2054, Reconstruction Loss: 0.0000, KLD Loss: 0.2886, Valid Loss: 14.4460, LR: 0.0010,  Training Time: 223.8478/epoch
+Epoch: 045, Prediction Loss: 13.1990, Reconstruction Loss: 0.0000, KLD Loss: 0.2687, Valid Loss: 14.4205, LR: 0.0010,  Training Time: 223.0451/epoch
+Epoch: 046, Prediction Loss: 13.1848, Reconstruction Loss: 0.0000, KLD Loss: 0.2928, Valid Loss: 14.4701, LR: 0.0010,  Training Time: 223.2899/epoch
+Epoch: 047, Prediction Loss: 13.1992, Reconstruction Loss: 0.0000, KLD Loss: 0.3083, Valid Loss: 14.3417, LR: 0.0010,  Training Time: 222.4077/epoch
+Epoch: 048, Prediction Loss: 13.1173, Reconstruction Loss: 0.0000, KLD Loss: 0.2566, Valid Loss: 14.3756, LR: 0.0010,  Training Time: 223.3139/epoch
+Epoch: 049, Prediction Loss: 13.1462, Reconstruction Loss: 0.0000, KLD Loss: 0.2604, Valid Loss: 15.0552, LR: 0.0010,  Training Time: 224.0222/epoch
+Epoch: 050, Prediction Loss: 13.1230, Reconstruction Loss: 0.0000, KLD Loss: 0.2986, Valid Loss: 14.2653, LR: 0.0010,  Training Time: 222.2489/epoch
+Epoch: 051, Prediction Loss: 13.1193, Reconstruction Loss: 0.0000, KLD Loss: 0.2762, Valid Loss: 14.1540, LR: 0.0010,  Training Time: 222.7854/epoch
+Epoch: 052, Prediction Loss: 13.1014, Reconstruction Loss: 0.0000, KLD Loss: 0.2768, Valid Loss: 14.2684, LR: 0.0010,  Training Time: 224.1044/epoch
+Epoch: 053, Prediction Loss: 13.1284, Reconstruction Loss: 0.0000, KLD Loss: 0.3045, Valid Loss: 14.2412, LR: 0.0010,  Training Time: 224.0314/epoch
+Epoch: 054, Prediction Loss: 13.0918, Reconstruction Loss: 0.0000, KLD Loss: 0.2487, Valid Loss: 14.3031, LR: 0.0010,  Training Time: 222.7292/epoch
+Epoch: 055, Prediction Loss: 13.0567, Reconstruction Loss: 0.0000, KLD Loss: 0.2138, Valid Loss: 14.1382, LR: 0.0010,  Training Time: 224.0571/epoch
+Epoch: 056, Prediction Loss: 13.1146, Reconstruction Loss: 0.0000, KLD Loss: 0.2867, Valid Loss: 14.2469, LR: 0.0010,  Training Time: 224.6913/epoch
+Epoch: 057, Prediction Loss: 13.0395, Reconstruction Loss: 0.0000, KLD Loss: 0.2366, Valid Loss: 14.2177, LR: 0.0010,  Training Time: 222.7385/epoch
+Epoch: 058, Prediction Loss: 13.0857, Reconstruction Loss: 0.0000, KLD Loss: 0.2476, Valid Loss: 14.2137, LR: 0.0010,  Training Time: 222.8585/epoch
+Epoch: 059, Prediction Loss: 13.0127, Reconstruction Loss: 0.0000, KLD Loss: 0.1919, Valid Loss: 14.1805, LR: 0.0010,  Training Time: 224.4720/epoch
+Epoch: 060, Prediction Loss: 13.0461, Reconstruction Loss: 0.0000, KLD Loss: 0.2239, Valid Loss: 14.1320, LR: 0.0010,  Training Time: 224.4190/epoch
+Epoch: 061, Prediction Loss: 13.0162, Reconstruction Loss: 0.0000, KLD Loss: 0.1913, Valid Loss: 14.3371, LR: 0.0010,  Training Time: 222.0901/epoch
+Epoch: 062, Prediction Loss: 13.0496, Reconstruction Loss: 0.0000, KLD Loss: 0.2271, Valid Loss: 14.2074, LR: 0.0010,  Training Time: 222.9800/epoch
+Epoch: 063, Prediction Loss: 13.0122, Reconstruction Loss: 0.0000, KLD Loss: 0.2010, Valid Loss: 14.3531, LR: 0.0010,  Training Time: 225.0229/epoch
+Epoch: 064, Prediction Loss: 13.0145, Reconstruction Loss: 0.0000, KLD Loss: 0.2220, Valid Loss: 14.2127, LR: 0.0010,  Training Time: 223.6227/epoch
+Epoch: 065, Prediction Loss: 13.0014, Reconstruction Loss: 0.0000, KLD Loss: 0.1983, Valid Loss: 14.2171, LR: 0.0010,  Training Time: 222.5097/epoch
+Epoch: 066, Prediction Loss: 12.9875, Reconstruction Loss: 0.0000, KLD Loss: 0.1910, Valid Loss: 14.2057, LR: 0.0010,  Training Time: 224.1760/epoch
+Epoch: 067, Prediction Loss: 12.9806, Reconstruction Loss: 0.0000, KLD Loss: 0.1864, Valid Loss: 14.2440, LR: 0.0010,  Training Time: 225.0455/epoch
+Epoch: 068, Prediction Loss: 12.9750, Reconstruction Loss: 0.0000, KLD Loss: 0.2202, Valid Loss: 14.4833, LR: 0.0010,  Training Time: 223.3580/epoch
+Epoch: 069, Prediction Loss: 12.9954, Reconstruction Loss: 0.0000, KLD Loss: 0.1906, Valid Loss: 14.1113, LR: 0.0010,  Training Time: 223.0913/epoch
+Epoch: 070, Prediction Loss: 12.9734, Reconstruction Loss: 0.0000, KLD Loss: 0.1955, Valid Loss: 14.2223, LR: 0.0010,  Training Time: 225.2789/epoch
+Epoch: 071, Prediction Loss: 12.9581, Reconstruction Loss: 0.0000, KLD Loss: 0.1834, Valid Loss: 14.2283, LR: 0.0010,  Training Time: 224.6677/epoch
+Epoch: 072, Prediction Loss: 12.9441, Reconstruction Loss: 0.0000, KLD Loss: 0.1892, Valid Loss: 14.1096, LR: 0.0010,  Training Time: 224.3473/epoch
+Epoch: 073, Prediction Loss: 12.9291, Reconstruction Loss: 0.0000, KLD Loss: 0.1758, Valid Loss: 14.3279, LR: 0.0010,  Training Time: 223.9638/epoch
+Epoch: 074, Prediction Loss: 12.9682, Reconstruction Loss: 0.0000, KLD Loss: 0.2286, Valid Loss: 14.1975, LR: 0.0010,  Training Time: 225.3115/epoch
+Epoch: 075, Prediction Loss: 12.9385, Reconstruction Loss: 0.0000, KLD Loss: 0.1837, Valid Loss: 14.1587, LR: 0.0010,  Training Time: 223.1772/epoch
+Epoch: 076, Prediction Loss: 12.9389, Reconstruction Loss: 0.0000, KLD Loss: 0.1853, Valid Loss: 14.1766, LR: 0.0010,  Training Time: 222.9093/epoch
+Epoch: 077, Prediction Loss: 12.9200, Reconstruction Loss: 0.0000, KLD Loss: 0.1744, Valid Loss: 14.2048, LR: 0.0010,  Training Time: 223.2837/epoch
+Epoch: 078, Prediction Loss: 12.9192, Reconstruction Loss: 0.0000, KLD Loss: 0.1607, Valid Loss: 14.4034, LR: 0.0010,  Training Time: 224.7599/epoch
+Epoch: 079, Prediction Loss: 12.9199, Reconstruction Loss: 0.0000, KLD Loss: 0.1834, Valid Loss: 14.1453, LR: 0.0010,  Training Time: 223.5088/epoch
+Epoch: 080, Prediction Loss: 12.8986, Reconstruction Loss: 0.0000, KLD Loss: 0.1828, Valid Loss: 14.2571, LR: 0.0010,  Training Time: 223.6746/epoch
+Epoch: 081, Prediction Loss: 12.8986, Reconstruction Loss: 0.0000, KLD Loss: 0.1605, Valid Loss: 14.4759, LR: 0.0010,  Training Time: 225.1857/epoch
+Epoch: 082, Prediction Loss: 12.9179, Reconstruction Loss: 0.0000, KLD Loss: 0.1961, Valid Loss: 14.2313, LR: 0.0010,  Training Time: 225.0423/epoch
+Epoch: 083, Prediction Loss: 12.9048, Reconstruction Loss: 0.0000, KLD Loss: 0.1866, Valid Loss: 14.1894, LR: 0.0010,  Training Time: 224.0506/epoch
+Epoch: 084, Prediction Loss: 12.8824, Reconstruction Loss: 0.0000, KLD Loss: 0.1722, Valid Loss: 14.1704, LR: 0.0010,  Training Time: 223.6154/epoch
+Epoch: 085, Prediction Loss: 12.8833, Reconstruction Loss: 0.0000, KLD Loss: 0.1594, Valid Loss: 14.1412, LR: 0.0010,  Training Time: 225.6657/epoch
+Epoch: 086, Prediction Loss: 12.8759, Reconstruction Loss: 0.0000, KLD Loss: 0.1761, Valid Loss: 14.1978, LR: 0.0010,  Training Time: 223.7961/epoch
+Epoch: 087, Prediction Loss: 12.8680, Reconstruction Loss: 0.0000, KLD Loss: 0.1811, Valid Loss: 14.3313, LR: 0.0010,  Training Time: 223.2749/epoch
+/home/cseadmin/dz/anaconda3/envs/torch1.11/lib/python3.8/site-packages/torch/nn/functional.py:1933: UserWarning: nn.functional.tanh is deprecated. Use torch.tanh instead.
+  warnings.warn("nn.functional.tanh is deprecated. Use torch.tanh instead.")
+Validation performance didn't improve for 15 epochs. Training stops.
+Average Training Time: 225.6899 secs/epoch
+Average Inference Time: 16.3643 secs
+Best iteration: 72.0000 secs
+Horizon 01, MAE: 14.17, RMSE: 24.82, MAPE: 347298.0312%
+Horizon 02, MAE: 14.59, RMSE: 25.69, MAPE: 367637.7188%
+Horizon 03, MAE: 14.95, RMSE: 26.41, MAPE: 393710.9062%
+Horizon 04, MAE: 15.35, RMSE: 27.11, MAPE: 428610.3438%
+Horizon 05, MAE: 15.72, RMSE: 27.71, MAPE: 425038.8125%
+Horizon 06, MAE: 15.92, RMSE: 28.04, MAPE: 454392.5312%
+Horizon 07, MAE: 16.12, RMSE: 28.32, MAPE: 473321.0312%
+Horizon 08, MAE: 16.28, RMSE: 28.55, MAPE: 502486.2188%
+Horizon 09, MAE: 16.45, RMSE: 28.83, MAPE: 482537.3438%
+Horizon 10, MAE: 16.71, RMSE: 29.18, MAPE: 498736.0312%
+Horizon 11, MAE: 17.17, RMSE: 29.80, MAPE: 498555.2812%
+Horizon 12, MAE: 17.56, RMSE: 30.31, MAPE: 520500.5000%
+Average Horizon, MAE: 15.91, RMSE: 27.94, MAPE: 449401.9375%
+Total time spent: 21080.8455
