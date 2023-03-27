@@ -7,7 +7,7 @@ PEMS03:
   val_size: 0.2
   
   lr: 0.001
-  milestones: [60]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -36,7 +36,7 @@ PEMS04:
   val_size: 0.2
   
   lr: 0.001
-  milestones: [60]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -65,7 +65,7 @@ PEMS07:
   val_size: 0.2
   
   lr: 0.001
-  milestones: [60]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -94,7 +94,7 @@ PEMS08:
   val_size: 0.2
   
   lr: 0.001
-  milestones: [60]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200

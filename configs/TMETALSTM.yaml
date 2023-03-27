@@ -6,9 +6,9 @@ METRLA:
   train_size: 0.7
   val_size: 0.1
   
-  lr: 0.01
-  weight_decay: 0.0001
-  milestones: [5, 20]
+  lr: 0.001
+  weight_decay: 0
+  milestones: [10, 30]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -17,8 +17,6 @@ METRLA:
   load_npz: False
   with_embeddings: True
   
-  pass_device: False
-
   model_args:
     num_nodes: 207
     out_steps: 12
@@ -35,9 +33,9 @@ PEMSBAY:
   train_size: 0.7
   val_size: 0.1
   
-  lr: 0.01
-  weight_decay: 0.0001
-  milestones: [5, 20]
+  lr: 0.001
+  weight_decay: 0
+  milestones: [10, 30]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -46,8 +44,6 @@ PEMSBAY:
   load_npz: False
   with_embeddings: True
   
-  pass_device: False
-
   model_args:
     num_nodes: 325
     out_steps: 12

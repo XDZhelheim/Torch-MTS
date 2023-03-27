@@ -1,0 +1,173 @@
+METRLA
+Original data shape (34272, 207, 97)
+Trainset:	x-(23967, 12, 207, 97)	y-(23967, 12, 207, 1)
+Valset:  	x-(3404, 12, 207, 97)  	y-(3404, 12, 207, 1)
+Testset:	x-(6832, 12, 207, 97)	y-(6832, 12, 207, 1)
+
+--------- SMetaLSTM ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "lr": 0.001,
+    "weight_decay": 0,
+    "milestones": [
+        10,
+        40
+    ],
+    "clip_grad": false,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "use_cl": false,
+    "load_npz": false,
+    "with_embeddings": true,
+    "model_args": {
+        "num_nodes": 207,
+        "out_steps": 12,
+        "lstm_input_dim": 1,
+        "lstm_hidden_dim": 64,
+        "s_embedding_dim": 64,
+        "learner_hidden_dim": 64
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+SMetaLSTM                                [64, 12, 207, 1]          --
+├─ModuleList: 1-10                       --                        (recursive)
+│    └─Sequential: 2-1                   [207, 64]                 --
+│    │    └─Linear: 3-1                  [207, 64]                 4,160
+│    │    └─ReLU: 3-2                    [207, 64]                 --
+│    │    └─Linear: 3-3                  [207, 64]                 4,160
+├─ModuleList: 1-11                       --                        (recursive)
+│    └─Sequential: 2-2                   [207, 4096]               --
+│    │    └─Linear: 3-4                  [207, 64]                 4,160
+│    │    └─ReLU: 3-5                    [207, 64]                 --
+│    │    └─Linear: 3-6                  [207, 4096]               266,240
+├─ModuleList: 1-12                       --                        (recursive)
+│    └─Sequential: 2-3                   [207, 64]                 --
+│    │    └─Linear: 3-7                  [207, 64]                 4,160
+│    │    └─ReLU: 3-8                    [207, 64]                 --
+│    │    └─Linear: 3-9                  [207, 64]                 4,160
+├─ModuleList: 1-10                       --                        (recursive)
+│    └─Sequential: 2-4                   [207, 64]                 --
+│    │    └─Linear: 3-10                 [207, 64]                 4,160
+│    │    └─ReLU: 3-11                   [207, 64]                 --
+│    │    └─Linear: 3-12                 [207, 64]                 4,160
+├─ModuleList: 1-11                       --                        (recursive)
+│    └─Sequential: 2-5                   [207, 4096]               --
+│    │    └─Linear: 3-13                 [207, 64]                 4,160
+│    │    └─ReLU: 3-14                   [207, 64]                 --
+│    │    └─Linear: 3-15                 [207, 4096]               266,240
+├─ModuleList: 1-12                       --                        (recursive)
+│    └─Sequential: 2-6                   [207, 64]                 --
+│    │    └─Linear: 3-16                 [207, 64]                 4,160
+│    │    └─ReLU: 3-17                   [207, 64]                 --
+│    │    └─Linear: 3-18                 [207, 64]                 4,160
+├─ModuleList: 1-10                       --                        (recursive)
+│    └─Sequential: 2-7                   [207, 64]                 --
+│    │    └─Linear: 3-19                 [207, 64]                 4,160
+│    │    └─ReLU: 3-20                   [207, 64]                 --
+│    │    └─Linear: 3-21                 [207, 64]                 4,160
+├─ModuleList: 1-11                       --                        (recursive)
+│    └─Sequential: 2-8                   [207, 4096]               --
+│    │    └─Linear: 3-22                 [207, 64]                 4,160
+│    │    └─ReLU: 3-23                   [207, 64]                 --
+│    │    └─Linear: 3-24                 [207, 4096]               266,240
+├─ModuleList: 1-12                       --                        (recursive)
+│    └─Sequential: 2-9                   [207, 64]                 --
+│    │    └─Linear: 3-25                 [207, 64]                 4,160
+│    │    └─ReLU: 3-26                   [207, 64]                 --
+│    │    └─Linear: 3-27                 [207, 64]                 4,160
+├─ModuleList: 1-10                       --                        (recursive)
+│    └─Sequential: 2-10                  [207, 64]                 --
+│    │    └─Linear: 3-28                 [207, 64]                 4,160
+│    │    └─ReLU: 3-29                   [207, 64]                 --
+│    │    └─Linear: 3-30                 [207, 64]                 4,160
+├─ModuleList: 1-11                       --                        (recursive)
+│    └─Sequential: 2-11                  [207, 4096]               --
+│    │    └─Linear: 3-31                 [207, 64]                 4,160
+│    │    └─ReLU: 3-32                   [207, 64]                 --
+│    │    └─Linear: 3-33                 [207, 4096]               266,240
+├─ModuleList: 1-12                       --                        (recursive)
+│    └─Sequential: 2-12                  [207, 64]                 --
+│    │    └─Linear: 3-34                 [207, 64]                 4,160
+│    │    └─ReLU: 3-35                   [207, 64]                 --
+│    │    └─Linear: 3-36                 [207, 64]                 4,160
+├─Sequential: 1-13                       [64, 207, 12]             --
+│    └─ReLU: 2-13                        [64, 207, 64]             --
+│    └─Linear: 2-14                      [64, 207, 32]             2,080
+│    └─ReLU: 2-15                        [64, 207, 32]             --
+│    └─Linear: 2-16                      [64, 207, 12]             396
+==========================================================================================
+Total params: 1,150,636
+Trainable params: 1,150,636
+Non-trainable params: 0
+Total mult-adds (M): 237.83
+==========================================================================================
+Input size (MB): 61.68
+Forward/backward pass size (MB): 33.91
+Params size (MB): 4.60
+Estimated Total Size (MB): 100.20
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-03-26 20:45:36.863098 Epoch 1  	Train Loss = 4.22696 Val Loss = 3.36145
+2023-03-26 20:46:17.784671 Epoch 2  	Train Loss = 3.57042 Val Loss = 3.32413
+2023-03-26 20:46:56.754924 Epoch 3  	Train Loss = 3.52405 Val Loss = 3.34857
+2023-03-26 20:47:37.715527 Epoch 4  	Train Loss = 3.49605 Val Loss = 3.26891
+2023-03-26 20:48:16.892418 Epoch 5  	Train Loss = 3.47876 Val Loss = 3.27405
+2023-03-26 20:48:55.667346 Epoch 6  	Train Loss = 3.46785 Val Loss = 3.25259
+2023-03-26 20:49:37.618857 Epoch 7  	Train Loss = 3.45133 Val Loss = 3.23544
+2023-03-26 20:50:17.012474 Epoch 8  	Train Loss = 3.44274 Val Loss = 3.23628
+2023-03-26 20:50:58.007156 Epoch 9  	Train Loss = 3.43600 Val Loss = 3.23121
+2023-03-26 20:51:40.697573 Epoch 10  	Train Loss = 3.42386 Val Loss = 3.22403
+2023-03-26 20:52:21.038070 Epoch 11  	Train Loss = 3.39205 Val Loss = 3.20875
+2023-03-26 20:53:00.874765 Epoch 12  	Train Loss = 3.38679 Val Loss = 3.21443
+2023-03-26 20:53:42.613368 Epoch 13  	Train Loss = 3.38432 Val Loss = 3.21339
+2023-03-26 20:54:26.340067 Epoch 14  	Train Loss = 3.38195 Val Loss = 3.21123
+2023-03-26 20:55:09.327057 Epoch 15  	Train Loss = 3.37993 Val Loss = 3.20706
+2023-03-26 20:55:52.375425 Epoch 16  	Train Loss = 3.37872 Val Loss = 3.21030
+2023-03-26 20:56:34.277733 Epoch 17  	Train Loss = 3.37636 Val Loss = 3.21934
+2023-03-26 20:57:15.421854 Epoch 18  	Train Loss = 3.37536 Val Loss = 3.21488
+2023-03-26 20:57:53.468837 Epoch 19  	Train Loss = 3.37231 Val Loss = 3.20974
+2023-03-26 20:58:31.720381 Epoch 20  	Train Loss = 3.37156 Val Loss = 3.20786
+2023-03-26 20:59:10.519792 Epoch 21  	Train Loss = 3.36889 Val Loss = 3.22005
+2023-03-26 20:59:51.685122 Epoch 22  	Train Loss = 3.36743 Val Loss = 3.21333
+2023-03-26 21:00:29.971492 Epoch 23  	Train Loss = 3.36626 Val Loss = 3.20925
+2023-03-26 21:01:08.174076 Epoch 24  	Train Loss = 3.36463 Val Loss = 3.21094
+2023-03-26 21:01:48.020736 Epoch 25  	Train Loss = 3.36279 Val Loss = 3.20632
+2023-03-26 21:02:29.777362 Epoch 26  	Train Loss = 3.36093 Val Loss = 3.20859
+2023-03-26 21:03:10.428290 Epoch 27  	Train Loss = 3.35909 Val Loss = 3.22002
+2023-03-26 21:03:50.860680 Epoch 28  	Train Loss = 3.35834 Val Loss = 3.20788
+2023-03-26 21:04:29.267378 Epoch 29  	Train Loss = 3.35595 Val Loss = 3.21051
+2023-03-26 21:05:07.514178 Epoch 30  	Train Loss = 3.35494 Val Loss = 3.21388
+2023-03-26 21:05:48.817009 Epoch 31  	Train Loss = 3.35299 Val Loss = 3.21130
+2023-03-26 21:06:28.531469 Epoch 32  	Train Loss = 3.35242 Val Loss = 3.20758
+2023-03-26 21:07:09.624295 Epoch 33  	Train Loss = 3.35025 Val Loss = 3.21069
+2023-03-26 21:07:50.176465 Epoch 34  	Train Loss = 3.34894 Val Loss = 3.21304
+2023-03-26 21:08:30.487825 Epoch 35  	Train Loss = 3.34683 Val Loss = 3.21032
+Early stopping at epoch: 35
+Best at epoch 25:
+Train Loss = 3.36279
+Train RMSE = 6.94445, MAE = 3.34187, MAPE = 9.33011
+Val Loss = 3.20632
+Val RMSE = 6.98149, MAE = 3.27387, MAPE = 9.56031
+--------- Test ---------
+All Steps RMSE = 7.50521, MAE = 3.62398, MAPE = 10.51436
+Step 1 RMSE = 4.28455, MAE = 2.40581, MAPE = 5.98802
+Step 2 RMSE = 5.27174, MAE = 2.74276, MAPE = 7.14703
+Step 3 RMSE = 5.96306, MAE = 3.00081, MAPE = 8.06570
+Step 4 RMSE = 6.52578, MAE = 3.22704, MAPE = 8.91498
+Step 5 RMSE = 7.00059, MAE = 3.43100, MAPE = 9.72777
+Step 6 RMSE = 7.43619, MAE = 3.62243, MAPE = 10.49338
+Step 7 RMSE = 7.83765, MAE = 3.79977, MAPE = 11.19392
+Step 8 RMSE = 8.20478, MAE = 3.96288, MAPE = 11.84822
+Step 9 RMSE = 8.51753, MAE = 4.11367, MAPE = 12.41632
+Step 10 RMSE = 8.79304, MAE = 4.25668, MAPE = 12.93409
+Step 11 RMSE = 9.05852, MAE = 4.39399, MAPE = 13.46750
+Step 12 RMSE = 9.30994, MAE = 4.53096, MAPE = 13.97595
+Inference time: 5.96 s
