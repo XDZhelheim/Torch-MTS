@@ -8,7 +8,7 @@ METRLA:
   
   lr: 0.01
   weight_decay: 0
-  milestones: [10, 30]
+  milestones: [10, 20]
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
@@ -23,8 +23,11 @@ METRLA:
     num_nodes: 207
     in_steps: 12
     out_steps: 12
-    lstm_input_dim: 1
+    input_dim: 1
+    output_dim: 1
     lstm_hidden_dim: 64
+    num_layers: 3
+    seq2seq: True
 
 PEMSBAY:
   num_nodes: 325
@@ -36,7 +39,7 @@ PEMSBAY:
   
   lr: 0.01
   weight_decay: 0
-  milestones: [10, 30]
+  milestones: [10, 20]
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
@@ -51,8 +54,11 @@ PEMSBAY:
     num_nodes: 325
     in_steps: 12
     out_steps: 12
-    lstm_input_dim: 1
+    input_dim: 1
+    output_dim: 1
     lstm_hidden_dim: 64
+    num_layers: 3
+    seq2seq: True
 
 PEMS03:
   num_nodes: 358

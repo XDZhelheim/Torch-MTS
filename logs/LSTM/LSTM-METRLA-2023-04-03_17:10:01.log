@@ -1,0 +1,102 @@
+METRLA
+Original data shape (34272, 207)
+Trainset:	x-(23967, 12, 207, 1)	y-(23967, 12, 207, 1)
+Valset:  	x-(3404, 12, 207, 1)  	y-(3404, 12, 207, 1)
+Testset:	x-(6832, 12, 207, 1)	y-(6832, 12, 207, 1)
+
+--------- LSTM ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "lr": 0.01,
+    "weight_decay": 0,
+    "milestones": [
+        10,
+        20
+    ],
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "use_cl": false,
+    "load_npz": false,
+    "with_embeddings": false,
+    "pass_device": false,
+    "model_args": {
+        "num_nodes": 207,
+        "in_steps": 12,
+        "out_steps": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "lstm_hidden_dim": 64,
+        "num_layers": 3,
+        "seq2seq": false
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LSTM                                     --                        --
+├─LSTM: 1-1                              [13248, 12, 128]          232,960
+├─Linear: 1-2                            [13248, 12]               1,548
+==========================================================================================
+Total params: 234,508
+Trainable params: 234,508
+Non-trainable params: 0
+Total mult-adds (G): 37.06
+==========================================================================================
+Input size (MB): 0.64
+Forward/backward pass size (MB): 164.06
+Params size (MB): 0.94
+Estimated Total Size (MB): 165.64
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-04-03 17:10:23.320424 Epoch 1  	Train Loss = 4.00865 Val Loss = 3.40171
+2023-04-03 17:10:41.619061 Epoch 2  	Train Loss = 3.72671 Val Loss = 3.39747
+2023-04-03 17:10:59.868900 Epoch 3  	Train Loss = 3.63986 Val Loss = 3.36293
+2023-04-03 17:11:18.242569 Epoch 4  	Train Loss = 3.64143 Val Loss = 3.41326
+2023-04-03 17:11:36.616460 Epoch 5  	Train Loss = 3.62367 Val Loss = 3.43174
+2023-04-03 17:11:54.987745 Epoch 6  	Train Loss = 3.61395 Val Loss = 3.38561
+2023-04-03 17:12:13.390024 Epoch 7  	Train Loss = 3.63043 Val Loss = 3.33719
+2023-04-03 17:12:31.795882 Epoch 8  	Train Loss = 3.59458 Val Loss = 3.36639
+2023-04-03 17:12:50.216846 Epoch 9  	Train Loss = 3.59483 Val Loss = 3.34455
+2023-04-03 17:13:08.636062 Epoch 10  	Train Loss = 3.59075 Val Loss = 3.36601
+2023-04-03 17:13:27.046804 Epoch 11  	Train Loss = 3.56894 Val Loss = 3.32381
+2023-04-03 17:13:45.424916 Epoch 12  	Train Loss = 3.56667 Val Loss = 3.32791
+2023-04-03 17:14:03.796293 Epoch 13  	Train Loss = 3.56639 Val Loss = 3.32619
+2023-04-03 17:14:22.170670 Epoch 14  	Train Loss = 3.56495 Val Loss = 3.32260
+2023-04-03 17:14:40.589940 Epoch 15  	Train Loss = 3.56378 Val Loss = 3.32566
+2023-04-03 17:14:58.938141 Epoch 16  	Train Loss = 3.56266 Val Loss = 3.32556
+2023-04-03 17:15:17.300545 Epoch 17  	Train Loss = 3.56168 Val Loss = 3.32791
+2023-04-03 17:15:35.652689 Epoch 18  	Train Loss = 3.55994 Val Loss = 3.33652
+2023-04-03 17:15:53.994441 Epoch 19  	Train Loss = 3.55895 Val Loss = 3.32749
+2023-04-03 17:16:12.324685 Epoch 20  	Train Loss = 3.55719 Val Loss = 3.33644
+2023-04-03 17:16:30.631233 Epoch 21  	Train Loss = 3.55069 Val Loss = 3.32812
+2023-04-03 17:16:48.928757 Epoch 22  	Train Loss = 3.55038 Val Loss = 3.32764
+2023-04-03 17:17:07.248819 Epoch 23  	Train Loss = 3.55017 Val Loss = 3.32674
+2023-04-03 17:17:25.521521 Epoch 24  	Train Loss = 3.54869 Val Loss = 3.32722
+Early stopping at epoch: 24
+Best at epoch 14:
+Train Loss = 3.56495
+Train RMSE = 7.29007, MAE = 3.54810, MAPE = 9.80037
+Val Loss = 3.32260
+Val RMSE = 7.17631, MAE = 3.39342, MAPE = 9.65906
+--------- Test ---------
+All Steps RMSE = 7.73583, MAE = 3.79328, MAPE = 10.83714
+Step 1 RMSE = 4.27531, MAE = 2.40869, MAPE = 5.88212
+Step 2 RMSE = 5.34028, MAE = 2.78213, MAPE = 7.14007
+Step 3 RMSE = 6.08094, MAE = 3.06754, MAPE = 8.14293
+Step 4 RMSE = 6.67899, MAE = 3.31837, MAPE = 9.05344
+Step 5 RMSE = 7.19514, MAE = 3.54963, MAPE = 9.88786
+Step 6 RMSE = 7.65492, MAE = 3.76945, MAPE = 10.70151
+Step 7 RMSE = 8.07412, MAE = 3.97538, MAPE = 11.46508
+Step 8 RMSE = 8.45063, MAE = 4.17152, MAPE = 12.20579
+Step 9 RMSE = 8.79297, MAE = 4.35648, MAPE = 12.89916
+Step 10 RMSE = 9.11328, MAE = 4.53523, MAPE = 13.56278
+Step 11 RMSE = 9.40866, MAE = 4.70758, MAPE = 14.21805
+Step 12 RMSE = 9.68886, MAE = 4.87761, MAPE = 14.88744
+Inference time: 1.61 s
