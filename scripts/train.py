@@ -250,6 +250,9 @@ if __name__ == "__main__":
     data_path = f"../data/{dataset}"
     model_name = args.model.upper()
 
+    model_class = model_select(model_name)
+    model_name = model_class.__name__
+
     with open(f"../configs/{model_name}.yaml", "r") as f:
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
@@ -259,13 +262,13 @@ if __name__ == "__main__":
     if cfg.get("pass_device"):
         cfg["model_args"]["device"] = DEVICE
 
-    model = model_select(model_name)(**cfg["model_args"])
+    model = model_class(**cfg["model_args"])
 
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-    log_path = f"../logs/{model._get_name()}"
+    log_path = f"../logs/{model_name}"
     if not os.path.exists(log_path):
         os.makedirs(log_path)
-    log = os.path.join(log_path, f"{model._get_name()}-{dataset}-{now}.log")
+    log = os.path.join(log_path, f"{model_name}-{dataset}-{now}.log")
     log = open(log, "a")
     log.seek(0)
     log.truncate()
@@ -299,10 +302,10 @@ if __name__ == "__main__":
         )
     print_log(log=log)
 
-    save_path = f"../saved_models/{model._get_name()}"
+    save_path = f"../saved_models/{model_name}"
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    save = os.path.join(save_path, f"{model._get_name()}-{dataset}-{now}.pt")
+    save = os.path.join(save_path, f"{model_name}-{dataset}-{now}.pt")
 
     if dataset in ("METRLA", "PEMSBAY"):
         criterion = MaskedMAELoss()
@@ -324,7 +327,7 @@ if __name__ == "__main__":
         verbose=False,
     )
 
-    print_log("---------", model._get_name(), "---------", log=log)
+    print_log("---------", model_name, "---------", log=log)
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
     )
