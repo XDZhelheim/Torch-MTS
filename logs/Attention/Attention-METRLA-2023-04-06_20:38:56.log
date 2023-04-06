@@ -1,0 +1,88 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 2)	y-(23974, 12, 207, 2)
+Valset:  	x-(3425, 12, 207, 2)  	y-(3425, 12, 207, 2)
+Testset:	x-(6850, 12, 207, 2)	y-(6850, 12, 207, 2)
+
+--------- Attention ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "lr": 0.001,
+    "milestones": [
+        10,
+        35
+    ],
+    "batch_size": 64,
+    "max_epochs": 200,
+    "use_cl": false,
+    "load_npz": true,
+    "pass_device": false,
+    "model_args": {
+        "num_nodes": 207,
+        "in_steps": 12,
+        "out_steps": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "model_dim": 64,
+        "feed_forward_dim": 128,
+        "num_heads": 4,
+        "num_layers": 3
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+Attention                                --                        --
+├─Linear: 1-1                            [64, 207, 12, 64]         128
+├─Linear: 1-2                            [64, 207, 12, 64]         128
+├─Sequential: 1-3                        [64, 207, 12, 64]         --
+│    └─SelfAttentionLayer: 2-1           [64, 207, 12, 64]         --
+│    │    └─AttentionLayer: 3-1          [64, 207, 12, 64]         12,480
+│    │    └─LayerNorm: 3-2               [64, 207, 12, 64]         128
+│    │    └─Sequential: 3-3              [64, 207, 12, 64]         16,576
+│    │    └─LayerNorm: 3-4               [64, 207, 12, 64]         128
+│    └─SelfAttentionLayer: 2-2           [64, 207, 12, 64]         --
+│    │    └─AttentionLayer: 3-5          [64, 207, 12, 64]         12,480
+│    │    └─LayerNorm: 3-6               [64, 207, 12, 64]         128
+│    │    └─Sequential: 3-7              [64, 207, 12, 64]         16,576
+│    │    └─LayerNorm: 3-8               [64, 207, 12, 64]         128
+│    └─SelfAttentionLayer: 2-3           [64, 207, 12, 64]         --
+│    │    └─AttentionLayer: 3-9          [64, 207, 12, 64]         12,480
+│    │    └─LayerNorm: 3-10              [64, 207, 12, 64]         128
+│    │    └─Sequential: 3-11             [64, 207, 12, 64]         16,576
+│    │    └─LayerNorm: 3-12              [64, 207, 12, 64]         128
+├─Linear: 1-4                            [64, 207, 64, 12]         156
+├─Linear: 1-5                            [64, 207, 12, 1]          65
+==========================================================================================
+Total params: 88,413
+Trainable params: 88,413
+Non-trainable params: 0
+Total mult-adds (M): 5.66
+==========================================================================================
+Input size (MB): 1.27
+Forward/backward pass size (MB): 2198.96
+Params size (MB): 0.35
+Estimated Total Size (MB): 2200.58
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-04-06 20:39:37.246800 Epoch 1  	Train Loss = 4.69521 Val Loss = 4.03031
+2023-04-06 20:40:06.473858 Epoch 2  	Train Loss = 4.03531 Val Loss = 3.49330
+2023-04-06 20:40:35.855587 Epoch 3  	Train Loss = 3.77512 Val Loss = 3.41795
+2023-04-06 20:41:05.323821 Epoch 4  	Train Loss = 3.61684 Val Loss = 3.38219
+2023-04-06 20:41:34.812267 Epoch 5  	Train Loss = 3.65552 Val Loss = 3.38921
+2023-04-06 20:42:04.330946 Epoch 6  	Train Loss = 3.68023 Val Loss = 3.39403
+2023-04-06 20:42:33.875424 Epoch 7  	Train Loss = 3.58360 Val Loss = 3.38509
+2023-04-06 20:43:03.393208 Epoch 8  	Train Loss = 3.55932 Val Loss = 3.36039
+2023-04-06 20:43:32.919957 Epoch 9  	Train Loss = 3.55085 Val Loss = 3.42669
+2023-04-06 20:44:02.516752 Epoch 10  	Train Loss = 3.54127 Val Loss = 3.38675
+2023-04-06 20:44:32.127810 Epoch 11  	Train Loss = 3.50549 Val Loss = 3.31789
+2023-04-06 20:45:01.688623 Epoch 12  	Train Loss = 3.50166 Val Loss = 3.31022
+2023-04-06 20:45:31.226685 Epoch 13  	Train Loss = 3.50092 Val Loss = 3.31249
+2023-04-06 20:46:00.761881 Epoch 14  	Train Loss = 3.49921 Val Loss = 3.30702
+2023-04-06 20:46:30.305608 Epoch 15  	Train Loss = 3.49865 Val Loss = 3.30841
+2023-04-06 20:46:59.857506 Epoch 16  	Train Loss = 3.49648 Val Loss = 3.30428
