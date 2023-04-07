@@ -7,7 +7,7 @@ METRLA:
   val_size: 0.1
   
   lr: 0.001
-  milestones: [10, 35]
+  milestones: [10, 60]
   batch_size: 64
   max_epochs: 200
   use_cl: False
@@ -34,7 +34,7 @@ PEMSBAY:
   val_size: 0.1
   
   lr: 0.001
-  milestones: [10, 35]
+  milestones: [10, 40]
   batch_size: 64
   max_epochs: 200
   use_cl: False

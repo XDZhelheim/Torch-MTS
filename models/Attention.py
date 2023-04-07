@@ -32,6 +32,8 @@ class AttentionLayer(nn.Module):
         self.FC_K = nn.Linear(model_dim, model_dim)
         self.FC_V = nn.Linear(model_dim, model_dim)
 
+        self.out_proj = nn.Linear(model_dim, model_dim)
+
     def forward(self, query, key, value):
         # Q    (batch_size, ..., tgt_length, model_dim)
         # K, V (batch_size, ..., src_length, model_dim)
@@ -67,6 +69,8 @@ class AttentionLayer(nn.Module):
         out = torch.cat(
             torch.split(out, batch_size, dim=0), dim=-1
         )  # (batch_size, ..., tgt_length, head_dim * num_heads = model_dim)
+
+        out = self.out_proj(out)
 
         return out
 
@@ -142,7 +146,7 @@ class Attention(nn.Module):
 
         x = self.input_proj(x)
         pe = self.positional_proj(position)
-        x += pe
+        x += pe  # (batch_size, num_nodes, in_steps, model_dim)
 
         out = self.attn_layers(x)  # (batch_size, num_nodes, in_steps, model_dim)
 
