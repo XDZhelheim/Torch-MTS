@@ -21,7 +21,7 @@ from lib.utils import (
     CustomJSONEncoder,
 )
 from lib.metrics import RMSE_MAE_MAPE
-from lib.data_prepare import read_numpy, get_dataloaders, get_dataloaders_from_npz
+from lib.data_prepare import read_numpy, get_dataloaders_from_raw, get_dataloaders_from_tvt
 from models import model_select
 
 # ! X shape: (B, T, N, C)
@@ -280,7 +280,7 @@ if __name__ == "__main__":
             valset_loader,
             testset_loader,
             SCALER,
-        ) = get_dataloaders_from_npz(data_path, batch_size=cfg["batch_size"], log=log)
+        ) = get_dataloaders_from_tvt(data_path, batch_size=cfg["batch_size"], log=log)
     else:
         if cfg.get("with_embeddings"):
             data = read_numpy(
@@ -290,14 +290,14 @@ if __name__ == "__main__":
             data = read_numpy(
                 os.path.join(data_path, f"{dataset}.npz"), log=log
             )  # (all_steps, num_nodes)
-        trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders(
+        trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders_from_raw(
             data,
             cfg["in_steps"],
             cfg["out_steps"],
             train_size=cfg["train_size"],
             val_size=cfg["val_size"],
             batch_size=cfg["batch_size"],
-            with_embeddings=cfg.get("with_embeddings"),
+            with_other_features=cfg.get("with_embeddings"),
             log=log,
         )
     print_log(log=log)

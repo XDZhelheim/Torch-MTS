@@ -134,5 +134,5 @@ temp*
 train.npz
 val.npz
 test.npz
-pems-bay.h5
+PEMSBAY.h5
 PEMSBAY.npy

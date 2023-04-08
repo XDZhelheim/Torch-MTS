@@ -2,7 +2,7 @@ import torch
 import pandas as pd
 import numpy as np
 import os
-from .utils import print_log, StandardScaler
+from .utils import print_log, StandardScaler, vrange
 
 # ! X shape: (B, T, N, C)
 
@@ -48,15 +48,15 @@ def read_numpy(data_path, transpose=False, log=None):
     return data
 
 
-def gen_xy(data, in_steps, out_steps, with_embeddings=False):
+def gen_xy(data, in_steps, out_steps, with_other_features=False):
     """
     Parameter
     ---
-    data: (all_timesteps, num_nodes, 1+embedding_dim) if with_embeddings, else features=1
+    data: (all_timesteps, num_nodes, 1+other_features) if with_other_features, else features=1
 
     Returns
     ---
-    x: (num_samples, in_steps, num_nodes, num_features=1+time_embedding_dim or 1) Numpy
+    x: (num_samples, in_steps, num_nodes, num_features=1+other_features or 1) Numpy
     y: (num_samples, out_steps, num_nodes, num_features=1) Numpy
         num_samples is determined by `timesteps` and `in_steps+out_steps`
     """
@@ -74,7 +74,7 @@ def gen_xy(data, in_steps, out_steps, with_embeddings=False):
     x, y = [], []
     for begin, end in indices:
         x.append(data[begin : begin + in_steps])
-        if with_embeddings:
+        if with_other_features:
             y.append(data[begin + in_steps : end, :, 0])
         else:
             y.append(data[begin + in_steps : end])
@@ -82,30 +82,30 @@ def gen_xy(data, in_steps, out_steps, with_embeddings=False):
     x = np.array(x)
     y = np.array(y)
 
-    if with_embeddings:
+    if with_other_features:
         y = y[..., np.newaxis]
 
     return x, y
 
 
-def get_dataloaders(
+def get_dataloaders_from_raw(
     data,
     in_steps,
     out_steps,
     train_size=0.7,
     val_size=0.1,
-    batch_size=32,
-    with_embeddings=False,
+    batch_size=64,
+    with_other_features=False,
     log=None,
 ):
     """
     Parameters
     ---
-    data: (all_timesteps, num_nodes, 1+time_embedding_dim or 1) numpy
+    data: (all_timesteps, num_nodes, 1+other_features or 1) numpy
     """
     if data.ndim == 2:
         data = data[:, :, np.newaxis]
-    elif data.shape[2] > 1 and not with_embeddings:
+    elif data.shape[2] > 1 and not with_other_features:
         data = data[..., :1]  # for PEMS04 and 08, only use traffic flow
 
     all_steps = data.shape[0]
@@ -116,9 +116,9 @@ def get_dataloaders(
     val_data = data[split1:split2]
     test_data = data[split2:]
 
-    x_train, y_train = gen_xy(train_data, in_steps, out_steps, with_embeddings)
-    x_val, y_val = gen_xy(val_data, in_steps, out_steps, with_embeddings)
-    x_test, y_test = gen_xy(test_data, in_steps, out_steps, with_embeddings)
+    x_train, y_train = gen_xy(train_data, in_steps, out_steps, with_other_features)
+    x_val, y_val = gen_xy(val_data, in_steps, out_steps, with_other_features)
+    x_test, y_test = gen_xy(test_data, in_steps, out_steps, with_other_features)
 
     scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
 
@@ -158,8 +158,8 @@ def get_dataloaders(
     return trainset_loader, valset_loader, testset_loader, scaler
 
 
-def get_dataloaders_from_npz(
-    data_path, batch_size=32, log=None,
+def get_dataloaders_from_tvt(
+    data_path, batch_size=64, log=None,
 ):
     data = {}
     for category in ["train", "val", "test"]:
@@ -189,6 +189,71 @@ def get_dataloaders_from_npz(
     trainset = torch.utils.data.TensorDataset(data["x_train"], data["y_train"])
     valset = torch.utils.data.TensorDataset(data["x_val"], data["y_val"])
     testset = torch.utils.data.TensorDataset(data["x_test"], data["y_test"])
+
+    trainset_loader = torch.utils.data.DataLoader(
+        trainset, batch_size=batch_size, shuffle=True
+    )
+    valset_loader = torch.utils.data.DataLoader(
+        valset, batch_size=batch_size, shuffle=False
+    )
+    testset_loader = torch.utils.data.DataLoader(
+        testset, batch_size=batch_size, shuffle=False
+    )
+
+    return trainset_loader, valset_loader, testset_loader, scaler
+
+
+def get_dataloaders_from_index_data(
+    data_dir, tod=False, dow=False, batch_size=64, log=None,
+):
+    data = np.load(os.path.join(data_dir, "data.npz"))["data"].astype(np.float32)
+    
+    features = [0]
+    if tod:
+        features.append(2)
+    if dow:
+        features.append(3)
+    data = data[..., features]
+
+    index = np.load(os.path.join(data_dir, "index.npz"))
+    
+    train_index = index["train"]  # (num_samples, 3)
+    val_index = index["val"]
+    test_index = index["test"]
+
+    x_train_index = vrange(train_index[:, 0], train_index[:, 1])
+    y_train_index = vrange(train_index[:, 1], train_index[:, 2])
+    x_val_index = vrange(val_index[:, 0], val_index[:, 1])
+    y_val_index = vrange(val_index[:, 1], val_index[:, 2])
+    x_test_index = vrange(test_index[:, 0], test_index[:, 1])
+    y_test_index = vrange(test_index[:, 1], test_index[:, 2])
+
+    x_train = data[x_train_index]
+    y_train = data[y_train_index]
+    x_val = data[x_val_index]
+    y_val = data[y_val_index]
+    x_test = data[x_test_index]
+    y_test = data[y_test_index]
+
+    scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
+
+    x_train[..., 0] = scaler.transform(x_train[..., 0])
+    x_val[..., 0] = scaler.transform(x_val[..., 0])
+    x_test[..., 0] = scaler.transform(x_test[..., 0])
+
+    print_log(f"Trainset:\tx-{x_train.shape}\ty-{y_train.shape}", log=log)
+    print_log(f"Valset:  \tx-{x_val.shape}  \ty-{y_val.shape}", log=log)
+    print_log(f"Testset:\tx-{x_test.shape}\ty-{y_test.shape}", log=log)
+
+    trainset = torch.utils.data.TensorDataset(
+        torch.FloatTensor(x_train), torch.FloatTensor(y_train)
+    )
+    valset = torch.utils.data.TensorDataset(
+        torch.FloatTensor(x_val), torch.FloatTensor(y_val)
+    )
+    testset = torch.utils.data.TensorDataset(
+        torch.FloatTensor(x_test), torch.FloatTensor(y_test)
+    )
 
     trainset_loader = torch.utils.data.DataLoader(
         trainset, batch_size=batch_size, shuffle=True
