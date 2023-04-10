@@ -6,6 +6,7 @@ from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
 from .GCLSTM import GCLSTM
 from .STWA import STWA
+from .STID import STID
 
 
 def model_select(name):
@@ -27,6 +28,8 @@ def model_select(name):
         return GCLSTM
     elif name == "STWA":
         return STWA
+    elif name == "STID":
+        return STID
 
     else:
         raise NotImplementedError

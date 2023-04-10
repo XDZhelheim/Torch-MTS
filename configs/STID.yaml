@@ -1,0 +1,218 @@
+# STID is not so stable
+# needs to run multiple times and calculate avg. metrics
+
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 25, 50]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+  use_cl: False
+
+  model_args:
+    num_nodes: 207
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+  use_cl: False
+
+  model_args:
+    num_nodes: 325
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+  use_cl: False
+
+  model_args:
+    num_nodes: 358
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+  use_cl: False
+
+  model_args:
+    num_nodes: 307
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+  use_cl: False
+
+  model_args:
+    num_nodes: 883
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+  use_cl: False
+
+  model_args:
+    num_nodes: 170
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
