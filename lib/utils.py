@@ -123,3 +123,34 @@ class CustomJSONEncoder(json.JSONEncoder):
             return str(obj)
         else:
             return super(CustomJSONEncoder, self).default(obj)
+
+
+def vrange(starts, stops):
+    """Create ranges of integers for multiple start/stop
+
+    Parameters:
+        starts (1-D array_like): starts for each range
+        stops (1-D array_like): stops for each range (same shape as starts)
+        
+        Lengths of each range should be equal.
+
+    Returns:
+        numpy.ndarray: 2d array for each range
+        
+    For example:
+
+        >>> starts = [1, 2, 3, 4]
+        >>> stops  = [4, 5, 6, 7]
+        >>> vrange(starts, stops)
+        array([[1, 2, 3],
+               [2, 3, 4],
+               [3, 4, 5],
+               [4, 5, 6]])
+
+    Ref: https://codereview.stackexchange.com/questions/83018/vectorized-numpy-version-of-arange-with-multiple-start-stop
+    """
+    stops = np.asarray(stops)
+    l = stops - starts  # Lengths of each range. Should be equal, e.g. [12, 12, 12, ...]
+    assert l.min() == l.max(), "Lengths of each range should be equal."
+    indices = np.repeat(stops - l.cumsum(), l) + np.arange(l.sum())
+    return indices.reshape(-1, l[0])

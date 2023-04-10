@@ -4,11 +4,9 @@ from .Attention import Attention
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
-from .STMetaLSTM import STMetaLSTM
-from .SMetaLSTM import SMetaLSTM
-from .TMetaLSTM import TMetaLSTM
 from .GCLSTM import GCLSTM
 from .STWA import STWA
+from .STID import STID
 
 
 def model_select(name):
@@ -26,16 +24,12 @@ def model_select(name):
         return GWNET
     elif name == "MTGNN":
         return MTGNN
-    elif name == "STMETALSTM":
-        return STMetaLSTM
-    elif name == "SMETALSTM":
-        return SMetaLSTM
-    elif name == "TMETALSTM":
-        return TMetaLSTM
     elif name == "GCLSTM":
         return GCLSTM
     elif name == "STWA":
         return STWA
+    elif name == "STID":
+        return STID
 
     else:
         raise NotImplementedError

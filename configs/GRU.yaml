@@ -14,11 +14,6 @@ METRLA:
   max_epochs: 200
   use_cl: False
 
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
-
   model_args:
     num_nodes: 207
     in_steps: 12
@@ -44,11 +39,6 @@ PEMSBAY:
   batch_size: 64
   max_epochs: 200
   use_cl: False
-
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
 
   model_args:
     num_nodes: 325
@@ -76,11 +66,6 @@ PEMS03:
   max_epochs: 200
   use_cl: False
 
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
-
   model_args:
     num_nodes: 358
     in_steps: 12
@@ -106,11 +91,6 @@ PEMS04:
   batch_size: 64
   max_epochs: 200
   use_cl: False
-
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
 
   model_args:
     num_nodes: 307
@@ -138,11 +118,6 @@ PEMS07:
   max_epochs: 200
   use_cl: False
 
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
-
   model_args:
     num_nodes: 883
     in_steps: 12
@@ -168,11 +143,6 @@ PEMS08:
   batch_size: 64
   max_epochs: 200
   use_cl: False
-
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
 
   model_args:
     num_nodes: 170

@@ -5,6 +5,8 @@ METRLA:
 
   train_size: 0.7
   val_size: 0.1
+
+  time_of_day: True
   
   lr: 0.001
   weight_decay: 0.0001
@@ -15,7 +17,6 @@ METRLA:
   use_cl: True
   cl_step_size: 2500
 
-  load_npz: True
   pass_device: True
 
   model_args:
@@ -37,6 +38,8 @@ PEMSBAY:
 
   train_size: 0.7
   val_size: 0.1
+
+  time_of_day: True
   
   lr: 0.001
   weight_decay: 0.0001
@@ -47,7 +50,6 @@ PEMSBAY:
   use_cl: True
   cl_step_size: 2500
 
-  load_npz: True
   pass_device: True
 
   model_args:
@@ -69,6 +71,8 @@ PEMS03:
 
   train_size: 0.6
   val_size: 0.2
+
+  time_of_day: True
   
   lr: 0.001
   weight_decay: 0.0001
@@ -79,12 +83,11 @@ PEMS03:
   use_cl: True
   cl_step_size: 2500
 
-  load_npz: False
   pass_device: True
 
   model_args:
     num_nodes: 358
-    in_dim: 1
+    in_dim: 2
     out_dim: 12
     adj_path: "../data/PEMS03/adj_PEMS03_distance.pkl"
     adj_type: "doubletransition"
@@ -101,6 +104,8 @@ PEMS04:
 
   train_size: 0.6
   val_size: 0.2
+
+  time_of_day: True
   
   lr: 0.001
   weight_decay: 0.0001
@@ -112,12 +117,11 @@ PEMS04:
   use_cl: True
   cl_step_size: 2500
 
-  load_npz: False
   pass_device: True
 
   model_args:
     num_nodes: 307
-    in_dim: 1
+    in_dim: 2
     out_dim: 12
     adj_path: "../data/PEMS04/adj_PEMS04_distance.pkl"
     adj_type: "doubletransition"
@@ -134,6 +138,8 @@ PEMS07:
 
   train_size: 0.6
   val_size: 0.2
+
+  time_of_day: True
   
   lr: 0.001
   weight_decay: 0.0001
@@ -144,12 +150,11 @@ PEMS07:
   use_cl: True
   cl_step_size: 2500
 
-  load_npz: False
   pass_device: True
 
   model_args:
     num_nodes: 883
-    in_dim: 1
+    in_dim: 2
     out_dim: 12
     adj_path: "../data/PEMS07/adj_PEMS07_distance.pkl"
     adj_type: "doubletransition"
@@ -166,6 +171,8 @@ PEMS08:
 
   train_size: 0.6
   val_size: 0.2
+
+  time_of_day: True
   
   lr: 0.001
   weight_decay: 0.0001
@@ -177,12 +184,11 @@ PEMS08:
   use_cl: True
   cl_step_size: 2500
 
-  load_npz: False
   pass_device: True
 
   model_args:
     num_nodes: 170
-    in_dim: 1
+    in_dim: 2
     out_dim: 12
     adj_path: "../data/PEMS08/adj_PEMS08_distance.pkl"
     adj_type: "doubletransition"

@@ -21,7 +21,7 @@ from lib.utils import (
     CustomJSONEncoder,
 )
 from lib.metrics import RMSE_MAE_MAPE
-from lib.data_prepare import read_numpy, get_dataloaders, get_dataloaders_from_npz
+from lib.data_prepare import get_dataloaders_from_index_data
 from models import model_select
 
 # ! X shape: (B, T, N, C)
@@ -229,6 +229,8 @@ def test_model(model, testset_loader, log=None):
 
 
 if __name__ == "__main__":
+    # -------------------------- set running environment ------------------------- #
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, default="METRLA")
     parser.add_argument("-m", "--model", type=str, default="LSTM")
@@ -257,12 +259,16 @@ if __name__ == "__main__":
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
 
+    # -------------------------------- load model -------------------------------- #
+
     # cfg.get(key, default_value=None): no need to write in the config if not used
     # cfg[key]: must be assigned in the config, else KeyError
     if cfg.get("pass_device"):
         cfg["model_args"]["device"] = DEVICE
 
     model = model_class(**cfg["model_args"])
+
+    # ------------------------------- make log file ------------------------------ #
 
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
     log_path = f"../logs/{model_name}"
@@ -273,39 +279,31 @@ if __name__ == "__main__":
     log.seek(0)
     log.truncate()
 
+    # ------------------------------- load dataset ------------------------------- #
+
     print_log(dataset, log=log)
-    if cfg["load_npz"]:
-        (
-            trainset_loader,
-            valset_loader,
-            testset_loader,
-            SCALER,
-        ) = get_dataloaders_from_npz(data_path, batch_size=cfg["batch_size"], log=log)
-    else:
-        if cfg.get("with_embeddings"):
-            data = read_numpy(
-                os.path.join(data_path, f"{dataset}_embedded.npz"), log=log
-            )  #!!! (all_steps, num_nodes, 1+time_embedding_dim+node_embedding_dim)
-        else:
-            data = read_numpy(
-                os.path.join(data_path, f"{dataset}.npz"), log=log
-            )  # (all_steps, num_nodes)
-        trainset_loader, valset_loader, testset_loader, SCALER = get_dataloaders(
-            data,
-            cfg["in_steps"],
-            cfg["out_steps"],
-            train_size=cfg["train_size"],
-            val_size=cfg["val_size"],
-            batch_size=cfg["batch_size"],
-            with_embeddings=cfg.get("with_embeddings"),
-            log=log,
-        )
+    (
+        trainset_loader,
+        valset_loader,
+        testset_loader,
+        SCALER,
+    ) = get_dataloaders_from_index_data(
+        data_path,
+        tod=cfg.get("time_of_day"),
+        dow=cfg.get("day_of_week"),
+        batch_size=cfg.get("batch_size", 64),
+        log=log,
+    )
     print_log(log=log)
+
+    # --------------------------- set model saving path -------------------------- #
 
     save_path = f"../saved_models/{model_name}"
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     save = os.path.join(save_path, f"{model_name}-{dataset}-{now}.pt")
+
+    # ---------------------- set loss, optimizer, scheduler ---------------------- #
 
     if dataset in ("METRLA", "PEMSBAY"):
         criterion = MaskedMAELoss()
@@ -327,6 +325,8 @@ if __name__ == "__main__":
         verbose=False,
     )
 
+    # --------------------------- print model structure -------------------------- #
+
     print_log("---------", model_name, "---------", log=log)
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
@@ -345,6 +345,9 @@ if __name__ == "__main__":
         log=log,
     )
     print_log(log=log)
+
+    # --------------------------- train and test model --------------------------- #
+
     print_log(f"Loss: {criterion._get_name()}", log=log)
     print_log(log=log)
 
