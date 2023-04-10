@@ -99,6 +99,8 @@ def get_dataloaders_from_raw(
     log=None,
 ):
     """
+    Not used.
+    
     Parameters
     ---
     data: (all_timesteps, num_nodes, 1+other_features or 1) numpy
@@ -159,17 +161,18 @@ def get_dataloaders_from_raw(
 
 
 def get_dataloaders_from_tvt(
-    data_path, batch_size=64, log=None,
+    data_dir, batch_size=64, log=None,
 ):
+    """
+    Not used.
+    """
     data = {}
     for category in ["train", "val", "test"]:
-        cat_data = np.load(os.path.join(data_path, category + ".npz"))
+        cat_data = np.load(os.path.join(data_dir, category + ".npz"))
         data["x_" + category] = cat_data["x"].astype(np.float32)
-        data["y_" + category] = cat_data["y"].astype(np.float32)
+        data["y_" + category] = cat_data["y"][..., :1].astype(np.float32)
 
-    print_log(
-        f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log
-    )
+    print_log(f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log)
     print_log(f"Valset:  \tx-{data['x_val'].shape}  \ty-{data['y_val'].shape}", log=log)
     print_log(f"Testset:\tx-{data['x_test'].shape}\ty-{data['y_test'].shape}", log=log)
 
@@ -182,9 +185,7 @@ def get_dataloaders_from_tvt(
 
     for category in ["train", "val", "test"]:
         data["x_" + category] = torch.FloatTensor(data["x_" + category])
-        data["y_" + category] = torch.FloatTensor(
-            data["y_" + category][..., :1]
-        )  # no time embedding
+        data["y_" + category] = torch.FloatTensor(data["y_" + category])
 
     trainset = torch.utils.data.TensorDataset(data["x_train"], data["y_train"])
     valset = torch.utils.data.TensorDataset(data["x_val"], data["y_val"])
@@ -210,9 +211,9 @@ def get_dataloaders_from_index_data(
     
     features = [0]
     if tod:
-        features.append(2)
+        features.append(1)
     if dow:
-        features.append(3)
+        features.append(2)
     data = data[..., features]
 
     index = np.load(os.path.join(data_dir, "index.npz"))
@@ -229,11 +230,11 @@ def get_dataloaders_from_index_data(
     y_test_index = vrange(test_index[:, 1], test_index[:, 2])
 
     x_train = data[x_train_index]
-    y_train = data[y_train_index]
+    y_train = data[y_train_index][..., :1]
     x_val = data[x_val_index]
-    y_val = data[y_val_index]
+    y_val = data[y_val_index][..., :1]
     x_test = data[x_test_index]
-    y_test = data[y_test_index]
+    y_test = data[y_test_index][..., :1]
 
     scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
 
