@@ -16,3 +16,7 @@ All the codes are based on my personal coding habit and style.
 7. Learning scheduler: `MultiStepLR` 必须有而且要细调，而且要和课程学习的设置联动
 8. 课程学习 对复杂模型很管用
 9. 可能有用也可能没用的 trick: l2 reg, grad clip
+
+## Changelog
+* v1.1: 一个稳定版本，包含 MetaLSTM
+* v1.2: 参考 BasicTS，重构了整个 dataset 的创建和读取
