@@ -158,6 +158,106 @@ class Attention(nn.Module):
         return out.transpose(1, 2)  # (batch_size, out_steps, num_nodes, output_dim)
 
 
+class STAttention(nn.Module):
+    def __init__(
+        self,
+        num_nodes,
+        in_steps,
+        out_steps,
+        steps_per_day=288,
+        input_dim=1,
+        output_dim=1,
+        input_embedding_dim=12,
+        tod_embedding_dim=12,
+        dow_embedding_dim=12,
+        adaptive_embedding_dim=72,
+        feed_forward_dim=256,
+        num_heads=4,
+        num_layers=3,
+    ):
+        super().__init__()
+
+        self.num_nodes = num_nodes
+        self.in_steps = in_steps
+        self.out_steps = out_steps
+        self.steps_per_day = steps_per_day
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        self.input_embedding_dim = input_embedding_dim
+        self.tod_embedding_dim = tod_embedding_dim
+        self.dow_embedding_dim = dow_embedding_dim
+        self.adaptive_embedding_dim = adaptive_embedding_dim
+        self.model_dim = (
+            input_embedding_dim
+            + tod_embedding_dim
+            + dow_embedding_dim
+            + adaptive_embedding_dim
+        )
+        self.num_heads = num_heads
+        self.num_layers = num_layers
+
+        self.input_proj = nn.Linear(input_dim, input_embedding_dim)
+        self.tod_embedding = nn.Embedding(steps_per_day, tod_embedding_dim)
+        self.dow_embedding = nn.Embedding(7, dow_embedding_dim)
+        self.adaptive_embedding = nn.init.xavier_uniform_(
+            nn.Parameter(torch.empty(in_steps * num_nodes, adaptive_embedding_dim))
+        )
+        self.temporal_proj = nn.Linear(in_steps, out_steps)
+        self.output_proj = nn.Linear(self.model_dim, self.output_dim)
+
+        self.attn_layers = nn.Sequential(
+            *[
+                SelfAttentionLayer(self.model_dim, feed_forward_dim, num_heads)
+                for _ in range(num_layers)
+            ]
+        )
+
+    def forward(self, x):
+        # x: (batch_size, in_steps, num_nodes, input_dim+tod+dow=3)
+        batch_size = x.shape[0]
+        x = x.view(
+            x.shape[0], x.shape[1] * x.shape[2], x.shape[3]
+        )  # (batch_size, in_steps * num_nodes, input_dim+tod+dow)
+
+        tod = x[..., 1]
+        dow = x[..., 2]
+        x = x[..., :1]
+
+        x = self.input_proj(
+            x
+        )  # (batch_size, in_steps * num_nodes, input_embedding_dim)
+        tod_emb = self.tod_embedding(
+            (tod * self.steps_per_day).long()
+        )  # (batch_size, in_steps * num_nodes, tod_embedding_dim)
+        dow_emb = self.dow_embedding(
+            dow.long()
+        )  # (batch_size, in_steps * num_nodes, dow_embedding_dim)
+        adp_emb = self.adaptive_embedding.expand(
+            size=(
+                batch_size,
+                self.num_nodes * self.in_steps,
+                self.adaptive_embedding_dim,
+            )
+        )
+        x = torch.cat(
+            [x, tod_emb, dow_emb, adp_emb], dim=-1
+        )  # (batch_size, in_steps * num_nodes, model_dim)
+
+        out = self.attn_layers(x)  # (batch_size, in_steps * num_nodes, model_dim)
+
+        out = out.view(
+            batch_size, self.in_steps, self.num_nodes, self.model_dim
+        ).transpose(
+            1, 3
+        )  # (batch_size, model_dim, num_nodes, in_steps)
+        out = self.temporal_proj(out)  # (batch_size, model_dim, num_nodes, out_steps)
+        out = self.output_proj(
+            out.transpose(1, 3)
+        )  # (batch_size, out_steps, num_nodes, output_dim)
+
+        return out
+
+
 if __name__ == "__main__":
-    model = Attention(207, 12, 12, 1, 1, 64)
-    summary(model, [32, 12, 207, 2])
+    model = STAttention(207, 12, 12)
+    summary(model, [1, 12, 207, 3])
