@@ -10,8 +10,8 @@ METRLA:
   day_of_week: True
   
   lr: 0.001
-  milestones: [10, 60]
-  batch_size: 8
+  milestones: [10, 50]
+  batch_size: 64
   max_epochs: 200
   use_cl: False
 
