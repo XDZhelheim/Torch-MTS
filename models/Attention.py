@@ -75,7 +75,9 @@ class AttentionLayer(nn.Module):
 
 
 class SelfAttentionLayer(nn.Module):
-    def __init__(self, model_dim, feed_forward_dim=2048, num_heads=8, mask=False):
+    def __init__(
+        self, model_dim, feed_forward_dim=2048, num_heads=8, dropout=0, mask=False
+    ):
         super().__init__()
 
         self.attn = AttentionLayer(model_dim, num_heads, mask)
@@ -86,19 +88,24 @@ class SelfAttentionLayer(nn.Module):
         )
         self.ln1 = nn.LayerNorm(model_dim)
         self.ln2 = nn.LayerNorm(model_dim)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
 
     def forward(self, x, dim=-2):
         x = x.transpose(dim, -2)
         # x: (batch_size, ..., length, model_dim)
         residual = x
         out = self.attn(x, x, x)  # (batch_size, ..., length, model_dim)
+        out = self.dropout1(out)
         out = self.ln1(residual + out)
 
         residual = out
         out = self.feed_forward(out)  # (batch_size, ..., length, model_dim)
+        out = self.dropout2(out)
         out = self.ln2(residual + out)
 
-        return out.transpose(dim, -2)
+        out = out.transpose(dim, -2)
+        return out
 
 
 class Attention(nn.Module):
@@ -172,10 +179,10 @@ class STAttention(nn.Module):
         tod_embedding_dim=12,
         dow_embedding_dim=12,
         adaptive_embedding_dim=72,
-        feed_forward_dim=256,
+        feed_forward_dim=192,
         num_heads=4,
         num_layers=3,
-        mode="TN",
+        dropout=0.1,
     ):
         super().__init__()
 
@@ -197,7 +204,6 @@ class STAttention(nn.Module):
         )
         self.num_heads = num_heads
         self.num_layers = num_layers
-        self.mode = mode
 
         self.input_proj = nn.Linear(input_dim, input_embedding_dim)
         self.tod_embedding = nn.Embedding(steps_per_day, tod_embedding_dim)
@@ -208,16 +214,16 @@ class STAttention(nn.Module):
         self.temporal_proj = nn.Linear(in_steps, out_steps)
         self.output_proj = nn.Linear(self.model_dim, self.output_dim)
 
-        self.attn_layers = nn.Sequential(
-            *[
-                SelfAttentionLayer(self.model_dim, feed_forward_dim, num_heads)
+        self.attn_layers_t = nn.ModuleList(
+            [
+                SelfAttentionLayer(self.model_dim, feed_forward_dim, num_heads, dropout)
                 for _ in range(num_layers)
             ]
         )
 
-        self.attn_layers2 = nn.Sequential(
-            *[
-                SelfAttentionLayer(self.model_dim, feed_forward_dim, num_heads)
+        self.attn_layers_s = nn.ModuleList(
+            [
+                SelfAttentionLayer(self.model_dim, feed_forward_dim, num_heads, dropout)
                 for _ in range(num_layers)
             ]
         )
@@ -230,9 +236,7 @@ class STAttention(nn.Module):
         dow = x[..., 2]
         x = x[..., :1]
 
-        x = self.input_proj(
-            x
-        )  # (batch_size, in_steps, num_nodes, input_embedding_dim)
+        x = self.input_proj(x)  # (batch_size, in_steps, num_nodes, input_embedding_dim)
         tod_emb = self.tod_embedding(
             (tod * self.steps_per_day).long()
         )  # (batch_size, in_steps, num_nodes, tod_embedding_dim)
@@ -246,26 +250,13 @@ class STAttention(nn.Module):
             [x, tod_emb, dow_emb, adp_emb], dim=-1
         )  # (batch_size, in_steps, num_nodes, model_dim)
 
-        if self.mode == "mix":
-            x = x.view(batch_size, self.in_steps * self.num_nodes, self.model_dim)
-        elif self.mode == "TN":
-            x = x.transpose(1, 2)  # (batch_size, num_nodes, in_steps, model_dim)
-        out = self.attn_layers(x)
-        if self.mode in ("TN", "NT"):
-            out = out.transpose(1, 2)  # (batch_size, in_steps, num_nodes, model_dim)
-            out = self.attn_layers2(out)
+        for attn in self.attn_layers_t:
+            x = attn(x, dim=1)
+        for attn in self.attn_layers_s:
+            x = attn(x, dim=2)
+        # (batch_size, in_steps, num_nodes, model_dim)
 
-        if self.mode == "mix":
-            out = out.view(
-                batch_size, self.in_steps, self.num_nodes, self.model_dim
-            ).transpose(
-                1, 3
-            )  # (batch_size, model_dim, num_nodes, in_steps)
-        elif self.mode == "TN":
-            out = out.transpose(1, 3)  # (batch_size, model_dim, num_nodes, in_steps)
-        elif self.mode == "NT":
-            out = out.permute(0, 3, 1, 2)
-            
+        out = x.transpose(1, 3)  # (batch_size, model_dim, num_nodes, in_steps)
         out = self.temporal_proj(out)  # (batch_size, model_dim, num_nodes, out_steps)
         out = self.output_proj(
             out.transpose(1, 3)
@@ -275,5 +266,5 @@ class STAttention(nn.Module):
 
 
 if __name__ == "__main__":
-    model = STAttention(207, 12, 12, mode="TN")
+    model = STAttention(207, 12, 12)
     summary(model, [1, 12, 207, 3])

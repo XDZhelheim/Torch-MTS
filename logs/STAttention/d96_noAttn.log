@@ -1,0 +1,178 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 3)	y-(23974, 12, 207, 1)
+Valset:  	x-(3425, 12, 207, 3)  	y-(3425, 12, 207, 1)
+Testset:	x-(6850, 12, 207, 3)	y-(6850, 12, 207, 1)
+
+--------- STAttention ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "time_of_day": true,
+    "day_of_week": true,
+    "lr": 0.001,
+    "weight_decay": 0,
+    "milestones": [
+        10,
+        50
+    ],
+    "lr_decay_rate": 0.1,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "early_stop": 20,
+    "use_cl": false,
+    "cl_step_size": 2500,
+    "model_args": {
+        "num_nodes": 207,
+        "in_steps": 12,
+        "out_steps": 12,
+        "steps_per_day": 288,
+        "input_dim": 1,
+        "output_dim": 1,
+        "input_embedding_dim": 12,
+        "tod_embedding_dim": 12,
+        "dow_embedding_dim": 12,
+        "adaptive_embedding_dim": 60,
+        "feed_forward_dim": 192,
+        "num_heads": 4,
+        "num_layers": 2,
+        "dropout": 0
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+STAttention                              --                        --
+├─ModuleList: 1-1                        --                        --
+├─ModuleList: 1-2                        --                        --
+├─Linear: 1-3                            [64, 12, 207, 12]         24
+├─Embedding: 1-4                         [64, 12, 207, 12]         3,456
+├─Embedding: 1-5                         [64, 12, 207, 12]         84
+├─ModuleList: 1-6                        --                        (recursive)
+│    └─SelfAttentionLayer: 2-1           --                        --
+│    │    └─AttentionLayer: 3-1          --                        37,248
+│    │    └─Sequential: 3-2              --                        37,152
+│    │    └─LayerNorm: 3-3               --                        192
+│    │    └─LayerNorm: 3-4               --                        192
+│    │    └─Dropout: 3-5                 --                        --
+│    │    └─Dropout: 3-6                 --                        --
+│    └─SelfAttentionLayer: 2-2           --                        --
+│    │    └─AttentionLayer: 3-7          --                        37,248
+│    │    └─Sequential: 3-8              --                        37,152
+│    │    └─LayerNorm: 3-9               --                        192
+│    │    └─LayerNorm: 3-10              --                        192
+│    │    └─Dropout: 3-11                --                        --
+│    │    └─Dropout: 3-12                --                        --
+├─ModuleList: 1-7                        --                        (recursive)
+│    └─SelfAttentionLayer: 2-3           --                        --
+│    │    └─AttentionLayer: 3-13         --                        37,248
+│    │    └─Sequential: 3-14             --                        37,152
+│    │    └─LayerNorm: 3-15              --                        192
+│    │    └─LayerNorm: 3-16              --                        192
+│    │    └─Dropout: 3-17                --                        --
+│    │    └─Dropout: 3-18                --                        --
+│    └─SelfAttentionLayer: 2-4           --                        --
+│    │    └─AttentionLayer: 3-19         --                        37,248
+│    │    └─Sequential: 3-20             --                        37,152
+│    │    └─LayerNorm: 3-21              --                        192
+│    │    └─LayerNorm: 3-22              --                        192
+│    │    └─Dropout: 3-23                --                        --
+│    │    └─Dropout: 3-24                --                        --
+├─Linear: 1-8                            [64, 96, 207, 12]         156
+├─Linear: 1-9                            [64, 12, 207, 1]          97
+==========================================================================================
+Total params: 302,953
+Trainable params: 302,953
+Non-trainable params: 0
+Total mult-adds (M): 0.24
+==========================================================================================
+Input size (MB): 1.91
+Forward/backward pass size (MB): 169.15
+Params size (MB): 1.21
+Estimated Total Size (MB): 172.27
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-04-13 16:38:42.457022 Epoch 1  	Train Loss = 5.58733 Val Loss = 4.72678
+2023-04-13 16:38:47.370954 Epoch 2  	Train Loss = 4.45887 Val Loss = 4.49050
+2023-04-13 16:38:52.252120 Epoch 3  	Train Loss = 4.31368 Val Loss = 4.38470
+2023-04-13 16:38:57.230108 Epoch 4  	Train Loss = 4.25167 Val Loss = 4.34050
+2023-04-13 16:39:02.109786 Epoch 5  	Train Loss = 4.22652 Val Loss = 4.31609
+2023-04-13 16:39:07.013064 Epoch 6  	Train Loss = 4.21345 Val Loss = 4.30587
+2023-04-13 16:39:11.995076 Epoch 7  	Train Loss = 4.20996 Val Loss = 4.29442
+2023-04-13 16:39:16.932020 Epoch 8  	Train Loss = 4.20602 Val Loss = 4.29081
+2023-04-13 16:39:21.828640 Epoch 9  	Train Loss = 4.20637 Val Loss = 4.29238
+2023-04-13 16:39:26.790780 Epoch 10  	Train Loss = 4.20356 Val Loss = 4.29197
+2023-04-13 16:39:31.715292 Epoch 11  	Train Loss = 4.19744 Val Loss = 4.28602
+2023-04-13 16:39:36.644035 Epoch 12  	Train Loss = 4.19819 Val Loss = 4.28682
+2023-04-13 16:39:41.627859 Epoch 13  	Train Loss = 4.19642 Val Loss = 4.28791
+2023-04-13 16:39:46.530978 Epoch 14  	Train Loss = 4.19864 Val Loss = 4.28601
+2023-04-13 16:39:51.461914 Epoch 15  	Train Loss = 4.19631 Val Loss = 4.28867
+2023-04-13 16:39:56.324217 Epoch 16  	Train Loss = 4.19559 Val Loss = 4.28716
+2023-04-13 16:40:01.208631 Epoch 17  	Train Loss = 4.19602 Val Loss = 4.28715
+2023-04-13 16:40:05.901236 Epoch 18  	Train Loss = 4.19599 Val Loss = 4.28594
+2023-04-13 16:40:10.796279 Epoch 19  	Train Loss = 4.19577 Val Loss = 4.28707
+2023-04-13 16:40:15.656710 Epoch 20  	Train Loss = 4.19483 Val Loss = 4.28632
+2023-04-13 16:40:20.624076 Epoch 21  	Train Loss = 4.19574 Val Loss = 4.28495
+2023-04-13 16:40:25.595298 Epoch 22  	Train Loss = 4.19507 Val Loss = 4.28572
+2023-04-13 16:40:30.550701 Epoch 23  	Train Loss = 4.19757 Val Loss = 4.28862
+2023-04-13 16:40:35.585268 Epoch 24  	Train Loss = 4.19523 Val Loss = 4.28692
+2023-04-13 16:40:40.500095 Epoch 25  	Train Loss = 4.19597 Val Loss = 4.28454
+2023-04-13 16:40:45.489904 Epoch 26  	Train Loss = 4.19551 Val Loss = 4.28574
+2023-04-13 16:40:50.400569 Epoch 27  	Train Loss = 4.19526 Val Loss = 4.28368
+2023-04-13 16:40:55.190693 Epoch 28  	Train Loss = 4.19586 Val Loss = 4.28445
+2023-04-13 16:41:00.101226 Epoch 29  	Train Loss = 4.19579 Val Loss = 4.28645
+2023-04-13 16:41:05.033624 Epoch 30  	Train Loss = 4.19482 Val Loss = 4.28470
+2023-04-13 16:41:09.926664 Epoch 31  	Train Loss = 4.19609 Val Loss = 4.28857
+2023-04-13 16:41:14.809881 Epoch 32  	Train Loss = 4.19646 Val Loss = 4.28358
+2023-04-13 16:41:19.681281 Epoch 33  	Train Loss = 4.19611 Val Loss = 4.28455
+2023-04-13 16:41:24.598003 Epoch 34  	Train Loss = 4.19540 Val Loss = 4.28414
+2023-04-13 16:41:29.571394 Epoch 35  	Train Loss = 4.19551 Val Loss = 4.28302
+2023-04-13 16:41:34.532741 Epoch 36  	Train Loss = 4.19497 Val Loss = 4.28481
+2023-04-13 16:41:39.475640 Epoch 37  	Train Loss = 4.19640 Val Loss = 4.28603
+2023-04-13 16:41:44.466132 Epoch 38  	Train Loss = 4.19468 Val Loss = 4.28474
+2023-04-13 16:41:49.399273 Epoch 39  	Train Loss = 4.19667 Val Loss = 4.28287
+2023-04-13 16:41:54.389936 Epoch 40  	Train Loss = 4.19548 Val Loss = 4.28377
+2023-04-13 16:41:59.334393 Epoch 41  	Train Loss = 4.19651 Val Loss = 4.28296
+2023-04-13 16:42:04.255706 Epoch 42  	Train Loss = 4.19501 Val Loss = 4.28392
+2023-04-13 16:42:09.234138 Epoch 43  	Train Loss = 4.19447 Val Loss = 4.28448
+2023-04-13 16:42:14.175379 Epoch 44  	Train Loss = 4.19539 Val Loss = 4.28453
+2023-04-13 16:42:19.166833 Epoch 45  	Train Loss = 4.19604 Val Loss = 4.28289
+2023-04-13 16:42:23.985110 Epoch 46  	Train Loss = 4.19902 Val Loss = 4.28596
+2023-04-13 16:42:28.807568 Epoch 47  	Train Loss = 4.19472 Val Loss = 4.28402
+2023-04-13 16:42:33.719742 Epoch 48  	Train Loss = 4.19457 Val Loss = 4.28537
+2023-04-13 16:42:38.678971 Epoch 49  	Train Loss = 4.19390 Val Loss = 4.28380
+2023-04-13 16:42:43.632443 Epoch 50  	Train Loss = 4.19328 Val Loss = 4.28328
+2023-04-13 16:42:48.585312 Epoch 51  	Train Loss = 4.19451 Val Loss = 4.28348
+2023-04-13 16:42:53.548964 Epoch 52  	Train Loss = 4.19549 Val Loss = 4.28349
+2023-04-13 16:42:58.583288 Epoch 53  	Train Loss = 4.19610 Val Loss = 4.28373
+2023-04-13 16:43:03.627008 Epoch 54  	Train Loss = 4.19481 Val Loss = 4.28328
+2023-04-13 16:43:08.739650 Epoch 55  	Train Loss = 4.19551 Val Loss = 4.28400
+2023-04-13 16:43:13.797951 Epoch 56  	Train Loss = 4.19443 Val Loss = 4.28364
+2023-04-13 16:43:18.856988 Epoch 57  	Train Loss = 4.19375 Val Loss = 4.28333
+2023-04-13 16:43:23.921556 Epoch 58  	Train Loss = 4.19362 Val Loss = 4.28360
+2023-04-13 16:43:28.879213 Epoch 59  	Train Loss = 4.19359 Val Loss = 4.28383
+Early stopping at epoch: 59
+Best at epoch 39:
+Train Loss = 4.19667
+Train RMSE = 8.50320, MAE = 4.19296, MAPE = 11.45670
+Val Loss = 4.28287
+Val RMSE = 8.68485, MAE = 4.14905, MAPE = 11.61826
+--------- Test ---------
+All Steps RMSE = 9.48329, MAE = 4.66760, MAPE = 12.87435
+Step 1 RMSE = 5.65169, MAE = 2.90365, MAPE = 6.88568
+Step 2 RMSE = 6.97136, MAE = 3.38713, MAPE = 8.37331
+Step 3 RMSE = 7.88294, MAE = 3.76192, MAPE = 9.55315
+Step 4 RMSE = 8.61311, MAE = 4.09408, MAPE = 10.62150
+Step 5 RMSE = 9.21102, MAE = 4.40012, MAPE = 11.63504
+Step 6 RMSE = 9.69218, MAE = 4.68534, MAPE = 12.62987
+Step 7 RMSE = 10.08223, MAE = 4.94358, MAPE = 13.57681
+Step 8 RMSE = 10.39284, MAE = 5.18021, MAPE = 14.51259
+Step 9 RMSE = 10.63523, MAE = 5.39414, MAPE = 15.39256
+Step 10 RMSE = 10.82185, MAE = 5.58461, MAPE = 16.25984
+Step 11 RMSE = 10.97446, MAE = 5.75802, MAPE = 17.11078
+Step 12 RMSE = 11.10088, MAE = 5.91858, MAPE = 17.94178
+Inference time: 0.55 s
