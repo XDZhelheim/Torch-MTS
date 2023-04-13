@@ -1,6 +1,6 @@
 from .LSTM import LSTM
 from .GRU import GRU
-from .Attention import Attention, STAttention
+from .Attention import Attention
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
@@ -30,8 +30,6 @@ def model_select(name):
         return STWA
     elif name == "STID":
         return STID
-    elif name in ("STATTN", "STATTENTION", "STTRANSFORMER"):
-        return STAttention
 
     else:
         raise NotImplementedError
