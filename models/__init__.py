@@ -1,6 +1,9 @@
 from .LSTM import LSTM
 from .GRU import GRU
 from .Attention import Attention
+
+from .STMetaLSTM import STMetaLSTM
+
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
@@ -18,6 +21,10 @@ def model_select(name):
         return GRU
     elif name in ("ATTENRTION", "ATTN", "TRANSFORMER"):
         return Attention
+
+    elif name == "STMETALSTM":
+        return STMetaLSTM
+
     elif name == "AGCRN":
         return AGCRN
     elif name in ("GWNET", "GRAPHWAVENET", "GWN"):
