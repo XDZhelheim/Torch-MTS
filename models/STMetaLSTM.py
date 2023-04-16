@@ -5,56 +5,30 @@ from torchinfo import summary
 
 
 class STMetaLSTMCell(nn.Module):
-    def __init__(
-        self, input_dim, lstm_hidden_dim, st_embedding_dim, learner_hidden_dim, z_dim
-    ):
+    def __init__(self, lstm_hidden_dim=64, Wx=None, Wh=None, b=None):
         super().__init__()
 
-        self.input_dim = input_dim
         self.lstm_hidden_dim = lstm_hidden_dim
-        self.st_embedding_dim = st_embedding_dim
-        self.learner_hidden_dim = learner_hidden_dim
-        self.z_dim = z_dim
+        self.Wx = Wx
+        self.Wh = Wh
+        self.b = b
 
-        self.learner_wx = nn.Sequential(
-            nn.Linear(self.st_embedding_dim + z_dim, learner_hidden_dim),
-            nn.ReLU(inplace=True),
-            nn.Linear(learner_hidden_dim, 4 * input_dim * lstm_hidden_dim),
-        )
+    def set_weights(self, Wx, Wh, b):
+        self.Wx = Wx
+        self.Wh = Wh
+        self.b = b
 
-        self.learner_wh = nn.Sequential(
-            nn.Linear(self.st_embedding_dim + z_dim, learner_hidden_dim),
-            nn.ReLU(inplace=True),
-            nn.Linear(learner_hidden_dim, 4 * lstm_hidden_dim * lstm_hidden_dim),
-        )
-
-        self.learner_b = nn.Sequential(
-            nn.Linear(self.st_embedding_dim + z_dim, learner_hidden_dim),
-            nn.ReLU(inplace=True),
-            nn.Linear(learner_hidden_dim, 4 * lstm_hidden_dim),
-        )
-
-    def forward(self, xt, meta_input, h, c):
-        # xt           (B, N, input_dim)
-        # meta_input   (B, N, st_embedding_dim+z_dim)
-        # h, c         (B, N, lstm_hidden_dim)
-        batch_size = xt.shape[0]
-        num_nodes = xt.shape[1]
-
-        Wx = self.learner_wx(meta_input).view(
-            batch_size, num_nodes, self.input_dim, 4 * self.lstm_hidden_dim
-        )
-        Wh = self.learner_wh(meta_input).view(
-            batch_size, num_nodes, self.lstm_hidden_dim, 4 * self.lstm_hidden_dim
-        )
-        b = self.learner_b(meta_input).view(
-            batch_size, num_nodes, 4 * self.lstm_hidden_dim
-        )
+    def forward(self, xt, h, c):
+        # xt            (B, N, input_dim)
+        # h, c          (B, N, lstm_hidden_dim)
+        # Wx            (B, N, input_dim, 4*lstm_hidden_dim)
+        # Wh            (B, N, lstm_hidden_dim, 4*lstm_hidden_dim)
+        # b             (B, N, 4*lstm_hidden_dim)
 
         combined_gates = (
-            torch.einsum("bnc,bncd->bnd", xt, Wx)
-            + torch.einsum("bnh,bnhd->bnd", h, Wh)
-            + b
+            torch.einsum("bnc,bncd->bnd", xt, self.Wx)
+            + torch.einsum("bnh,bnhd->bnd", h, self.Wh)
+            + self.b
         )  # (B, N, 4*lstm_hidden_dim)
 
         g, i, f, o = torch.split(combined_gates, self.lstm_hidden_dim, dim=-1)
@@ -67,6 +41,78 @@ class STMetaLSTMCell(nn.Module):
         h = torch.tanh(c) * o
 
         return h, c
+
+
+class STMetaLSTMEncoder(nn.Module):
+    def __init__(
+        self,
+        input_dim=1,
+        lstm_hidden_dim=64,
+        st_embedding_dim=95,
+        learner_hidden_dim=128,
+        z_dim=32,
+    ):
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.lstm_hidden_dim = lstm_hidden_dim
+        self.st_embedding_dim = st_embedding_dim
+        self.learner_hidden_dim = learner_hidden_dim
+        self.z_dim = z_dim
+
+        self.cell = STMetaLSTMCell(lstm_hidden_dim=lstm_hidden_dim)
+
+        self.learner_wx = nn.Sequential(
+            nn.Linear(st_embedding_dim + z_dim, learner_hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(learner_hidden_dim, 4 * input_dim * lstm_hidden_dim),
+        )
+
+        self.learner_wh = nn.Sequential(
+            nn.Linear(st_embedding_dim + z_dim, learner_hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(learner_hidden_dim, 4 * lstm_hidden_dim * lstm_hidden_dim),
+        )
+
+        self.learner_b = nn.Sequential(
+            nn.Linear(st_embedding_dim + z_dim, learner_hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(learner_hidden_dim, 4 * lstm_hidden_dim),
+        )
+
+    def forward(self, x, meta_input):
+        # x            (B, T_in, N, input_dim)
+        # meta_input   (B, N, st_embedding_dim+z_dim)
+
+        batch_size = x.shape[0]
+        in_steps = x.shape[1]
+        num_nodes = x.shape[2]
+
+        Wx = self.learner_wx(meta_input).view(
+            batch_size, num_nodes, self.input_dim, 4 * self.lstm_hidden_dim
+        )
+        Wh = self.learner_wh(meta_input).view(
+            batch_size, num_nodes, self.lstm_hidden_dim, 4 * self.lstm_hidden_dim
+        )
+        b = self.learner_b(meta_input).view(
+            batch_size, num_nodes, 4 * self.lstm_hidden_dim
+        )
+
+        self.cell.set_weights(Wx, Wh, b)
+
+        h = torch.zeros(batch_size, num_nodes, self.lstm_hidden_dim, device=x.device)
+        c = torch.zeros(batch_size, num_nodes, self.lstm_hidden_dim, device=x.device)
+
+        h_each_step = []
+        for t in range(in_steps):
+            h, c = self.cell(x[:, t, ...], h, c)
+            h_each_step.append(h)  # T_in*(B, N, lstm_hidden_dim)
+
+        h_each_step = torch.stack(
+            h_each_step, dim=1
+        )  # (B, T_in, N, lstm_hidden_dim) input for next layer
+
+        return h_each_step, h, c  # last step's h, c
 
 
 class STMetaLSTM(nn.Module):
@@ -84,7 +130,7 @@ class STMetaLSTM(nn.Module):
         dow_embedding_dim=7,
         node_embedding_dim=64,
         learner_hidden_dim=64,
-        z_dim=0,
+        z_dim=32,
         num_layers=1,
         seq2seq=False,
     ):
@@ -111,9 +157,9 @@ class STMetaLSTM(nn.Module):
         self.tod_onehots = torch.eye(24, device=device)
         self.dow_onehots = torch.eye(7, device=device)
 
-        self.encoder = nn.ModuleList(
+        self.encoders = nn.ModuleList(
             [
-                STMetaLSTMCell(
+                STMetaLSTMEncoder(
                     input_dim,
                     lstm_hidden_dim,
                     self.st_embedding_dim,
@@ -123,8 +169,8 @@ class STMetaLSTM(nn.Module):
             ]
         )
         for _ in range(num_layers - 1):
-            self.encoder.append(
-                STMetaLSTMCell(
+            self.encoders.append(
+                STMetaLSTMEncoder(
                     lstm_hidden_dim,
                     lstm_hidden_dim,
                     self.st_embedding_dim,
@@ -189,14 +235,12 @@ class STMetaLSTM(nn.Module):
         )  # (B, N, st_emb_dim)
 
         if self.z_dim > 0:
-            mu = self.mu_estimator(x.squeeze(dim=-1).transpose(1, 2))  # (B, N, z_dim)
+            z_input = x.squeeze(dim=-1).transpose(1, 2)
 
-            logvar = self.logvar_estimator(
-                x.squeeze(dim=-1).transpose(1, 2)
-            )  # (B, N, z_dim)
+            mu = self.mu_estimator(z_input)  # (B, N, z_dim)
+            logvar = self.logvar_estimator(z_input)  # (B, N, z_dim)
 
             z_data = self.reparameterize(mu, logvar)  # temporal z (B, N, z_dim)
-
             z_data = z_data + self.reparameterize(
                 self.mu, self.logvar
             )  # temporal z + spatial z
@@ -207,28 +251,13 @@ class STMetaLSTM(nn.Module):
 
         lstm_input = x  # (B, T_in, N, 1)
         h_each_layer, c_each_layer = [], []  # last step's h, c of each layer
-        for lstm_cell in self.encoder:
-            # temp_weight = next(lstm_cell.parameters()).data
-            # # use new_zeros to generate zero tensor, keeping the same device and requires_grad option
-            # h = temp_weight.new_zeros(batch_size, self.num_nodes, self.lstm_hidden_dim)
-            # c = temp_weight.new_zeros(batch_size, self.num_nodes, self.lstm_hidden_dim)
-            h = torch.zeros(
-                batch_size, self.num_nodes, self.lstm_hidden_dim, device=x.device
-            )
-            c = torch.zeros(
-                batch_size, self.num_nodes, self.lstm_hidden_dim, device=x.device
-            )
+        for encoder in self.encoders:
+            lstm_input, last_h, last_c = encoder(lstm_input, meta_input)
 
-            h_each_step = []  # every step's h
-            for t in range(self.in_steps):
-                h, c = lstm_cell(lstm_input[:, t, ...], meta_input, h, c)
-                h_each_step.append(h)  # T_in*(B, N, lstm_hidden_dim)
-            lstm_input = torch.stack(
-                h_each_step, dim=1
-            )  # (B, T_in, N, lstm_hidden_dim) input for next layer
+            h_each_layer.append(last_h)  # num_layers*(B, N, lstm_hidden_dim)
+            c_each_layer.append(last_c)
 
-            h_each_layer.append(h)  # num_layers*(B, N, lstm_hidden_dim)
-            c_each_layer.append(c)
+        # TODO seq2seq
 
         out = h_each_layer[-1]  # (B, N, lstm_hidden_dim) last layer last step's h
 
@@ -244,7 +273,33 @@ class STMetaLSTM(nn.Module):
         return mu + eps * std
 
 
-class STMetaLSTM2(nn.Module):
+def print_model_params(model):
+    param_count = 0
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print("%-40s\t%-30s\t%-30s" % (name, list(param.shape), param.numel()))
+            param_count += param.numel()
+    print("%-40s\t%-30s" % ("Total trainable params", param_count))
+
+
+if __name__ == "__main__":
+    model = STMetaLSTM(
+        207,
+        "../data/METRLA/spatial_embeddings.npz",
+        torch.device("cpu"),
+        learner_hidden_dim=64,
+        lstm_hidden_dim=32,
+        z_dim=32,
+        num_layers=1,
+    )
+    summary(model, [64, 12, 207, 3], device="cpu")
+    print_model_params(model)
+
+
+# ---------------------------------------------------------------------------- #
+
+
+class STMetaLSTM_oldver(nn.Module):
     def __init__(
         self,
         num_nodes,
@@ -260,8 +315,6 @@ class STMetaLSTM2(nn.Module):
         node_embedding_dim=64,
         learner_hidden_dim=64,
         z_dim=0,
-        num_layers=1,
-        seq2seq=False,
     ):
         super(STMetaLSTM, self).__init__()
 
@@ -276,8 +329,6 @@ class STMetaLSTM2(nn.Module):
         )
         self.learner_hidden_dim = learner_hidden_dim
         self.z_dim = z_dim
-        self.num_layers = num_layers
-        self.seq2seq = seq2seq
 
         self.node_embedding = torch.FloatTensor(np.load(node_emb_file)["data"]).to(
             device
@@ -458,9 +509,3 @@ class STMetaLSTM2(nn.Module):
 
         return out.transpose(1, 2)  # (batch_size, out_steps, num_nodes, 1)
 
-
-if __name__ == "__main__":
-    model = STMetaLSTM(
-        207, "../data/METRLA/spatial_embeddings.npz", torch.device("cpu"), z_dim=32
-    )
-    summary(model, [64, 12, 207, 3], device="cpu")

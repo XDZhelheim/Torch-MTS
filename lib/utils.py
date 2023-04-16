@@ -154,3 +154,12 @@ def vrange(starts, stops):
     assert l.min() == l.max(), "Lengths of each range should be equal."
     indices = np.repeat(stops - l.cumsum(), l) + np.arange(l.sum())
     return indices.reshape(-1, l[0])
+
+
+def print_model_params(model):
+    param_count = 0
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print("%-40s\t%-30s\t%-30s" % (name, list(param.shape), param.numel()))
+            param_count += param.numel()
+    print("%-40s\t%-30s" % ("Total trainable params", param_count))

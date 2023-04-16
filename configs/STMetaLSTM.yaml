@@ -23,7 +23,7 @@ METRLA:
     out_steps: 12
     input_dim: 1
     output_dim: 1
-    lstm_hidden_dim: 64
+    lstm_hidden_dim: 32
     tod_embedding_dim: 24
     dow_embedding_dim: 7
     node_embedding_dim: 64

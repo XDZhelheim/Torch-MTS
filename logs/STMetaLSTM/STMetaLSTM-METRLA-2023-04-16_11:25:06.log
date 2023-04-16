@@ -1,0 +1,166 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 3)	y-(23974, 12, 207, 1)
+Valset:  	x-(3425, 12, 207, 3)  	y-(3425, 12, 207, 1)
+Testset:	x-(6850, 12, 207, 3)	y-(6850, 12, 207, 1)
+
+--------- STMetaLSTM ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "time_of_day": true,
+    "day_of_week": true,
+    "lr": 0.001,
+    "weight_decay": 0,
+    "milestones": [
+        10,
+        40
+    ],
+    "clip_grad": false,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "use_cl": false,
+    "pass_device": true,
+    "model_args": {
+        "num_nodes": 207,
+        "node_emb_file": "../data/METRLA/spatial_embeddings.npz",
+        "in_steps": 12,
+        "out_steps": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "lstm_hidden_dim": 32,
+        "tod_embedding_dim": 24,
+        "dow_embedding_dim": 7,
+        "node_embedding_dim": 64,
+        "learner_hidden_dim": 64,
+        "z_dim": 32,
+        "num_layers": 3,
+        "seq2seq": false,
+        "device": "cuda:0"
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+STMetaLSTM                               [64, 12, 207, 1]          13,248
+├─Sequential: 1-1                        [64, 207, 32]             --
+│    └─Linear: 2-1                       [64, 207, 32]             416
+│    └─Tanh: 2-2                         [64, 207, 32]             --
+│    └─Linear: 2-3                       [64, 207, 32]             1,056
+│    └─Tanh: 2-4                         [64, 207, 32]             --
+│    └─Linear: 2-5                       [64, 207, 32]             1,056
+├─Sequential: 1-2                        [64, 207, 32]             --
+│    └─Linear: 2-6                       [64, 207, 32]             416
+│    └─Tanh: 2-7                         [64, 207, 32]             --
+│    └─Linear: 2-8                       [64, 207, 32]             1,056
+│    └─Tanh: 2-9                         [64, 207, 32]             --
+│    └─Linear: 2-10                      [64, 207, 32]             1,056
+├─ModuleList: 1-3                        --                        --
+│    └─STMetaLSTMEncoder: 2-11           [64, 12, 207, 32]         --
+│    │    └─Sequential: 3-1              [64, 207, 128]            16,512
+│    │    └─Sequential: 3-2              [64, 207, 4096]           274,432
+│    │    └─Sequential: 3-3              [64, 207, 128]            16,512
+│    │    └─STMetaLSTMCell: 3-4          [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-5          [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-6          [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-7          [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-8          [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-9          [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-10         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-11         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-12         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-13         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-14         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-15         [64, 207, 32]             --
+│    └─STMetaLSTMEncoder: 2-12           [64, 12, 207, 32]         --
+│    │    └─Sequential: 3-16             [64, 207, 4096]           274,432
+│    │    └─Sequential: 3-17             [64, 207, 4096]           274,432
+│    │    └─Sequential: 3-18             [64, 207, 128]            16,512
+│    │    └─STMetaLSTMCell: 3-19         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-20         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-21         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-22         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-23         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-24         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-25         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-26         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-27         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-28         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-29         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-30         [64, 207, 32]             --
+│    └─STMetaLSTMEncoder: 2-13           [64, 12, 207, 32]         --
+│    │    └─Sequential: 3-31             [64, 207, 4096]           274,432
+│    │    └─Sequential: 3-32             [64, 207, 4096]           274,432
+│    │    └─Sequential: 3-33             [64, 207, 128]            16,512
+│    │    └─STMetaLSTMCell: 3-34         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-35         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-36         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-37         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-38         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-39         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-40         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-41         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-42         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-43         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-44         [64, 207, 32]             --
+│    │    └─STMetaLSTMCell: 3-45         [64, 207, 32]             --
+├─Linear: 1-4                            [64, 207, 12]             396
+==========================================================================================
+Total params: 1,456,908
+Trainable params: 1,456,908
+Non-trainable params: 0
+Total mult-adds (M): 92.39
+==========================================================================================
+Input size (MB): 1.91
+Forward/backward pass size (MB): 2307.48
+Params size (MB): 5.77
+Estimated Total Size (MB): 2315.17
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-04-16 11:26:22.593749 Epoch 1  	Train Loss = 3.93850 Val Loss = 3.34276
+2023-04-16 11:27:36.179965 Epoch 2  	Train Loss = 3.34337 Val Loss = 3.13881
+2023-04-16 11:28:49.934317 Epoch 3  	Train Loss = 3.21644 Val Loss = 3.06695
+2023-04-16 11:30:03.618583 Epoch 4  	Train Loss = 3.12902 Val Loss = 3.01426
+2023-04-16 11:31:17.224242 Epoch 5  	Train Loss = 3.07050 Val Loss = 2.99268
+2023-04-16 11:32:30.777395 Epoch 6  	Train Loss = 3.03347 Val Loss = 3.01167
+2023-04-16 11:33:44.330980 Epoch 7  	Train Loss = 3.00171 Val Loss = 2.96934
+2023-04-16 11:34:57.924304 Epoch 8  	Train Loss = 2.97938 Val Loss = 3.00118
+2023-04-16 11:36:11.558930 Epoch 9  	Train Loss = 2.96007 Val Loss = 2.96288
+2023-04-16 11:37:25.234018 Epoch 10  	Train Loss = 2.93795 Val Loss = 2.96740
+2023-04-16 11:38:38.912167 Epoch 11  	Train Loss = 2.88765 Val Loss = 2.95760
+2023-04-16 11:39:52.591228 Epoch 12  	Train Loss = 2.87602 Val Loss = 2.95722
+2023-04-16 11:41:06.288778 Epoch 13  	Train Loss = 2.86983 Val Loss = 2.95406
+2023-04-16 11:42:20.035531 Epoch 14  	Train Loss = 2.86424 Val Loss = 2.94706
+2023-04-16 11:43:33.740343 Epoch 15  	Train Loss = 2.86100 Val Loss = 2.95545
+2023-04-16 11:44:47.368287 Epoch 16  	Train Loss = 2.85650 Val Loss = 2.95318
+2023-04-16 11:46:01.138748 Epoch 17  	Train Loss = 2.85179 Val Loss = 2.95744
+2023-04-16 11:47:39.054622 Epoch 18  	Train Loss = 2.84722 Val Loss = 2.95430
+2023-04-16 11:49:08.562581 Epoch 19  	Train Loss = 2.84387 Val Loss = 2.95612
+2023-04-16 11:50:35.071850 Epoch 20  	Train Loss = 2.83984 Val Loss = 2.96589
+2023-04-16 11:52:18.074971 Epoch 21  	Train Loss = 2.83563 Val Loss = 2.96522
+2023-04-16 11:53:52.903321 Epoch 22  	Train Loss = 2.83196 Val Loss = 2.97144
+2023-04-16 11:55:06.409425 Epoch 23  	Train Loss = 2.82761 Val Loss = 2.96174
+2023-04-16 11:56:19.858362 Epoch 24  	Train Loss = 2.82407 Val Loss = 2.97698
+Early stopping at epoch: 24
+Best at epoch 14:
+Train Loss = 2.86424
+Train RMSE = 5.77126, MAE = 2.81783, MAPE = 7.61824
+Val Loss = 2.94706
+Val RMSE = 6.44142, MAE = 3.02246, MAPE = 8.72320
+--------- Test ---------
+All Steps RMSE = 6.75420, MAE = 3.22046, MAPE = 9.39003
+Step 1 RMSE = 4.18965, MAE = 2.34915, MAPE = 5.92845
+Step 2 RMSE = 5.07047, MAE = 2.64366, MAPE = 6.99168
+Step 3 RMSE = 5.68358, MAE = 2.85867, MAPE = 7.84157
+Step 4 RMSE = 6.19803, MAE = 3.03653, MAPE = 8.57999
+Step 5 RMSE = 6.60131, MAE = 3.17606, MAPE = 9.18341
+Step 6 RMSE = 6.90668, MAE = 3.28996, MAPE = 9.67512
+Step 7 RMSE = 7.15983, MAE = 3.38933, MAPE = 10.10281
+Step 8 RMSE = 7.37308, MAE = 3.46838, MAPE = 10.43106
+Step 9 RMSE = 7.51065, MAE = 3.53129, MAPE = 10.67152
+Step 10 RMSE = 7.64551, MAE = 3.58780, MAPE = 10.89749
+Step 11 RMSE = 7.75253, MAE = 3.63603, MAPE = 11.10764
+Step 12 RMSE = 7.84739, MAE = 3.67876, MAPE = 11.26997
+Inference time: 5.08 s
