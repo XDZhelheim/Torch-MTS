@@ -3,6 +3,7 @@ from .GRU import GRU
 from .Attention import Attention
 
 from .STMetaLSTM import STMetaLSTM
+from .STMetaGRU import STMetaGRU
 
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
@@ -24,6 +25,8 @@ def model_select(name):
 
     elif name == "STMETALSTM":
         return STMetaLSTM
+    elif name == "STMETAGRU":
+        return STMetaGRU
 
     elif name == "AGCRN":
         return AGCRN
