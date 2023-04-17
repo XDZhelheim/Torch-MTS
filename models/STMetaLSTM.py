@@ -265,7 +265,7 @@ class STMetaLSTM(nn.Module):
             batch_size, self.num_nodes, self.out_steps, self.output_dim
         )  # (B, N, T_out, output_dim=1)
 
-        return out.transpose(1, 2)  # (B, N, T_out, 1)
+        return out.transpose(1, 2)  # (B, T_out, N, 1)
 
     def reparameterize(self, mu, logvar):
         std = torch.exp(0.5 * logvar)
