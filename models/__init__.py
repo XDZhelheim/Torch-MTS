@@ -2,6 +2,9 @@ from .LSTM import LSTM
 from .GRU import GRU
 from .Attention import Attention
 
+from .GCLSTM import GCLSTM
+from .GCGRU import GCGRU
+
 from .STMetaLSTM import STMetaLSTM
 from .STMetaGRU import STMetaGRU
 from .STMetaAttention import STMetaAttention
@@ -9,7 +12,6 @@ from .STMetaAttention import STMetaAttention
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
-from .GCLSTM import GCLSTM
 from .STWA import STWA
 from .STID import STID
 
@@ -24,6 +26,11 @@ def model_select(name):
     elif name in ("ATTENTION", "ATTN", "TRANSFORMER"):
         return Attention
 
+    elif name == "GCLSTM":
+        return GCLSTM
+    elif name == "GCGRU":
+        return GCGRU
+
     elif name == "STMETALSTM":
         return STMetaLSTM
     elif name == "STMETAGRU":
@@ -37,8 +44,6 @@ def model_select(name):
         return GWNET
     elif name == "MTGNN":
         return MTGNN
-    elif name == "GCLSTM":
-        return GCLSTM
     elif name == "STWA":
         return STWA
     elif name == "STID":
