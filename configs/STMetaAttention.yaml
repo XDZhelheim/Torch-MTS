@@ -46,8 +46,8 @@ PEMSBAY:
   day_of_week: True
 
   lr: 0.001
-  weight_decay: 0.0001
-  milestones: [10, 40]
+  weight_decay: 0
+  milestones: [10, 30]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
@@ -67,10 +67,10 @@ PEMSBAY:
     dow_embedding_dim: 7
     node_embedding_dim: 64
     z_dim: 32
-    learner_hidden_dim: 128
-    feed_forward_dim: 128
+    learner_hidden_dim: 64
+    feed_forward_dim: 64
     num_heads: 4
     num_layers: 1
-    dropout: 0.1
+    dropout: 0
     with_spatial: True
   
