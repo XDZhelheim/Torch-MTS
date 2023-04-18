@@ -1,0 +1,68 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  day_of_week: True
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [10, 40]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 207
+    node_emb_file: "../data/METRLA/spatial_embeddings.npz"
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    lstm_hidden_dim: 32
+    tod_embedding_dim: 24
+    dow_embedding_dim: 7
+    node_embedding_dim: 64
+    learner_hidden_dim: 128
+    z_dim: 32
+    num_layers: 1
+    seq2seq: False
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  day_of_week: True
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [10, 40]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+  
+  pass_device: True
+
+  model_args:
+    num_nodes: 325
+    node_emb_file: "../data/PEMSBAY/spatial_embeddings.npz"
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    lstm_hidden_dim: 32
+    tod_embedding_dim: 24
+    dow_embedding_dim: 7
+    node_embedding_dim: 64
+    learner_hidden_dim: 128
+    z_dim: 32
+    num_layers: 1
+    seq2seq: False
+  

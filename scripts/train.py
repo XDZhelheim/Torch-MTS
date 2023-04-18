@@ -270,7 +270,7 @@ if __name__ == "__main__":
 
     # ------------------------------- make log file ------------------------------ #
 
-    now = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+    now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     log_path = f"../logs/{model_name}"
     if not os.path.exists(log_path):
         os.makedirs(log_path)
