@@ -8,6 +8,7 @@ from .GCGRU import GCGRU
 from .STMetaLSTM import STMetaLSTM
 from .STMetaGRU import STMetaGRU
 from .STMetaAttention import STMetaAttention
+from .STMetaGCGRU import STMetaGCGRU
 
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
@@ -37,6 +38,8 @@ def model_select(name):
         return STMetaGRU
     elif name in ("STMETAATTN", "STMETAATTENTION", "STMETATRANSFORMER"):
         return STMetaAttention
+    elif name == "STMETAGCGRU":
+        return STMetaGCGRU
 
     elif name == "AGCRN":
         return AGCRN

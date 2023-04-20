@@ -243,10 +243,10 @@ class STMetaGRU(nn.Module):
                 [meta_input, z_data], dim=-1
             )  # (B, N, st_emb_dim+z_dim)
 
-        lstm_input = x  # (B, T_in, N, 1)
+        gru_input = x  # (B, T_in, N, 1)
         h_each_layer = []  # last step's h of each layer
         for encoder in self.encoders:
-            lstm_input, last_h = encoder(lstm_input, meta_input)
+            gru_input, last_h = encoder(gru_input, meta_input)
 
             h_each_layer.append(last_h)  # num_layers*(B, N, lstm_hidden_dim)
 
