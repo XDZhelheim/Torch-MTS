@@ -120,6 +120,7 @@ class Attention(nn.Module):
         feed_forward_dim=256,
         num_heads=4,
         num_layers=3,
+        with_spatial=False,
     ):
         super().__init__()
 
@@ -131,41 +132,54 @@ class Attention(nn.Module):
         self.model_dim = model_dim
         self.num_heads = num_heads
         self.num_layers = num_layers
+        self.with_spatial = with_spatial
 
         self.input_proj = nn.Linear(input_dim, model_dim)
         self.positional_proj = nn.Linear(1, model_dim)
         self.temporal_proj = nn.Linear(in_steps, out_steps)
         self.output_proj = nn.Linear(model_dim, self.output_dim)
 
-        self.attn_layers = nn.Sequential(
-            *[
+        self.attn_layers_t = nn.ModuleList(
+            [
                 SelfAttentionLayer(model_dim, feed_forward_dim, num_heads)
                 for _ in range(num_layers)
             ]
         )
 
+        if with_spatial:
+            self.attn_layers_s = nn.ModuleList(
+                [
+                    SelfAttentionLayer(model_dim, feed_forward_dim, num_heads,)
+                    for _ in range(num_layers)
+                ]
+            )
+
     def forward(self, x):
         # x: (batch_size, in_steps, num_nodes, input_dim+timeinday=2)
-        x = x.transpose(1, 2)  # (batch_size, num_nodes, in_steps, input_dim+timeinday)
 
         position = x[..., 1:]
         x = x[..., :1]
 
         x = self.input_proj(x)
         pe = self.positional_proj(position)
-        x += pe  # (batch_size, num_nodes, in_steps, model_dim)
+        x += pe  # (batch_size, in_steps, num_nodes, model_dim)
 
-        out = self.attn_layers(x)  # (batch_size, num_nodes, in_steps, model_dim)
+        for attn in self.attn_layers_t:
+            x = attn(x, dim=1)
+        if self.with_spatial:
+            for attn in self.attn_layers_s:
+                x = attn(x, dim=2)
+        # (batch_size, in_steps, num_nodes, model_dim)
 
-        out = out.transpose(-1, -2)  # (batch_size, num_nodes, model_dim, in_steps)
-        out = self.temporal_proj(out)  # (batch_size, num_nodes, model_dim, out_steps)
+        out = x.transpose(1, 3)  # (batch_size, model_dim, num_nodes, in_steps)
+        out = self.temporal_proj(out)  # (batch_size, model_dim, num_nodes, out_steps)
         out = self.output_proj(
-            out.transpose(-1, -2)
-        )  # (batch_size, num_nodes, out_steps, output_dim)
+            out.transpose(1, 3)
+        )  # (batch_size, out_steps, num_nodes, output_dim)
 
-        return out.transpose(1, 2)  # (batch_size, out_steps, num_nodes, output_dim)
+        return out
 
 
 if __name__ == "__main__":
-    model = Attention(207, 12, 12)
+    model = Attention(207, 12, 12, with_spatial=True)
     summary(model, [1, 12, 207, 2])

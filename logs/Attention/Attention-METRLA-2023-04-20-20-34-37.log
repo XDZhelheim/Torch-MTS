@@ -1,0 +1,101 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 2)	y-(23974, 12, 207, 1)
+Valset:  	x-(3425, 12, 207, 2)  	y-(3425, 12, 207, 1)
+Testset:	x-(6850, 12, 207, 2)	y-(6850, 12, 207, 1)
+
+--------- Attention ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "train_size": 0.7,
+    "val_size": 0.1,
+    "time_of_day": true,
+    "lr": 0.001,
+    "milestones": [
+        10,
+        60
+    ],
+    "batch_size": 64,
+    "max_epochs": 200,
+    "use_cl": false,
+    "model_args": {
+        "num_nodes": 207,
+        "in_steps": 12,
+        "out_steps": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "model_dim": 64,
+        "feed_forward_dim": 256,
+        "num_heads": 4,
+        "num_layers": 3,
+        "with_spatial": true
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+Attention                                [64, 12, 207, 1]          --
+├─Linear: 1-1                            [64, 12, 207, 64]         128
+├─Linear: 1-2                            [64, 12, 207, 64]         128
+├─ModuleList: 1-3                        --                        --
+│    └─SelfAttentionLayer: 2-1           [64, 12, 207, 64]         --
+│    │    └─AttentionLayer: 3-1          [64, 207, 12, 64]         16,640
+│    │    └─Dropout: 3-2                 [64, 207, 12, 64]         --
+│    │    └─LayerNorm: 3-3               [64, 207, 12, 64]         128
+│    │    └─Sequential: 3-4              [64, 207, 12, 64]         33,088
+│    │    └─Dropout: 3-5                 [64, 207, 12, 64]         --
+│    │    └─LayerNorm: 3-6               [64, 207, 12, 64]         128
+│    └─SelfAttentionLayer: 2-2           [64, 12, 207, 64]         --
+│    │    └─AttentionLayer: 3-7          [64, 207, 12, 64]         16,640
+│    │    └─Dropout: 3-8                 [64, 207, 12, 64]         --
+│    │    └─LayerNorm: 3-9               [64, 207, 12, 64]         128
+│    │    └─Sequential: 3-10             [64, 207, 12, 64]         33,088
+│    │    └─Dropout: 3-11                [64, 207, 12, 64]         --
+│    │    └─LayerNorm: 3-12              [64, 207, 12, 64]         128
+│    └─SelfAttentionLayer: 2-3           [64, 12, 207, 64]         --
+│    │    └─AttentionLayer: 3-13         [64, 207, 12, 64]         16,640
+│    │    └─Dropout: 3-14                [64, 207, 12, 64]         --
+│    │    └─LayerNorm: 3-15              [64, 207, 12, 64]         128
+│    │    └─Sequential: 3-16             [64, 207, 12, 64]         33,088
+│    │    └─Dropout: 3-17                [64, 207, 12, 64]         --
+│    │    └─LayerNorm: 3-18              [64, 207, 12, 64]         128
+├─ModuleList: 1-4                        --                        --
+│    └─SelfAttentionLayer: 2-4           [64, 12, 207, 64]         --
+│    │    └─AttentionLayer: 3-19         [64, 12, 207, 64]         16,640
+│    │    └─Dropout: 3-20                [64, 12, 207, 64]         --
+│    │    └─LayerNorm: 3-21              [64, 12, 207, 64]         128
+│    │    └─Sequential: 3-22             [64, 12, 207, 64]         33,088
+│    │    └─Dropout: 3-23                [64, 12, 207, 64]         --
+│    │    └─LayerNorm: 3-24              [64, 12, 207, 64]         128
+│    └─SelfAttentionLayer: 2-5           [64, 12, 207, 64]         --
+│    │    └─AttentionLayer: 3-25         [64, 12, 207, 64]         16,640
+│    │    └─Dropout: 3-26                [64, 12, 207, 64]         --
+│    │    └─LayerNorm: 3-27              [64, 12, 207, 64]         128
+│    │    └─Sequential: 3-28             [64, 12, 207, 64]         33,088
+│    │    └─Dropout: 3-29                [64, 12, 207, 64]         --
+│    │    └─LayerNorm: 3-30              [64, 12, 207, 64]         128
+│    └─SelfAttentionLayer: 2-6           [64, 12, 207, 64]         --
+│    │    └─AttentionLayer: 3-31         [64, 12, 207, 64]         16,640
+│    │    └─Dropout: 3-32                [64, 12, 207, 64]         --
+│    │    └─LayerNorm: 3-33              [64, 12, 207, 64]         128
+│    │    └─Sequential: 3-34             [64, 12, 207, 64]         33,088
+│    │    └─Dropout: 3-35                [64, 12, 207, 64]         --
+│    │    └─LayerNorm: 3-36              [64, 12, 207, 64]         128
+├─Linear: 1-5                            [64, 64, 207, 12]         156
+├─Linear: 1-6                            [64, 12, 207, 1]          65
+==========================================================================================
+Total params: 300,381
+Trainable params: 300,381
+Non-trainable params: 0
+Total mult-adds (M): 19.22
+==========================================================================================
+Input size (MB): 1.27
+Forward/backward pass size (MB): 5617.58
+Params size (MB): 1.20
+Estimated Total Size (MB): 5620.05
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2023-04-20 20:36:07.494568 Epoch 1  	Train Loss = 4.68706 Val Loss = 3.95109
