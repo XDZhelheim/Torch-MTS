@@ -20,3 +20,10 @@ All the codes are based on my personal coding habit and style.
 ## Changelog
 * v1.1: 一个稳定版本，包含 MetaLSTM
 * v1.2: 参考 BasicTS，重构了整个 dataset 的创建和读取
+
+## TODO
+
+- Wavenet
+- HA
+- Copy last step
+- ARIMA
