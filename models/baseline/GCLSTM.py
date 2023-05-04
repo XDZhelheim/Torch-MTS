@@ -143,38 +143,48 @@ class GCN(nn.Module):
         return output
 
 
-class GRUCell(nn.Module):
+class LSTMCell(nn.Module):
     def __init__(self, num_nodes, dim_in, dim_hidden, cheb_k):
-        super(GRUCell, self).__init__()
+        super(LSTMCell, self).__init__()
         self.num_nodes = num_nodes
         self.dim_in = dim_in
         self.dim_hidden = dim_hidden
 
-        self.gate = GCN(
-            cheb_k=cheb_k, dim_in=dim_in + dim_hidden, dim_out=2 * dim_hidden
-        )
-        self.update = GCN(cheb_k=cheb_k, dim_in=dim_in + dim_hidden, dim_out=dim_hidden)
+        self.conv_gate = GCN(
+            cheb_k=cheb_k, dim_in=dim_in + dim_hidden, dim_out=4 * dim_hidden
+        )  # 4 gates
 
-    def forward(self, G, x_t, h_pre):
+    def forward(self, G, x_t, h_pre, c_pre):
         """
         :param G: support adj matrices      -   [K, N, N]
         :param x_t: graph feature/signal    -   [B, N, C]
         :param h_pre: previous hidden state -   [B, N, H]
+        :param c_pre: previous cell state   -   [B, N, H]
         :return h_t: current hidden state   -   [B, N, H]
+        :return c_t: current cell state     -   [B, N, H]
         """
         combined = torch.cat([x_t, h_pre], dim=-1)  # concat input and last hidden
-        z_r = torch.sigmoid(self.gate(G, combined))  # [B, N, 2 * H]
-        z, r = torch.split(z_r, self.dim_hidden, dim=-1)
-        candidate = torch.cat([x_t, r * h_pre], dim=-1)
-        n = torch.tanh(self.update(G, candidate))
-        h_t = z * n + (1 - z) * h_pre  # [B, N, H]
+        combined_conv = self.conv_gate(
+            G, combined
+        )  # [B, N, 4 * H] replace original LSTM's matmul operation by graph conv
 
-        return h_t
+        gc_i, gc_f, gc_o, gc_g = torch.split(
+            combined_conv, self.dim_hidden, dim=-1
+        )  # four gates
+        i = torch.sigmoid(gc_i)  # [B, N, H]
+        f = torch.sigmoid(gc_f)
+        o = torch.sigmoid(gc_o)
+        g = torch.tanh(gc_g)
+
+        c_t = c_pre * f + g * i  # [B, N, H]
+        h_t = torch.tanh(c_t) * o  # [B, N, H]
+        return h_t, c_t
 
     def init_hidden(self, batch_size: int):
         weight = next(self.parameters()).data
         h = weight.new_zeros(batch_size, self.num_nodes, self.dim_hidden)
-        return h
+        c = weight.new_zeros(batch_size, self.num_nodes, self.dim_hidden)
+        return h, c
 
 
 class Encoder(nn.Module):
@@ -193,7 +203,7 @@ class Encoder(nn.Module):
         for i in range(self.num_layers):
             cur_input_dim = self.dim_in if i == 0 else self.dim_hidden
             self.cell_list.append(
-                GRUCell(
+                LSTMCell(
                     num_nodes=num_nodes,
                     dim_in=cur_input_dim,
                     dim_hidden=self.dim_hidden,
@@ -201,37 +211,49 @@ class Encoder(nn.Module):
                 )
             )
 
-    def forward(self, G, x_seq, init_h):
+    def forward(self, G, x_seq, init_h, init_c):
         """
         :param G: support adj matrices                          -   [K, N, N]
         :param x_seq: graph feature/signal                      -   [B, T, N, C]
         :param init_h: init hidden state                        -   num_layers * [B, N, H]
+        :param init_c: init memory cell internal state          -   num_layers * [B, N, H]
         :return output_h: the last hidden state                 -   num_layers * [B, N, H]
+        :return output_c: the last memory cell internal state   -   num_layers * [B, N, H]
         """
         batch_size, seq_len = x_seq.shape[:2]
         if init_h is None:
-            init_h = self._init_hidden(batch_size)  # each layer's init h
+            init_h, init_c = self._init_hidden(batch_size)  # each layer's init h and c
 
         current_inputs = x_seq
-        output_h = []  # each layer's last h
+        output_h, output_c = [], []  # each layer's last h and c
         for i in range(self.num_layers):
-            h = init_h[i]
-            h_lst = []  # each step's h for this layer
+            h, c = init_h[i], init_c[i]
+            h_lst, c_lst = [], []  # each step's h and c for this layer
             for t in range(seq_len):
-                h = self.cell_list[i](G, current_inputs[:, t, :, :], h)
+                h, c = self.cell_list[i](G, current_inputs[:, t, :, :], h, c)
                 h_lst.append(h)  # T * [B, N, H]
+                c_lst.append(c)  # T * [B, N, H]
             output_h.append(h)  # num_layers * [B, N, H]
+            output_c.append(c)  # num_layers * [B, N, H]
             current_inputs = torch.stack(
                 h_lst, dim=1
             )  # [B, T, N, H] input for the next layer
-        return output_h
+        return output_h, output_c
 
     def _init_hidden(self, batch_size: int):
         h_l = []
+        c_l = []
         for i in range(self.num_layers):
-            h = self.cell_list[i].init_hidden(batch_size)
+            h, c = self.cell_list[i].init_hidden(batch_size)
             h_l.append(h)
-        return h_l
+            c_l.append(c)
+        return h_l, c_l
+
+    @staticmethod
+    def _extend_for_multilayer(param, num_layers):
+        if not isinstance(param, list):
+            param = [param] * num_layers
+        return param
 
 
 class Decoder(nn.Module):
@@ -249,7 +271,7 @@ class Decoder(nn.Module):
         for i in range(self.num_layers):
             cur_input_dim = self.dim_out if i == 0 else self.dim_hidden
             self.cell_list.append(
-                GRUCell(
+                LSTMCell(
                     num_nodes=num_nodes,
                     dim_in=cur_input_dim,
                     dim_hidden=self.dim_hidden,
@@ -257,25 +279,34 @@ class Decoder(nn.Module):
                 )
             )
 
-    def forward(self, G, x_t, h):
+    def forward(self, G, x_t, h, c):
         """
         :param G: support adj matrices                              -   [K, N, N]
         :param x_t: graph feature/signal                            -   [B, N, C]
         :param h: previous hidden state from the last encoder cell  -   num_layers * [B, N, H]
+        :param c: previous cell state from the last encoder cell    -   num_layers * [B, N, H]
         :return output: the last hidden state                       -   [B, N, H]
         :return h_lst: hidden state of each layer                   -   num_layers * [B, N, H]
+        :return c_lst: cell state of each layer                     -   num_layers * [B, N, H]
         """
         current_inputs = x_t
-        h_lst = []  # each layer's h for this step
+        h_lst, c_lst = [], []  # each layer's h and c for this step
         for i in range(self.num_layers):
-            h_t = self.cell_list[i](G, current_inputs, h[i])
+            h_t, c_t = self.cell_list[i](G, current_inputs, h[i], c[i])
             h_lst.append(h_t)  # num_layers * [B, N, H]
+            c_lst.append(c_t)  # num_layers * [B, N, H]
             current_inputs = h_t  # input for next layer
         output = current_inputs
-        return output, h_lst
+        return output, h_lst, c_lst
+
+    @staticmethod
+    def _extend_for_multilayer(param, num_layers):
+        if not isinstance(param, list):
+            param = [param] * num_layers
+        return param
 
 
-class GCGRU(nn.Module):
+class GCLSTM(nn.Module):
     def __init__(
         self,
         device,
@@ -289,7 +320,7 @@ class GCGRU(nn.Module):
         num_layers=1,
         cheb_k=3,
     ):
-        super(GCGRU, self).__init__()
+        super(GCLSTM, self).__init__()
         self.num_nodes = num_nodes
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -330,16 +361,17 @@ class GCGRU(nn.Module):
         return torch.stack(P_k, dim=0)  # (K, N, N) or (2*K, N, N) for bidirection
 
     def forward(self, x):
+        init_c = None
         init_h = None
 
-        h_lst = self.encoder(self.P, x, init_h)
+        h_lst, c_lst = self.encoder(self.P, x, init_h, init_c)
 
         deco_input = torch.zeros(
             (x.shape[0], x.shape[2], x.shape[3]), device=x.device
         )  # original initialization [B, N, C], go
         outputs = []
         for t in range(self.horizon):
-            output, h_lst = self.decoder(self.P, deco_input, h_lst)
+            output, h_lst, c_lst = self.decoder(self.P, deco_input, h_lst, c_lst)
             deco_input = self.proj(output)  # update decoder input
             outputs.append(deco_input)  # T * [B, N, C]
 
@@ -348,10 +380,10 @@ class GCGRU(nn.Module):
 
 
 if __name__ == "__main__":
-    model = GCGRU(
+    model = GCLSTM(
         torch.device("cpu"),
         num_nodes=207,
-        adj_path="../data/METRLA/adj_mx.pkl",
+        adj_path="../../data/METRLA/adj_mx.pkl",
         adj_type="doubletransition",
         input_dim=1,
         output_dim=1,

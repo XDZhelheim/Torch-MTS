@@ -314,7 +314,7 @@ class STMetaAttention(nn.Module):
 if __name__ == "__main__":
     model = STMetaAttention(
         207,
-        "../data/METRLA/spatial_embeddings.npz",
+        "../../data/METRLA/spatial_embeddings.npz",
         torch.device("cpu"),
         learner_hidden_dim=64,
         feed_forward_dim=64,

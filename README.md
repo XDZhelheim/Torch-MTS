@@ -27,3 +27,16 @@ All the codes are based on my personal coding habit and style.
 - HA
 - Copy last step
 - ARIMA
+
+logs:
+
+- AGCRN: bay, 3478
+- Attn: 3478 w, w/o spatial
+- GCGRU: bay, 3478
+- GCLSTM: bay, 3478
+- GRU: 78
+- LSTM: LA, bay, 347
+- GWN: bay, 3478
+- MTGNN: bay, 3478
+- STMetaGCGRU: bay
+- STWA: 3478

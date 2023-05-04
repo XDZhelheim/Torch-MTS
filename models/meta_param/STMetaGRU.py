@@ -269,7 +269,7 @@ class STMetaGRU(nn.Module):
 if __name__ == "__main__":
     model = STMetaGRU(
         207,
-        "../data/METRLA/spatial_embeddings.npz",
+        "../../data/METRLA/spatial_embeddings.npz",
         torch.device("cpu"),
         learner_hidden_dim=128,
         gru_hidden_dim=32,

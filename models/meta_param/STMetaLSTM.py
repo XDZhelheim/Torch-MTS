@@ -285,7 +285,7 @@ def print_model_params(model):
 if __name__ == "__main__":
     model = STMetaLSTM(
         207,
-        "../data/METRLA/spatial_embeddings.npz",
+        "../../data/METRLA/spatial_embeddings.npz",
         torch.device("cpu"),
         learner_hidden_dim=128,
         lstm_hidden_dim=32,

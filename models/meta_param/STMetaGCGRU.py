@@ -695,8 +695,8 @@ if __name__ == "__main__":
     model = STMetaGCGRU(
         torch.device("cpu"),
         207,
-        "../data/METRLA/spatial_embeddings.npz",
-        "../data/METRLA/adj_mx.pkl",
+        "../../data/METRLA/spatial_embeddings.npz",
+        "../../data/METRLA/adj_mx.pkl",
         "doubletransition",
         learner_hidden_dim=128,
         gru_hidden_dim=32,

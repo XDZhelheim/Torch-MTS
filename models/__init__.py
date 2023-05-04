@@ -1,14 +1,13 @@
-from .LSTM import LSTM
-from .GRU import GRU
-from .Attention import Attention
+from .baseline.LSTM import LSTM
+from .baseline.GRU import GRU
+from .baseline.Attention import Attention
+from .baseline.GCLSTM import GCLSTM
+from .baseline.GCGRU import GCGRU
 
-from .GCLSTM import GCLSTM
-from .GCGRU import GCGRU
-
-from .STMetaLSTM import STMetaLSTM
-from .STMetaGRU import STMetaGRU
-from .STMetaAttention import STMetaAttention
-from .STMetaGCGRU import STMetaGCGRU
+from .meta_param.STMetaLSTM import STMetaLSTM
+from .meta_param.STMetaGRU import STMetaGRU
+from .meta_param.STMetaAttention import STMetaAttention
+from .meta_param.STMetaGCGRU import STMetaGCGRU
 
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
