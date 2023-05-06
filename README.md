@@ -32,8 +32,7 @@ All the codes are based on my personal coding habit and style.
 
 logs:
 
-- AGCRN: LA, bay, 3478
-- Attn: 3478 w, w/o spatial
+- Attn: 7 w-spatial
 - GCGRU: bay, 3478
 - GCLSTM: bay, 3478
 - GRU: 78
