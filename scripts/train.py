@@ -320,7 +320,7 @@ if __name__ == "__main__":
     )
     scheduler = torch.optim.lr_scheduler.MultiStepLR(
         optimizer,
-        milestones=cfg["milestones"],
+        milestones=cfg.get("milestones", []),
         gamma=cfg.get("lr_decay_rate", 0.1),
         verbose=False,
     )
