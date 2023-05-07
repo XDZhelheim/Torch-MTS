@@ -35,8 +35,6 @@ logs:
 - Attn: 7 w-spatial
 - GCGRU: bay, 3478
 - GCLSTM: bay, 3478
-- GRU: 78
-- LSTM: LA, bay, 347
 - GWN: bay, 3478
 - MTGNN: bay, 3478
 - STMetaGCGRU: bay

@@ -141,7 +141,7 @@ PEMS08:
   milestones: [10, 20]
   clip_grad: 0
   batch_size: 64
-  max_epochs: 200
+  max_epochs: 300
   use_cl: False
 
   model_args:
