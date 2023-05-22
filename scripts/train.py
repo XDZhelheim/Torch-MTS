@@ -341,6 +341,7 @@ if __name__ == "__main__":
                 next(iter(trainset_loader))[0].shape[-1],
             ],
             verbose=0,  # avoid print twice
+            device=DEVICE,
         ),
         log=log,
     )
