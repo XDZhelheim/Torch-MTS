@@ -1,6 +1,7 @@
 from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
 from .baseline.Attention import Attention
+from .baseline.WaveNet import WaveNet
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
 
@@ -25,6 +26,8 @@ def model_select(name):
         return GRU
     elif name in ("ATTENTION", "ATTN", "TRANSFORMER"):
         return Attention
+    elif name in ("TCN", "WAVENET"):
+        return WaveNet
 
     elif name == "GCLSTM":
         return GCLSTM

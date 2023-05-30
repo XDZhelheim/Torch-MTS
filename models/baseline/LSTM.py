@@ -87,4 +87,4 @@ class LSTM(nn.Module):
 
 if __name__ == "__main__":
     model = LSTM(207, 12, 12, 1, 1, 64, seq2seq=True)
-    summary(model, [128, 207, 12, 1])
+    summary(model, [128, 12, 207, 1])
