@@ -177,7 +177,7 @@ class WaveNet(nn.Module):
         final_length = skips[-1].shape[3]
         skip_sum = skips[0][..., -final_length:]
         for i in range(1, len(skips)):
-            skip_sum += skips[1][
+            skip_sum += skips[i][
                 ..., -final_length:
             ]  # (B, hidden_channels, N, final_length)
 
