@@ -14,7 +14,7 @@ METRLA:
   model_args:
     in_channels: 1
     out_channels: 12
-    hidden_channels: 32
+    hidden_channels: 16
     kernel_size: 2
     num_blocks: 4
     num_layers: 2
