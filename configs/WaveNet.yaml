@@ -26,7 +26,7 @@ PEMSBAY:
 
   lr: 0.01
   weight_decay: 0
-  milestones: [10, 20]
+  milestones: [10, 30]
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
@@ -47,10 +47,73 @@ PEMS03:
 
   lr: 0.01
   weight_decay: 0
-  milestones: [10, 20]
+  milestones: [10, 30]
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
+  use_cl: False
+
+  model_args:
+    in_channels: 1
+    out_channels: 12
+    hidden_channels: 16
+    kernel_size: 2
+    num_blocks: 4
+    num_layers: 2
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    in_channels: 1
+    out_channels: 12
+    hidden_channels: 16
+    kernel_size: 2
+    num_blocks: 4
+    num_layers: 2
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    in_channels: 1
+    out_channels: 12
+    hidden_channels: 16
+    kernel_size: 2
+    num_blocks: 4
+    num_layers: 2
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 300
   use_cl: False
 
   model_args:
