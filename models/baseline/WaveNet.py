@@ -16,7 +16,7 @@ from torchinfo import summary
 """
 
 
-class CasualConv(nn.Module):
+class DilatedConv(nn.Module):
     """
     out_length = [in_length + 2*pad - dilation*(kernel_size-1) - 1] / stride + 1
 
@@ -134,12 +134,17 @@ class WaveNet(nn.Module):
         self.num_blocks = num_blocks
         self.num_layers = num_layers
 
-        self.receptive_field = 1
-        for _ in range(num_blocks):
-            additional_scope = kernel_size - 1
-            for _ in range(num_layers):
-                self.receptive_field += additional_scope
-                additional_scope *= 2
+        # self.receptive_field = 1
+        # for _ in range(num_blocks):
+        #     additional_scope = kernel_size - 1
+        #     for _ in range(num_layers):
+        #         self.receptive_field += additional_scope
+        #         additional_scope *= 2
+
+        # equivalent to sum of a geometric sequence a1(q^n-1)/(q-1)
+        self.receptive_field = 1 + num_blocks * (
+            (kernel_size - 1) * (2**num_layers - 1)
+        ) // (2 - 1)
 
         self.input_conv = nn.Conv2d(in_channels, hidden_channels, kernel_size=(1, 1))
         self.blocks = nn.ModuleList(
