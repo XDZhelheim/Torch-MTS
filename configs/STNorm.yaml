@@ -1,0 +1,25 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  lr: 0.002
+  weight_decay: 0.0001
+  clip_grad: 5
+  milestones: [1, 50]
+  lr_decay_rate: 0.5
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 207
+    tnorm_bool: True
+    snorm_bool: True
+    in_dim: 2
+    out_dim: 12
+    channels: 32
+    kernel_size: 2
+    blocks: 4
+    layers: 2
