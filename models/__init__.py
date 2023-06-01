@@ -1,3 +1,4 @@
+from .baseline.HistoricalInertia import HistoricalInertia
 from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
 from .baseline.Attention import Attention
@@ -20,7 +21,9 @@ from .STID import STID
 def model_select(name):
     name = name.upper()
 
-    if name == "LSTM":
+    if name in ("HI", "HISTORICALINERTIA", "COPYLASTSTEPS"):
+        return HistoricalInertia
+    elif name == "LSTM":
         return LSTM
     elif name == "GRU":
         return GRU

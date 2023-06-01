@@ -1,0 +1,47 @@
+METRLA:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
+
+PEMSBAY:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
+
+PEMS03:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
+
+PEMS04:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
+
+PEMS07:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
+
+PEMS08:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
