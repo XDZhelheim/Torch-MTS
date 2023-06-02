@@ -1,0 +1,132 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.0002
+  weight_decay: 0
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    units: 207
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.0002
+  weight_decay: 0
+  milestones: [50]
+  lr_decay_rate: 0.5
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    units: 325
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    units: 358
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    units: 307
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [10]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    units: 883
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 300
+  use_cl: False
+
+  model_args:
+    units: 170
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2

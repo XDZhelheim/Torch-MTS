@@ -18,6 +18,7 @@ from .MTGNN import MTGNN
 from .STWA import STWA
 from .STID import STID
 from .STNorm import STNorm
+from .StemGNN import StemGNN
 
 
 def model_select(name):
@@ -62,6 +63,8 @@ def model_select(name):
         return STID
     elif name == "STNORM":
         return STNorm
+    elif name == "STEMGNN":
+        return StemGNN
 
     else:
         raise NotImplementedError
