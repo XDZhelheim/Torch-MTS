@@ -1,4 +1,5 @@
 from .baseline.HistoricalInertia import HistoricalInertia
+from .baseline.MLP import MLP
 from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
 from .baseline.Attention import Attention
@@ -24,6 +25,8 @@ def model_select(name):
 
     if name in ("HI", "HISTORICALINERTIA", "COPYLASTSTEPS"):
         return HistoricalInertia
+    elif name == "MLP":
+        return MLP
     elif name == "LSTM":
         return LSTM
     elif name == "GRU":

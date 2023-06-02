@@ -26,7 +26,7 @@ class MLP(nn.Module):
         batch_size = x.shape[0]
         num_nodes = x.shape[2]
 
-        x = x.transpose(1, 2).view(
+        x = x.transpose(1, 2).reshape(
             batch_size, num_nodes, self.in_steps * self.input_dim
         )  # (B, N, T*C)
 
