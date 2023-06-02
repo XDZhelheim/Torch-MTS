@@ -10,6 +10,7 @@ METRLA:
   
   lr: 0.001
   weight_decay: 0.0001
+  # milestones: [80]
   milestones: [40]
   clip_grad: False
   batch_size: 64
@@ -43,11 +44,12 @@ PEMSBAY:
   
   lr: 0.001
   weight_decay: 0.0001
-  milestones: [50]
+  # milestones: [50]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: True
+  use_cl: False
   cl_step_size: 2500
 
   pass_device: True
@@ -76,11 +78,12 @@ PEMS03:
   
   lr: 0.001
   weight_decay: 0.0001
-  milestones: [115]
+  # milestones: [115]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: True
+  use_cl: False
   cl_step_size: 2500
 
   pass_device: True
@@ -109,12 +112,13 @@ PEMS04:
   
   lr: 0.001
   weight_decay: 0.0001
-  milestones: [175]
+  # milestones: [175]
+  milestones: [40]
   early_stop: 15
   clip_grad: False
   batch_size: 64
   max_epochs: 500
-  use_cl: True
+  use_cl: False
   cl_step_size: 2500
 
   pass_device: True
@@ -143,11 +147,12 @@ PEMS07:
   
   lr: 0.001
   weight_decay: 0.0001
-  milestones: [108]
+  # milestones: [108]
+  milestones: [40]
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: True
+  use_cl: False
   cl_step_size: 2500
 
   pass_device: True
@@ -176,12 +181,13 @@ PEMS08:
   
   lr: 0.001
   weight_decay: 0.0001
-  milestones: [168]
+  # milestones: [168]
+  milestones: [40]
   early_stop: 15
   clip_grad: False
   batch_size: 64
-  max_epochs: 200
-  use_cl: True
+  max_epochs: 300
+  use_cl: False
   cl_step_size: 2500
 
   pass_device: True

@@ -81,7 +81,7 @@ def train_one_epoch(
         out_batch = model(x_batch)
         out_batch = SCALER.inverse_transform(out_batch)
 
-        if cfg["use_cl"]:
+        if cfg.get("use_cl"):
             if (
                 global_iter_count % cfg["cl_step_size"] == 0
                 and global_target_length < cfg["out_steps"]
@@ -314,13 +314,13 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.Adam(
         model.parameters(),
-        lr=cfg["lr"],
+        lr=cfg.get("lr", 0.001),
         weight_decay=cfg.get("weight_decay", 0),
         eps=cfg.get("eps", 1e-8),
     )
     scheduler = torch.optim.lr_scheduler.MultiStepLR(
         optimizer,
-        milestones=cfg["milestones"],
+        milestones=cfg.get("milestones", []),
         gamma=cfg.get("lr_decay_rate", 0.1),
         verbose=False,
     )
@@ -331,16 +331,13 @@ if __name__ == "__main__":
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
     )
+    x_shape = next(iter(trainset_loader))[0].shape
     print_log(
         summary(
             model,
-            [
-                cfg["batch_size"],
-                cfg["in_steps"],
-                cfg["num_nodes"],
-                next(iter(trainset_loader))[0].shape[-1],
-            ],
+            x_shape,
             verbose=0,  # avoid print twice
+            device=DEVICE,
         ),
         log=log,
     )
@@ -351,9 +348,11 @@ if __name__ == "__main__":
     print_log(f"Loss: {criterion._get_name()}", log=log)
     print_log(log=log)
 
-    if cfg["use_cl"]:
+    if cfg.get("use_cl"):
         if "cl_step_size" not in cfg:
             raise KeyError("Missing config: cl_step_size (int).")
+        if "out_steps" not in cfg:
+            raise KeyError("Missing config: out_steps (int).")
         global_iter_count = 1
         global_target_length = 1
         print_log(f"CL target length = {global_target_length}", log=log)

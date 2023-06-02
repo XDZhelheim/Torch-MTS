@@ -1,6 +1,9 @@
+from .baseline.HistoricalInertia import HistoricalInertia
+from .baseline.MLP import MLP
 from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
 from .baseline.Attention import Attention
+from .baseline.WaveNet import WaveNet
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
 
@@ -14,17 +17,24 @@ from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
 from .STWA import STWA
 from .STID import STID
+from .STNorm import STNorm
 
 
 def model_select(name):
     name = name.upper()
 
-    if name == "LSTM":
+    if name in ("HI", "HISTORICALINERTIA", "COPYLASTSTEPS"):
+        return HistoricalInertia
+    elif name == "MLP":
+        return MLP
+    elif name == "LSTM":
         return LSTM
     elif name == "GRU":
         return GRU
     elif name in ("ATTENTION", "ATTN", "TRANSFORMER"):
         return Attention
+    elif name in ("TCN", "WAVENET"):
+        return WaveNet
 
     elif name == "GCLSTM":
         return GCLSTM
@@ -50,6 +60,8 @@ def model_select(name):
         return STWA
     elif name == "STID":
         return STID
+    elif name == "STNORM":
+        return STNorm
 
     else:
         raise NotImplementedError

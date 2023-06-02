@@ -5,23 +5,22 @@ METRLA:
 
   train_size: 0.7
   val_size: 0.1
+
+  time_of_day: True
   
-  lr: 0.003
-  weight_decay: 0
-  milestones: [5, 20, 40, 70]
-  lr_decay_rate: 0.3
-  clip_grad: False
+  lr: 0.001
+  milestones: [25]
+  clip_grad: 0
   batch_size: 64
   max_epochs: 200
+  early_stop: 20
   use_cl: False
   cl_step_size: 2500
 
-  load_npz: False
-  
   model_args:
     num_nodes: 207
     out_steps: 12
-    input_dim: 1
+    input_dim: 2
     output_dim: 1
     embed_dim: 10
     rnn_units: 64
@@ -36,26 +35,140 @@ PEMSBAY:
 
   train_size: 0.7
   val_size: 0.1
+
+  time_of_day: True
   
-  lr: 0.01
-  weight_decay: 0.0001
-  milestones: [10, 30]
-  clip_grad: False
+  lr: 0.001
+  milestones: [50]
+  clip_grad: 0
   batch_size: 64
   max_epochs: 200
+  early_stop: 20
   use_cl: False
-
-  load_npz: False
-  with_embeddings: False
-  
-  pass_device: False
+  cl_step_size: 2500
 
   model_args:
     num_nodes: 325
     out_steps: 12
+    input_dim: 2
+    output_dim: 1
+    embed_dim: 10
+    rnn_units: 64
+    num_layers: 2
+    cheb_k: 2
+    default_graph: True
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+  
+  lr: 0.003
+  # milestones: [50]
+  # lr_decay_rate: 0.3
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+  use_cl: False
+  cl_step_size: 2500
+
+  model_args:
+    num_nodes: 358
+    out_steps: 12
     input_dim: 1
     output_dim: 1
     embed_dim: 10
+    rnn_units: 64
+    num_layers: 2
+    cheb_k: 2
+    default_graph: True
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+  
+  lr: 0.003
+  milestones: [50]
+  lr_decay_rate: 0.3
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+  use_cl: False
+  cl_step_size: 2500
+
+  model_args:
+    num_nodes: 307
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    embed_dim: 10
+    rnn_units: 64
+    num_layers: 2
+    cheb_k: 2
+    default_graph: True
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+  
+  lr: 0.001
+  # milestones: [30]
+  # lr_decay_rate: 0.3
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+  use_cl: False
+  cl_step_size: 2500
+
+  model_args:
+    num_nodes: 883
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    embed_dim: 10
+    rnn_units: 64
+    num_layers: 2
+    cheb_k: 2
+    default_graph: True
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  train_size: 0.7
+  val_size: 0.1
+  
+  lr: 0.003
+  # milestones: [130]
+  # lr_decay_rate: 0.3
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+  use_cl: False
+  cl_step_size: 2500
+
+  model_args:
+    num_nodes: 170
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    embed_dim: 2
     rnn_units: 64
     num_layers: 2
     cheb_k: 2
