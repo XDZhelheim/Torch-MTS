@@ -1,9 +1,7 @@
 import argparse
 import numpy as np
-import pandas as pd
 import os
 import torch
-import torch.nn as nn
 import datetime
 import time
 import matplotlib.pyplot as plt
@@ -14,12 +12,12 @@ import sys
 
 sys.path.append("..")
 from lib.utils import (
-    MaskedMAELoss,
     print_log,
     seed_everything,
     set_cpu_num,
     CustomJSONEncoder,
 )
+from lib.losses import loss_select
 from lib.metrics import RMSE_MAE_MAPE
 from lib.data_prepare import get_dataloaders_from_index_data
 from models import model_select
@@ -305,12 +303,7 @@ if __name__ == "__main__":
 
     # ---------------------- set loss, optimizer, scheduler ---------------------- #
 
-    if dataset in ("METRLA", "PEMSBAY"):
-        criterion = MaskedMAELoss()
-    elif dataset in ("PEMS03", "PEMS04", "PEMS07", "PEMS08"):
-        criterion = nn.HuberLoss()
-    else:
-        raise ValueError("Unsupported dataset.")  # acctually this line is not reachable
+    criterion = loss_select(cfg.get("loss", dataset))(**cfg.get("loss_args", {}))
 
     optimizer = torch.optim.Adam(
         model.parameters(),

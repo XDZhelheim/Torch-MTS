@@ -29,46 +29,6 @@ class StandardScaler:
         return (data * self.std) + self.mean
 
 
-def masked_mae_loss(preds, labels, null_val=0.0):
-    if np.isnan(null_val):
-        mask = ~torch.isnan(labels)
-    else:
-        mask = labels != null_val
-    mask = mask.float()
-    mask /= torch.mean((mask))
-    mask = torch.where(torch.isnan(mask), torch.zeros_like(mask), mask)
-    loss = torch.abs(preds - labels)
-    loss = loss * mask
-    loss = torch.where(torch.isnan(loss), torch.zeros_like(loss), loss)
-    return torch.mean(loss)
-
-
-class MaskedMAELoss:
-    def _get_name(self):
-        return self.__class__.__name__
-
-    def __call__(self, preds, labels, null_val=0.0):
-        return masked_mae_loss(preds, labels, null_val)
-
-
-def masked_mae_loss_vDCRNN(y_pred, y_true):
-    mask = (y_true != 0).float()
-    mask /= mask.mean()
-    loss = torch.abs(y_pred - y_true)
-    loss = loss * mask
-    # trick for nans: https://discuss.pytorch.org/t/how-to-set-nan-in-tensor-to-0/3918/3
-    loss[loss != loss] = 0
-    return loss.mean()
-
-
-class MaskedMAELoss_vDCRNN:
-    def _get_name(self):
-        return self.__class__.__name__
-
-    def __call__(self, y_pred, y_true):
-        return masked_mae_loss_vDCRNN(y_pred, y_true)
-
-
 def print_log(*values, log=None, end="\n"):
     print(*values, end=end)
     if log:
@@ -131,12 +91,12 @@ def vrange(starts, stops):
     Parameters:
         starts (1-D array_like): starts for each range
         stops (1-D array_like): stops for each range (same shape as starts)
-        
+
         Lengths of each range should be equal.
 
     Returns:
         numpy.ndarray: 2d array for each range
-        
+
     For example:
 
         >>> starts = [1, 2, 3, 4]
