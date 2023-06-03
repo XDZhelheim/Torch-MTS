@@ -19,6 +19,7 @@ from .STWA import STWA
 from .STID import STID
 from .STNorm import STNorm
 from .StemGNN import StemGNN
+from .MegaCRN import MegaCRN
 
 
 def model_select(name):
@@ -65,6 +66,8 @@ def model_select(name):
         return STNorm
     elif name == "STEMGNN":
         return StemGNN
+    elif name == "MEGACRN":
+        return MegaCRN
 
     else:
         raise NotImplementedError

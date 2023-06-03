@@ -1,4 +1,5 @@
 from .BasicRunner import BasicRunner
+from .MegaCRNRunner import MegaCRNRunner
 
 
 def runner_select(name):
@@ -6,6 +7,8 @@ def runner_select(name):
 
     if name == "BASIC":
         return BasicRunner
+    elif name in ("MEGACRNRUNNER", "MEGACRN"):
+        return MegaCRNRunner
 
     else:
         raise NotImplementedError

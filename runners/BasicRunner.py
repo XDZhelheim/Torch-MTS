@@ -2,6 +2,7 @@ from .AbstractRunner import AbstractRunner
 
 import torch
 import numpy as np
+from torchinfo import summary
 import sys
 
 sys.path.append("..")
@@ -28,9 +29,8 @@ class BasicRunner(AbstractRunner):
                 raise KeyError("Missing config: cl_step_size (int).")
             if "out_steps" not in cfg:
                 raise KeyError("Missing config: out_steps (int).")
-            self.global_iter_count = 1
-            self.global_target_length = 1
-            print_log(f"CL target length = {self.global_target_length}", log=log)
+            self.iter_count = 0
+            self.target_length = 0
 
         self.clip_grad = cfg.get("clip_grad")
 
@@ -46,18 +46,16 @@ class BasicRunner(AbstractRunner):
 
             if self.cfg.get("use_cl"):
                 if (
-                    self.global_iter_count % self.cfg["cl_step_size"] == 0
-                    and self.global_target_length < self.cfg["out_steps"]
+                    self.iter_count % self.cfg["cl_step_size"] == 0
+                    and self.target_length < self.cfg["out_steps"]
                 ):
-                    self.global_target_length += 1
-                    print_log(
-                        f"CL target length = {self.global_target_length}", log=self.log
-                    )
+                    self.target_length += 1
+                    print_log(f"CL target length = {self.target_length}", log=self.log)
                 loss = criterion(
-                    out_batch[:, : self.global_target_length, ...],
-                    y_batch[:, : self.global_target_length, ...],
+                    out_batch[:, : self.target_length, ...],
+                    y_batch[:, : self.target_length, ...],
                 )
-                self.global_iter_count += 1
+                self.iter_count += 1
             else:
                 loss = criterion(out_batch, y_batch)
 
@@ -111,3 +109,13 @@ class BasicRunner(AbstractRunner):
         y = np.vstack(y).squeeze()
 
         return y, out
+
+    def model_summary(self, model, dataloader):
+        x_shape = next(iter(dataloader))[0].shape
+
+        return summary(
+            model,
+            x_shape,
+            verbose=0,  # avoid print twice
+            device=self.device,
+        )

@@ -208,6 +208,8 @@ if __name__ == "__main__":
         data_path,
         tod=cfg.get("time_of_day"),
         dow=cfg.get("day_of_week"),
+        y_tod=cfg.get("y_time_of_day"),
+        y_dow=cfg.get("y_day_of_week"),
         batch_size=cfg.get("batch_size", 64),
         log=log,
     )
@@ -237,32 +239,25 @@ if __name__ == "__main__":
         verbose=False,
     )
 
+    # ----------------------------- set model runner ----------------------------- #
+
+    runner = runner_select(cfg.get("runner", "basic"))(
+        cfg, device=DEVICE, scaler=SCALER, log=log
+    )
+
     # --------------------------- print model structure -------------------------- #
 
     print_log("---------", model_name, "---------", log=log)
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
     )
-    x_shape = next(iter(trainset_loader))[0].shape
-    print_log(
-        summary(
-            model,
-            x_shape,
-            verbose=0,  # avoid print twice
-            device=DEVICE,
-        ),
-        log=log,
-    )
+    print_log(runner.model_summary(model, trainset_loader), log=log)
     print_log(log=log)
 
     # --------------------------- train and test model --------------------------- #
 
     print_log(f"Loss: {criterion._get_name()}", log=log)
     print_log(log=log)
-
-    runner = runner_select(cfg.get("runner", "basic"))(
-        cfg, device=DEVICE, scaler=SCALER, log=log
-    )
 
     model = train(
         model,

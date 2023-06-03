@@ -12,3 +12,7 @@ class AbstractRunner(ABC):
     @abstractmethod
     def predict(self):
         pass
+    
+    @abstractmethod
+    def model_summary(self):
+        pass

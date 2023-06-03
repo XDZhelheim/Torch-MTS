@@ -100,7 +100,7 @@ def get_dataloaders_from_raw(
 ):
     """
     Not used.
-    
+
     Parameters
     ---
     data: (all_timesteps, num_nodes, 1+other_features or 1) numpy
@@ -161,7 +161,9 @@ def get_dataloaders_from_raw(
 
 
 def get_dataloaders_from_tvt(
-    data_dir, batch_size=64, log=None,
+    data_dir,
+    batch_size=64,
+    log=None,
 ):
     """
     Not used.
@@ -205,19 +207,29 @@ def get_dataloaders_from_tvt(
 
 
 def get_dataloaders_from_index_data(
-    data_dir, tod=False, dow=False, batch_size=64, log=None,
+    data_dir,
+    tod=False,
+    dow=False,
+    y_tod=False,
+    y_dow=False,
+    batch_size=64,
+    log=None,
 ):
     data = np.load(os.path.join(data_dir, "data.npz"))["data"].astype(np.float32)
-    
-    features = [0]
-    if tod:
-        features.append(1)
-    if dow:
-        features.append(2)
-    data = data[..., features]
-
     index = np.load(os.path.join(data_dir, "index.npz"))
-    
+
+    x_features = [0]
+    if tod:
+        x_features.append(1)
+    if dow:
+        x_features.append(2)
+
+    y_features = [0]
+    if y_tod:
+        y_features.append(1)
+    if y_dow:
+        y_features.append(2)
+
     train_index = index["train"]  # (num_samples, 3)
     val_index = index["val"]
     test_index = index["test"]
@@ -229,12 +241,12 @@ def get_dataloaders_from_index_data(
     x_test_index = vrange(test_index[:, 0], test_index[:, 1])
     y_test_index = vrange(test_index[:, 1], test_index[:, 2])
 
-    x_train = data[x_train_index]
-    y_train = data[y_train_index][..., :1]
-    x_val = data[x_val_index]
-    y_val = data[y_val_index][..., :1]
-    x_test = data[x_test_index]
-    y_test = data[y_test_index][..., :1]
+    x_train = data[x_train_index][..., x_features]
+    y_train = data[y_train_index][..., y_features]
+    x_val = data[x_val_index][..., x_features]
+    y_val = data[y_val_index][..., y_features]
+    x_test = data[x_test_index][..., x_features]
+    y_test = data[y_test_index][..., y_features]
 
     scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
 
