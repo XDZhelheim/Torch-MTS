@@ -36,6 +36,9 @@ def loss_select(name):
         return nn.L1Loss
     elif name in ("MSELOSS", "MSE_LOSS", "MSE"):
         return nn.MSELoss
+    
+    elif name in ("MEGACRNLOSS", "MEGACRN"):
+        return MegaCRNLoss
 
     else:
         raise NotImplementedError
@@ -79,3 +82,27 @@ class MaskedMAELoss_vDCRNN:
 
     def __call__(self, y_pred, y_true):
         return masked_mae_loss_vDCRNN(y_pred, y_true)
+
+
+class MegaCRNLoss:
+    def __init__(self, l1, l2):
+        self.l1 = l1
+        self.l2 = l2
+        self.masked_mae_loss = MaskedMAELoss()
+        self.separate_loss = torch.nn.TripletMarginLoss(margin=1.0)
+        self.compact_loss = torch.nn.MSELoss()
+
+    def _get_name(self):
+        return self.__class__.__name__
+
+    def forward(self, y_pred, y_true, query, pos, neg):
+        loss1 = self.masked_mae_loss(y_pred, y_true)
+        loss2 = self.separate_loss(query, pos.detach(), neg.detach())
+        loss3 = self.compact_loss(query, pos.detach())
+
+        loss = loss1 + self.l1 * loss2 + self.l2 * loss3
+
+        return loss
+
+    def __call__(self, y_pred, y_true, query, pos, neg):
+        return self.forward(y_pred, y_true, query, pos, neg)
