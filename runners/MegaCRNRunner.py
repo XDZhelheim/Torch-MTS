@@ -75,8 +75,8 @@ class MegaCRNRunner(AbstractRunner):
     @torch.no_grad()
     def predict(self, model, loader):
         model.eval()
-        y = []
-        out = []
+        y_list = []
+        out_list = []
 
         for x_batch, y_batch in loader:
             x = x_batch.to(self.device)
@@ -90,11 +90,11 @@ class MegaCRNRunner(AbstractRunner):
 
             y_pred = y_pred.cpu().numpy()
             y_true = y_true.cpu().numpy()
-            out.append(y_pred)
-            y.append(y_true)
+            out_list.append(y_pred)
+            y_list.append(y_true)
 
-        out = np.vstack(out).squeeze()  # (samples, out_steps, num_nodes)
-        y = np.vstack(y).squeeze()
+        out = np.vstack(out_list).squeeze()  # (samples, out_steps, num_nodes)
+        y = np.vstack(y_list).squeeze()
 
         return y, out
 

@@ -30,6 +30,6 @@ All the codes are based on my personal coding habit and style.
 logs:
 
 - Attn: 7 w-spatial
-- MTGNN: bay, 3478
+- MTGNN: bay, 3478 +tod
 - STMetaGCGRU: bay
 - STWA: 3478

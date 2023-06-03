@@ -89,8 +89,8 @@ class MegaCRNLoss:
         self.l1 = l1
         self.l2 = l2
         self.masked_mae_loss = MaskedMAELoss()
-        self.separate_loss = torch.nn.TripletMarginLoss(margin=1.0)
-        self.compact_loss = torch.nn.MSELoss()
+        self.separate_loss = nn.TripletMarginLoss(margin=1.0)
+        self.compact_loss = nn.MSELoss()
 
     def _get_name(self):
         return self.__class__.__name__

@@ -225,6 +225,8 @@ PEMS08:
   in_steps: 12
   out_steps: 12
 
+  time_of_day: True
+
   train_size: 0.6
   val_size: 0.2
   
