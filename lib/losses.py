@@ -85,7 +85,7 @@ class MaskedMAELoss_vDCRNN:
 
 
 class MegaCRNLoss:
-    def __init__(self, l1, l2):
+    def __init__(self, l1=0.01, l2=0.01):
         self.l1 = l1
         self.l2 = l2
         self.masked_mae_loss = MaskedMAELoss()

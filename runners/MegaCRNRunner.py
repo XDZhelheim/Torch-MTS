@@ -31,8 +31,8 @@ class MegaCRNRunner(AbstractRunner):
             x = x_batch.to(self.device)
             y = y_batch.to(self.device)
 
-            y_cov = y[..., 1:]
-            y_true = y[..., :1]
+            y_true = y[..., [0]]
+            y_cov = y[..., [1]]
 
             output, h_att, query, pos, neg = model(x, y_cov, y_true, self.batches_seen)
             y_pred = self.scaler.inverse_transform(output)
@@ -61,8 +61,8 @@ class MegaCRNRunner(AbstractRunner):
             x = x_batch.to(self.device)
             y = y_batch.to(self.device)
 
-            y_cov = y[..., 1:]
-            y_true = y[..., :1]
+            y_true = y[..., [0]]
+            y_cov = y[..., [1]]
 
             output, h_att, query, pos, neg = model(x, y_cov)
             y_pred = self.scaler.inverse_transform(output)
@@ -82,8 +82,8 @@ class MegaCRNRunner(AbstractRunner):
             x = x_batch.to(self.device)
             y = y_batch.to(self.device)
 
-            y_cov = y[..., 1:]
-            y_true = y[..., :1]
+            y_true = y[..., [0]]
+            y_cov = y[..., [1]]
 
             output, h_att, query, pos, neg = model(x, y_cov)
             y_pred = self.scaler.inverse_transform(output)
