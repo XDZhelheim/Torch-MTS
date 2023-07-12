@@ -93,8 +93,8 @@ class MegaCRNRunner(AbstractRunner):
             out_list.append(y_pred)
             y_list.append(y_true)
 
-        out = np.vstack(out_list).squeeze()  # (samples, out_steps, num_nodes)
-        y = np.vstack(y_list).squeeze()
+        out = np.vstack(out_list)
+        y = np.vstack(y_list)
 
         return y, out
 

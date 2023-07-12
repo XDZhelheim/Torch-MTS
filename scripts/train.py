@@ -5,7 +5,6 @@ import torch
 import datetime
 import time
 import matplotlib.pyplot as plt
-from torchinfo import summary
 import yaml
 import json
 import sys
@@ -210,6 +209,7 @@ if __name__ == "__main__":
         dow=cfg.get("day_of_week"),
         y_tod=cfg.get("y_time_of_day"),
         y_dow=cfg.get("y_day_of_week"),
+        pred_steps=cfg.get("pred_steps"),
         batch_size=cfg.get("batch_size", 64),
         log=log,
     )

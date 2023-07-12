@@ -212,6 +212,7 @@ def get_dataloaders_from_index_data(
     dow=False,
     y_tod=False,
     y_dow=False,
+    pred_steps=None,
     batch_size=64,
     log=None,
 ):
@@ -247,6 +248,11 @@ def get_dataloaders_from_index_data(
     y_val = data[y_val_index][..., y_features]
     x_test = data[x_test_index][..., x_features]
     y_test = data[y_test_index][..., y_features]
+    
+    if pred_steps:
+        y_train = y_train[:, pred_steps, :, :]
+        y_val = y_val[:, pred_steps, :, :]
+        y_test = y_test[:, pred_steps, :, :]
 
     scaler = StandardScaler(mean=x_train[..., 0].mean(), std=x_train[..., 0].std())
 

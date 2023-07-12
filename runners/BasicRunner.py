@@ -105,8 +105,8 @@ class BasicRunner(AbstractRunner):
             out.append(out_batch)
             y.append(y_batch)
 
-        out = np.vstack(out).squeeze()  # (samples, out_steps, num_nodes)
-        y = np.vstack(y).squeeze()
+        out = np.vstack(out)  # (samples, out_steps, num_nodes, output_dim)
+        y = np.vstack(y)
 
         return y, out
 

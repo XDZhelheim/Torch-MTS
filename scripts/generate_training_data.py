@@ -45,6 +45,13 @@ def generate_data(
     elif data_file_path.endswith("npz"):
         file_type = "npz"
         data = np.load(data_file_path)["data"]
+    elif data_file_path.endswith("csv"):
+        file_type = "csv"
+        df = pd.read_csv(data_file_path)
+        df_index = pd.to_datetime(df["date"].values, format="%Y-%m-%d %H:%M").to_numpy()
+        df = df[df.columns[1:]]
+        df.index = df_index
+        data = np.expand_dims(df.values, axis=-1)
     else:
         raise TypeError("Unsupported file type.")
 
@@ -74,7 +81,7 @@ def generate_data(
     feature_list = [data]
     if add_time_of_day:
         # numerical time_of_day
-        if file_type == "hdf":
+        if file_type == "hdf" or file_type == "csv":
             tod = (df.index.values - df.index.values.astype("datetime64[D]")) / np.timedelta64(1, "D")
         elif file_type == "npz":
             tod = np.array([i % steps_per_day / steps_per_day for i in range(data.shape[0])])
@@ -83,7 +90,7 @@ def generate_data(
 
     if add_day_of_week:
         # numerical day_of_week
-        if file_type == "hdf":
+        if file_type == "hdf" or file_type == "csv":
             dow = df.index.dayofweek
         elif file_type == "npz":
             dow = [(i // steps_per_day) % 7 for i in range(data.shape[0])]
@@ -135,6 +142,17 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
+    elif DATASET_NAME == "ELECTRICITY":
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.7
+        param_dict["valid_ratio"] = 0.1
+        param_dict["steps_per_day"] = 24
+        
+        # single step prediction on future step 3, 6, 12, 24
+        # here extract all 24 steps
+        # should specify which step to predict in model config (.yaml)
+        param_dict["history_seq_len"] = 168
+        param_dict["future_seq_len"] = 24
     else:
         raise ValueError("Unsupported dataset.")
         
