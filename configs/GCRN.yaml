@@ -1,0 +1,28 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  y_time_of_day: True
+
+  runner: gcrn
+
+  lr: 0.01
+  eps: 0.001
+  milestones: [50, 100]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    num_nodes: 207
+    input_dim: 1
+    output_dim: 1
+    horizon: 12
+    rnn_units: 64
+    num_layers: 1
+    cheb_k: 3
+    ycov_dim: 1
+    tf_decay_steps: 2000
+    use_teacher_forcing: True

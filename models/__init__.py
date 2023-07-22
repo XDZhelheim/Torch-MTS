@@ -6,6 +6,7 @@ from .baseline.Attention import Attention
 from .baseline.WaveNet import WaveNet
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
+from .baseline.GCRN import GCRN
 
 from .meta_param.STMetaLSTM import STMetaLSTM
 from .meta_param.STMetaGRU import STMetaGRU
@@ -37,6 +38,8 @@ def model_select(name):
         return Attention
     elif name in ("TCN", "WAVENET"):
         return WaveNet
+    elif name == "GCRN":
+        return GCRN
 
     elif name == "GCLSTM":
         return GCLSTM
