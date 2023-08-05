@@ -24,12 +24,11 @@ All the codes are based on my personal coding habit and style.
 ## TODO
 
 - HA
-- 自定义 forward，自定义 loss
 - 大饼：log 生成表格的脚本；支持输入 1) 多个.log 2) 模型名 3) log文件夹名；支持输出 1) .csv 2) .tex 3) .png
 
 logs:
 
 - Attn: 7 w-spatial
-- MTGNN: bay, 3478
+- MTGNN: bay, 3478 +tod
 - STMetaGCGRU: bay
 - STWA: 3478

@@ -117,3 +117,25 @@ PEMS08:
     input_dim: 1
     output_dim: 1
     hidden_dim: 256
+
+ELECTRICITY:
+  num_nodes: 321
+  in_steps: 168
+  out_steps: 1
+
+  pred_steps: [2]
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 30]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  use_cl: False
+
+  model_args:
+    in_steps: 168
+    out_steps: 1
+    input_dim: 1
+    output_dim: 1
+    hidden_dim: 256

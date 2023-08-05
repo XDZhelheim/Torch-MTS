@@ -1,20 +1,16 @@
 import argparse
 import numpy as np
-import pandas as pd
 import os
 import torch
-import torch.nn as nn
 import datetime
 import time
 import matplotlib.pyplot as plt
-from torchinfo import summary
 import yaml
 import json
 import sys
 
 sys.path.append("..")
 from lib.utils import (
-    MaskedMAELoss,
     print_log,
     seed_everything,
     set_cpu_num,
@@ -22,102 +18,21 @@ from lib.utils import (
 )
 from lib.metrics import RMSE_MAE_MAPE
 from lib.data_prepare import get_dataloaders_from_index_data
+from lib.losses import loss_select
 from models import model_select
+from runners import runner_select
 
 # ! X shape: (B, T, N, C)
 
 
-@torch.no_grad()
-def eval_model(model, valset_loader, criterion):
-    model.eval()
-    batch_loss_list = []
-    for x_batch, y_batch in valset_loader:
-        x_batch = x_batch.to(DEVICE)
-        y_batch = y_batch.to(DEVICE)
-
-        out_batch = model(x_batch)
-        out_batch = SCALER.inverse_transform(out_batch)
-        loss = criterion(out_batch, y_batch)
-        batch_loss_list.append(loss.item())
-
-    return np.mean(batch_loss_list)
-
-
-@torch.no_grad()
-def predict(model, loader):
-    model.eval()
-    y = []
-    out = []
-
-    for x_batch, y_batch in loader:
-        x_batch = x_batch.to(DEVICE)
-        y_batch = y_batch.to(DEVICE)
-
-        out_batch = model(x_batch)
-        out_batch = SCALER.inverse_transform(out_batch)
-
-        out_batch = out_batch.cpu().numpy()
-        y_batch = y_batch.cpu().numpy()
-        out.append(out_batch)
-        y.append(y_batch)
-
-    out = np.vstack(out).squeeze()  # (samples, out_steps, num_nodes)
-    y = np.vstack(y).squeeze()
-
-    return y, out
-
-
-def train_one_epoch(
-    model, trainset_loader, optimizer, scheduler, criterion, clip_grad, log=None
-):
-    global cfg, global_iter_count, global_target_length
-
-    model.train()
-    batch_loss_list = []
-    for x_batch, y_batch in trainset_loader:
-        x_batch = x_batch.to(DEVICE)
-        y_batch = y_batch.to(DEVICE)
-
-        out_batch = model(x_batch)
-        out_batch = SCALER.inverse_transform(out_batch)
-
-        if cfg.get("use_cl"):
-            if (
-                global_iter_count % cfg["cl_step_size"] == 0
-                and global_target_length < cfg["out_steps"]
-            ):
-                global_target_length += 1
-                print_log(f"CL target length = {global_target_length}", log=log)
-            loss = criterion(
-                out_batch[:, :global_target_length, ...],
-                y_batch[:, :global_target_length, ...],
-            )
-            global_iter_count += 1
-        else:
-            loss = criterion(out_batch, y_batch)
-
-        batch_loss_list.append(loss.item())
-
-        optimizer.zero_grad()
-        loss.backward()
-        if clip_grad:
-            torch.nn.utils.clip_grad_norm_(model.parameters(), clip_grad)
-        optimizer.step()
-
-    epoch_loss = np.mean(batch_loss_list)
-    scheduler.step()
-
-    return epoch_loss
-
-
 def train(
     model,
+    runner,
     trainset_loader,
     valset_loader,
     optimizer,
     scheduler,
     criterion,
-    clip_grad=0,
     max_epochs=200,
     early_stop=10,
     compile_model=False,
@@ -128,7 +43,6 @@ def train(
 ):
     if torch.__version__ >= "2.0.0" and compile_model:
         model = torch.compile(model)
-    model = model.to(DEVICE)
 
     wait = 0
     min_val_loss = np.inf
@@ -137,12 +51,12 @@ def train(
     val_loss_list = []
 
     for epoch in range(max_epochs):
-        train_loss = train_one_epoch(
-            model, trainset_loader, optimizer, scheduler, criterion, clip_grad, log=log
+        train_loss = runner.train_one_epoch(
+            model, trainset_loader, optimizer, scheduler, criterion
         )
         train_loss_list.append(train_loss)
 
-        val_loss = eval_model(model, valset_loader, criterion)
+        val_loss = runner.eval_model(model, valset_loader, criterion)
         val_loss_list.append(val_loss)
 
         if (epoch + 1) % verbose == 0:
@@ -166,8 +80,10 @@ def train(
                 break
 
     model.load_state_dict(best_state_dict)
-    train_rmse, train_mae, train_mape = RMSE_MAE_MAPE(*predict(model, trainset_loader))
-    val_rmse, val_mae, val_mape = RMSE_MAE_MAPE(*predict(model, valset_loader))
+    train_rmse, train_mae, train_mape = RMSE_MAE_MAPE(
+        *runner.predict(model, trainset_loader)
+    )
+    val_rmse, val_mae, val_mape = RMSE_MAE_MAPE(*runner.predict(model, valset_loader))
 
     out_str = f"Early stopping at epoch: {epoch+1}\n"
     out_str += f"Best at epoch {best_epoch+1}:\n"
@@ -200,12 +116,12 @@ def train(
 
 
 @torch.no_grad()
-def test_model(model, testset_loader, log=None):
+def test_model(model, runner, testset_loader, log=None):
     model.eval()
     print_log("--------- Test ---------", log=log)
 
     start = time.time()
-    y_true, y_pred = predict(model, testset_loader)
+    y_true, y_pred = runner.predict(model, testset_loader)
     end = time.time()
 
     rmse_all, mae_all, mape_all = RMSE_MAE_MAPE(y_true, y_pred)
@@ -266,7 +182,7 @@ if __name__ == "__main__":
     if cfg.get("pass_device"):
         cfg["model_args"]["device"] = DEVICE
 
-    model = model_class(**cfg["model_args"])
+    model = model_class(**cfg["model_args"]).to(DEVICE)
 
     # ------------------------------- make log file ------------------------------ #
 
@@ -291,6 +207,9 @@ if __name__ == "__main__":
         data_path,
         tod=cfg.get("time_of_day"),
         dow=cfg.get("day_of_week"),
+        y_tod=cfg.get("y_time_of_day"),
+        y_dow=cfg.get("y_day_of_week"),
+        pred_steps=cfg.get("pred_steps"),
         batch_size=cfg.get("batch_size", 64),
         log=log,
     )
@@ -305,12 +224,7 @@ if __name__ == "__main__":
 
     # ---------------------- set loss, optimizer, scheduler ---------------------- #
 
-    if dataset in ("METRLA", "PEMSBAY"):
-        criterion = MaskedMAELoss()
-    elif dataset in ("PEMS03", "PEMS04", "PEMS07", "PEMS08"):
-        criterion = nn.HuberLoss()
-    else:
-        raise ValueError("Unsupported dataset.")  # acctually this line is not reachable
+    criterion = loss_select(cfg.get("loss", dataset))(**cfg.get("loss_args", {}))
 
     optimizer = torch.optim.Adam(
         model.parameters(),
@@ -325,22 +239,19 @@ if __name__ == "__main__":
         verbose=False,
     )
 
+    # ----------------------------- set model runner ----------------------------- #
+
+    runner = runner_select(cfg.get("runner", "basic"))(
+        cfg, device=DEVICE, scaler=SCALER, log=log
+    )
+
     # --------------------------- print model structure -------------------------- #
 
     print_log("---------", model_name, "---------", log=log)
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
     )
-    x_shape = next(iter(trainset_loader))[0].shape
-    print_log(
-        summary(
-            model,
-            x_shape,
-            verbose=0,  # avoid print twice
-            device=DEVICE,
-        ),
-        log=log,
-    )
+    print_log(runner.model_summary(model, trainset_loader), log=log)
     print_log(log=log)
 
     # --------------------------- train and test model --------------------------- #
@@ -348,23 +259,14 @@ if __name__ == "__main__":
     print_log(f"Loss: {criterion._get_name()}", log=log)
     print_log(log=log)
 
-    if cfg.get("use_cl"):
-        if "cl_step_size" not in cfg:
-            raise KeyError("Missing config: cl_step_size (int).")
-        if "out_steps" not in cfg:
-            raise KeyError("Missing config: out_steps (int).")
-        global_iter_count = 1
-        global_target_length = 1
-        print_log(f"CL target length = {global_target_length}", log=log)
-
     model = train(
         model,
+        runner,
         trainset_loader,
         valset_loader,
         optimizer,
         scheduler,
         criterion,
-        clip_grad=cfg.get("clip_grad"),
         max_epochs=cfg.get("max_epochs", 200),
         early_stop=cfg.get("early_stop", 10),
         compile_model=args.compile,
@@ -373,6 +275,6 @@ if __name__ == "__main__":
         save=save,
     )
 
-    test_model(model, testset_loader, log=log)
+    test_model(model, runner, testset_loader, log=log)
 
     log.close()

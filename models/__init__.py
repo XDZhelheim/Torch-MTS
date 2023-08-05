@@ -6,6 +6,7 @@ from .baseline.Attention import Attention
 from .baseline.WaveNet import WaveNet
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
+from .baseline.GCRN import GCRN
 
 from .meta_param.STMetaLSTM import STMetaLSTM
 from .meta_param.STMetaGRU import STMetaGRU
@@ -18,6 +19,8 @@ from .MTGNN import MTGNN
 from .STWA import STWA
 from .STID import STID
 from .STNorm import STNorm
+from .StemGNN import StemGNN
+from .MegaCRN import MegaCRN
 
 
 def model_select(name):
@@ -35,6 +38,8 @@ def model_select(name):
         return Attention
     elif name in ("TCN", "WAVENET"):
         return WaveNet
+    elif name == "GCRN":
+        return GCRN
 
     elif name == "GCLSTM":
         return GCLSTM
@@ -62,6 +67,10 @@ def model_select(name):
         return STID
     elif name == "STNORM":
         return STNorm
+    elif name == "STEMGNN":
+        return StemGNN
+    elif name == "MEGACRN":
+        return MegaCRN
 
     else:
         raise NotImplementedError

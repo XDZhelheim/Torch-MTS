@@ -216,3 +216,41 @@ PEMS08:
     if_time_in_day: True
     if_day_in_week: True
     num_layer: 3
+
+ELECTRICITY:
+  num_nodes: 321
+  in_steps: 168
+  out_steps: 1
+
+  pred_steps: [2]
+
+  train_size: 0.7
+  val_size: 0.1
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+  use_cl: False
+
+  model_args:
+    num_nodes: 321
+    input_len: 168
+    output_len: 1
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 24
+    day_of_week_size: 7
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
