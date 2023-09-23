@@ -29,6 +29,4 @@ All the codes are based on my personal coding habit and style.
 
 logs:
 
-- Attn: 7 w-spatial
-- STMetaGCGRU: bay
 - STWA: 3478
