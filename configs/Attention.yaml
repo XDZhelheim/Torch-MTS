@@ -122,7 +122,7 @@ PEMS07:
   
   lr: 0.001
   milestones: [10, 40]
-  batch_size: 64
+  batch_size: 32
   max_epochs: 200
   use_cl: False
 
@@ -136,7 +136,7 @@ PEMS07:
     feed_forward_dim: 256
     num_heads: 4
     num_layers: 3
-    with_spatial: False
+    with_spatial: True
 
 PEMS08:
   num_nodes: 170

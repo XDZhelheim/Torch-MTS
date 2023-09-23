@@ -1,0 +1,59 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/METRLA/SE_metrla.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
+
+PEMSBAY:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMSBAY/SE_pemsbay.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
