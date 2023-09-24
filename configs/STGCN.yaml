@@ -1,0 +1,149 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    n_vertex: 207
+    adj_path: "../data/METRLA/adj_mx.pkl"
+    Kt: 3
+    Ks: 3
+    blocks: [[1], [64, 16, 64], [64, 16, 64], [128, 128], [12]]
+    T: 12
+    act_func: "glu"
+    graph_conv_type: "cheb_graph_conv"
+    bias: True
+    droprate: 0.5
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [30, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    n_vertex: 325
+    adj_path: "../data/PEMSBAY/adj_mx_bay.pkl"
+    Kt: 3
+    Ks: 3
+    blocks: [[1], [64, 16, 64], [64, 16, 64], [128, 128], [12]]
+    T: 12
+    act_func: "glu"
+    graph_conv_type: "cheb_graph_conv"
+    bias: True
+    droprate: 0.5
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [30, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    n_vertex: 358
+    adj_path: "../data/PEMS03/adj_PEMS03.pkl"
+    Kt: 3
+    Ks: 3
+    blocks: [[1], [64, 16, 64], [64, 16, 64], [128, 128], [12]]
+    T: 12
+    act_func: "glu"
+    graph_conv_type: "cheb_graph_conv"
+    bias: True
+    droprate: 0.5
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [30, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    n_vertex: 307
+    adj_path: "../data/PEMS04/adj_PEMS04.pkl"
+    Kt: 3
+    Ks: 3
+    blocks: [[1], [64, 16, 64], [64, 16, 64], [128, 128], [12]]
+    T: 12
+    act_func: "glu"
+    graph_conv_type: "cheb_graph_conv"
+    bias: True
+    droprate: 0.5
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [30, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    n_vertex: 883
+    adj_path: "../data/PEMS07/adj_PEMS07.pkl"
+    Kt: 3
+    Ks: 3
+    blocks: [[1], [64, 16, 64], [64, 16, 64], [128, 128], [12]]
+    T: 12
+    act_func: "glu"
+    graph_conv_type: "cheb_graph_conv"
+    bias: True
+    droprate: 0.5
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [30, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    n_vertex: 170
+    adj_path: "../data/PEMS08/adj_PEMS08.pkl"
+    Kt: 3
+    Ks: 3
+    blocks: [[1], [64, 16, 64], [64, 16, 64], [128, 128], [12]]
+    T: 12
+    act_func: "glu"
+    graph_conv_type: "cheb_graph_conv"
+    bias: True
+    droprate: 0.5

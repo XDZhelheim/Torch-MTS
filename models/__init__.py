@@ -22,6 +22,8 @@ from .STNorm import STNorm
 from .StemGNN import StemGNN
 from .MegaCRN import MegaCRN
 from .GMAN import GMAN
+from .STGCN import STGCN
+from .DCRNN import DCRNN
 
 
 def model_select(name):
@@ -74,6 +76,10 @@ def model_select(name):
         return MegaCRN
     elif name == "GMAN":
         return GMAN
+    elif name == "STGCN":
+        return STGCN
+    elif name == "DCRNN":
+        return DCRNN
 
     else:
         raise NotImplementedError
