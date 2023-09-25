@@ -34,7 +34,7 @@ class MegaCRNRunner(AbstractRunner):
             y_true = y[..., [0]]
             y_cov = y[..., [1]]
 
-            output, h_att, query, pos, neg = model(x, y_cov, y_true, self.batches_seen)
+            output, h_att, query, pos, neg = model(x, y_cov, self.scaler.transform(y_true), self.batches_seen)
             y_pred = self.scaler.inverse_transform(output)
 
             self.batches_seen += 1
