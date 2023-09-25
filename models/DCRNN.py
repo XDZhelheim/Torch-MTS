@@ -1,3 +1,8 @@
+"""
+This file is adapted from
+https://github.com/zezhishao/BasicTS/tree/master/basicts/archs/arch_zoo/dcrnn_arch
+"""
+
 import torch
 import torch.nn as nn
 import scipy.sparse.linalg as linalg
@@ -237,7 +242,7 @@ class Seq2SeqAttrs:
         self.adj_mx = adj_mx
         self.max_diffusion_step = int(
             model_kwargs.get("max_diffusion_step", 2))
-        self.cl_decay_steps = int(model_kwargs.get("cl_decay_steps", 2000))
+        self.cl_decay_steps = int(model_kwargs.get("tf_decay_steps", 2000))
         self.filter_type = model_kwargs.get("filter_type", "dual_random_walk")
         self.num_nodes = int(model_kwargs.get("num_nodes", 207))
         self.num_rnn_layers = int(model_kwargs.get("num_rnn_layers", 2))
@@ -313,9 +318,9 @@ class DCRNN(nn.Module, Seq2SeqAttrs):
         Seq2SeqAttrs.__init__(self, adj_mx, **model_kwargs)
         self.encoder_model = EncoderModel(adj_mx, **model_kwargs)
         self.decoder_model = DecoderModel(adj_mx, **model_kwargs)
-        self.cl_decay_steps = int(model_kwargs.get("cl_decay_steps", 2000))
+        self.cl_decay_steps = int(model_kwargs.get("tf_decay_steps", 2000))
         self.use_curriculum_learning = bool(
-            model_kwargs.get("use_curriculum_learning", False))
+            model_kwargs.get("use_teacher_forcing", False))
 
     def _compute_sampling_threshold(self, batches_seen):
         return self.cl_decay_steps / (

@@ -80,7 +80,7 @@ class DCRNNRunner(AbstractRunner):
             y_pred = self.scaler.inverse_transform(output)
 
             y_pred = y_pred.cpu().numpy()
-            y_true = y_true.cpu().numpy()
+            y_true = y_batch.cpu().numpy()
             out_list.append(y_pred)
             y_list.append(y_true)
 
