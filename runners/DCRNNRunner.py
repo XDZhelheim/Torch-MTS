@@ -5,7 +5,7 @@ import numpy as np
 from torchinfo import summary
 
 
-class MegaCRNRunner(AbstractRunner):
+class DCRNNRunner(AbstractRunner):
     def __init__(
         self,
         cfg: dict,
@@ -28,18 +28,15 @@ class MegaCRNRunner(AbstractRunner):
         model.train()
         batch_loss_list = []
         for x_batch, y_batch in trainset_loader:
-            x = x_batch.to(self.device)
-            y = y_batch.to(self.device)
+            x_batch = x_batch.to(self.device)
+            y_batch = y_batch.to(self.device)
 
-            y_true = y[..., [0]]
-            y_cov = y[..., [1]]
-
-            output, h_att, query, pos, neg = model(x, y_cov, self.scaler.transform(y_true), self.batches_seen)
+            output = model(x_batch, self.scaler.transform(y_batch), self.batches_seen) # !!! important: transform y_true
             y_pred = self.scaler.inverse_transform(output)
 
             self.batches_seen += 1
 
-            loss = criterion(y_pred, y_true, query, pos, neg)
+            loss = criterion(y_pred, y_batch)
             batch_loss_list.append(loss.item())
 
             optimizer.zero_grad()
@@ -58,16 +55,13 @@ class MegaCRNRunner(AbstractRunner):
         model.eval()
         batch_loss_list = []
         for x_batch, y_batch in valset_loader:
-            x = x_batch.to(self.device)
-            y = y_batch.to(self.device)
+            x_batch = x_batch.to(self.device)
+            y_batch = y_batch.to(self.device)
 
-            y_true = y[..., [0]]
-            y_cov = y[..., [1]]
-
-            output, h_att, query, pos, neg = model(x, y_cov)
+            output = model(x_batch)
             y_pred = self.scaler.inverse_transform(output)
 
-            loss = criterion(y_pred, y_true, query, pos, neg)
+            loss = criterion(y_pred, y_batch)
             batch_loss_list.append(loss.item())
 
         return np.mean(batch_loss_list)
@@ -79,17 +73,14 @@ class MegaCRNRunner(AbstractRunner):
         out_list = []
 
         for x_batch, y_batch in loader:
-            x = x_batch.to(self.device)
-            y = y_batch.to(self.device)
+            x_batch = x_batch.to(self.device)
+            y_batch = y_batch.to(self.device)
 
-            y_true = y[..., [0]]
-            y_cov = y[..., [1]]
-
-            output, h_att, query, pos, neg = model(x, y_cov)
+            output = model(x_batch)
             y_pred = self.scaler.inverse_transform(output)
 
             y_pred = y_pred.cpu().numpy()
-            y_true = y_true.cpu().numpy()
+            y_true = y_batch.cpu().numpy()
             out_list.append(y_pred)
             y_list.append(y_true)
 
@@ -100,11 +91,10 @@ class MegaCRNRunner(AbstractRunner):
 
     def model_summary(self, model, dataloader):
         x_shape = next(iter(dataloader))[0].shape
-        y_cov_shape = next(iter(dataloader))[1][..., 1:].shape
 
         return summary(
             model,
-            [x_shape, y_cov_shape],
+            x_shape,
             verbose=0,  # avoid print twice
             device=self.device,
         )

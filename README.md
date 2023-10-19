@@ -3,6 +3,10 @@ A simple PyTorch framework for multivariate time series forecasting, for persona
 
 All the codes are based on my personal coding habit and style.
 
+## Performance Table
+
+![TorchMTS-Table](https://github.com/XDZhelheim/Torch-MTS/assets/57553691/23cd6970-c0b5-4851-be32-71d646275b67)
+
 ## 几个关键点
 
 先看 [scaler_check.ipynb](scaler_check.ipynb)
