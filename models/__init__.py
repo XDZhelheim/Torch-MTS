@@ -24,6 +24,7 @@ from .MegaCRN import MegaCRN
 from .GMAN import GMAN
 from .STGCN import STGCN
 from .DCRNN import DCRNN
+from .STAEformer import STAEformer
 
 
 def model_select(name):
@@ -41,9 +42,9 @@ def model_select(name):
         return Attention
     elif name in ("TCN", "WAVENET"):
         return WaveNet
+
     elif name == "GCRN":
         return GCRN
-
     elif name == "GCLSTM":
         return GCLSTM
     elif name == "GCGRU":
@@ -80,6 +81,8 @@ def model_select(name):
         return STGCN
     elif name == "DCRNN":
         return DCRNN
+    elif name in ("STAE", "STAEFORMER"):
+        return STAEformer
 
     else:
         raise NotImplementedError
