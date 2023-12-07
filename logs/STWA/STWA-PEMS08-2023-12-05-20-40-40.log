@@ -1,0 +1,181 @@
+PEMS08
+Trainset:	x-(10700, 12, 170, 1)	y-(10700, 12, 170, 1)
+Valset:  	x-(3567, 12, 170, 1)  	y-(3567, 12, 170, 1)
+Testset:	x-(3566, 12, 170, 1)	y-(3566, 12, 170, 1)
+
+--------- STWA ---------
+{
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.001,
+    "milestones": [],
+    "clip_grad": false,
+    "batch_size": 16,
+    "max_epochs": 200,
+    "early_stop": 15,
+    "pass_device": true,
+    "model_args": {
+        "num_nodes": 170,
+        "input_dim": 1,
+        "output_dim": 1,
+        "lag": 12,
+        "horizon": 12,
+        "device": "cuda:0",
+        "channels": 16,
+        "memory_size": 16,
+        "dynamic": true
+    }
+}
+====================================================================================================
+Layer (type:depth-idx)                             Output Shape              Param #
+====================================================================================================
+STWA                                               [16, 12, 170, 1]          --
+├─Sequential: 1-1                                  [16, 170, 16]             --
+│    └─Linear: 2-1                                 [16, 170, 32]             416
+│    └─Tanh: 2-2                                   [16, 170, 32]             --
+│    └─Linear: 2-3                                 [16, 170, 32]             1,056
+│    └─Tanh: 2-4                                   [16, 170, 32]             --
+│    └─Linear: 2-5                                 [16, 170, 16]             528
+├─Sequential: 1-2                                  [16, 170, 16]             --
+│    └─Linear: 2-6                                 [16, 170, 32]             416
+│    └─Tanh: 2-7                                   [16, 170, 32]             --
+│    └─Linear: 2-8                                 [16, 170, 32]             1,056
+│    └─Tanh: 2-9                                   [16, 170, 32]             --
+│    └─Linear: 2-10                                [16, 170, 16]             528
+├─Linear: 1-3                                      [16, 12, 170, 16]         32
+├─ModuleList: 1-8                                  --                        (recursive)
+│    └─Layer: 2-11                                 [16, 12, 170, 16]         70,720
+│    │    └─ModuleList: 3-1                        --                        6,100
+│    │    └─ModuleList: 3-2                        --                        6,100
+│    │    └─TemporalAttention: 3-3                 [16, 2, 170, 16]          544
+│    │    └─SpatialAttention: 3-4                  [16, 2, 170, 16]          544
+│    │    └─Sequential: 3-5                        [16, 2, 170, 16]          544
+│    │    └─TemporalAttention: 3-6                 [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-7                  [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-8                        [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-9                 [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-10                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-11                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-12                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-13                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-14                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-15                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-16                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-17                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-18                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-19                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-20                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-21                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-22                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-23                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-24                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-25                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-26                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-27                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-28                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-29                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-30                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-31                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-32                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-33                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-34                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-35                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-36                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-37                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-38                       [16, 2, 170, 16]          (recursive)
+├─ModuleList: 1-9                                  --                        (recursive)
+│    └─Linear: 2-12                                [16, 170, 256]            49,408
+├─ModuleList: 1-8                                  --                        (recursive)
+│    └─Layer: 2-13                                 [16, 3, 170, 16]          21,760
+│    │    └─ModuleList: 3-39                       --                        6,100
+│    │    └─ModuleList: 3-40                       --                        6,100
+│    │    └─TemporalAttention: 3-41                [16, 2, 170, 16]          544
+│    │    └─SpatialAttention: 3-42                 [16, 2, 170, 16]          544
+│    │    └─Sequential: 3-43                       [16, 2, 170, 16]          544
+│    │    └─TemporalAttention: 3-44                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-45                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-46                       [16, 2, 170, 16]          (recursive)
+│    │    └─TemporalAttention: 3-47                [16, 2, 170, 16]          (recursive)
+│    │    └─SpatialAttention: 3-48                 [16, 2, 170, 16]          (recursive)
+│    │    └─Sequential: 3-49                       [16, 2, 170, 16]          (recursive)
+├─ModuleList: 1-9                                  --                        (recursive)
+│    └─Linear: 2-14                                [16, 170, 256]            12,544
+├─ModuleList: 1-8                                  --                        (recursive)
+│    └─Layer: 2-15                                 [16, 1, 170, 16]          10,880
+│    │    └─ModuleList: 3-50                       --                        6,100
+│    │    └─ModuleList: 3-51                       --                        6,100
+│    │    └─TemporalAttention: 3-52                [16, 2, 170, 16]          544
+│    │    └─SpatialAttention: 3-53                 [16, 2, 170, 16]          544
+│    │    └─Sequential: 3-54                       [16, 2, 170, 16]          544
+├─ModuleList: 1-9                                  --                        (recursive)
+│    └─Linear: 2-16                                [16, 170, 256]            4,352
+├─Sequential: 1-10                                 [16, 170, 12]             --
+│    └─Linear: 2-17                                [16, 170, 512]            131,584
+│    └─ReLU: 2-18                                  [16, 170, 512]            --
+│    └─Linear: 2-19                                [16, 170, 12]             6,156
+====================================================================================================
+Total params: 352,932
+Trainable params: 352,932
+Non-trainable params: 0
+Total mult-adds (M): 4.33
+====================================================================================================
+Input size (MB): 0.13
+Forward/backward pass size (MB): 138.65
+Params size (MB): 1.00
+Estimated Total Size (MB): 139.78
+====================================================================================================
+
+Loss: HuberLoss
+
+2023-12-05 20:41:55.835951 Epoch 1  	Train Loss = 28.94563 Val Loss = 21.74750
+2023-12-05 20:43:07.011011 Epoch 2  	Train Loss = 19.68343 Val Loss = 19.34217
+2023-12-05 20:44:17.633532 Epoch 3  	Train Loss = 18.38836 Val Loss = 19.33045
+2023-12-05 20:45:28.701010 Epoch 4  	Train Loss = 17.63172 Val Loss = 17.95713
+2023-12-05 20:46:41.367667 Epoch 5  	Train Loss = 17.07624 Val Loss = 17.87871
+2023-12-05 20:47:54.233214 Epoch 6  	Train Loss = 16.69110 Val Loss = 17.42210
+2023-12-05 20:49:05.729625 Epoch 7  	Train Loss = 16.34957 Val Loss = 16.91902
+2023-12-05 20:50:18.141568 Epoch 8  	Train Loss = 16.17416 Val Loss = 16.86102
+2023-12-05 20:51:31.321903 Epoch 9  	Train Loss = 16.02987 Val Loss = 16.99024
+2023-12-05 20:52:46.326396 Epoch 10  	Train Loss = 15.73479 Val Loss = 16.79928
+2023-12-05 20:53:58.855486 Epoch 11  	Train Loss = 15.61728 Val Loss = 16.49654
+2023-12-05 20:55:11.439262 Epoch 12  	Train Loss = 15.44716 Val Loss = 16.60813
+2023-12-05 20:56:21.194145 Epoch 13  	Train Loss = 15.32306 Val Loss = 16.79067
+2023-12-05 20:57:32.617362 Epoch 14  	Train Loss = 15.14267 Val Loss = 16.40954
+2023-12-05 20:58:42.115914 Epoch 15  	Train Loss = 15.10973 Val Loss = 16.38825
+2023-12-05 20:59:53.816660 Epoch 16  	Train Loss = 15.04258 Val Loss = 15.92391
+2023-12-05 21:01:03.273610 Epoch 17  	Train Loss = 14.90928 Val Loss = 15.98623
+2023-12-05 21:02:16.223355 Epoch 18  	Train Loss = 14.84361 Val Loss = 15.98114
+2023-12-05 21:03:27.135605 Epoch 19  	Train Loss = 14.75581 Val Loss = 16.19821
+2023-12-05 21:04:38.320511 Epoch 20  	Train Loss = 14.67300 Val Loss = 16.25176
+2023-12-05 21:05:47.703264 Epoch 21  	Train Loss = 14.60800 Val Loss = 16.48410
+2023-12-05 21:06:59.239950 Epoch 22  	Train Loss = 14.51351 Val Loss = 16.23535
+2023-12-05 21:08:13.838240 Epoch 23  	Train Loss = 14.45557 Val Loss = 15.96026
+2023-12-05 21:09:26.789872 Epoch 24  	Train Loss = 14.42402 Val Loss = 16.38821
+2023-12-05 21:10:40.734676 Epoch 25  	Train Loss = 14.33626 Val Loss = 16.44131
+2023-12-05 21:11:52.535163 Epoch 26  	Train Loss = 14.34333 Val Loss = 16.00202
+2023-12-05 21:13:02.301117 Epoch 27  	Train Loss = 14.26643 Val Loss = 16.40899
+2023-12-05 21:14:09.232481 Epoch 28  	Train Loss = 14.20369 Val Loss = 15.95335
+2023-12-05 21:15:16.020002 Epoch 29  	Train Loss = 14.18244 Val Loss = 16.04542
+2023-12-05 21:16:24.612133 Epoch 30  	Train Loss = 14.16982 Val Loss = 15.96875
+2023-12-05 21:17:34.620997 Epoch 31  	Train Loss = 14.09063 Val Loss = 16.02976
+Early stopping at epoch: 31
+Best at epoch 16:
+Train Loss = 15.04258
+Train RMSE = 23.88256, MAE = 14.59486, MAPE = 9.76495
+Val Loss = 15.92391
+Val RMSE = 26.44122, MAE = 16.50580, MAPE = 12.22784
+--------- Test ---------
+All Steps RMSE = 25.19360, MAE = 16.06306, MAPE = 10.41819
+Step 1 RMSE = 22.07316, MAE = 14.36118, MAPE = 9.35526
+Step 2 RMSE = 22.92961, MAE = 14.85157, MAPE = 10.02995
+Step 3 RMSE = 23.56254, MAE = 15.12043, MAPE = 9.69903
+Step 4 RMSE = 24.24445, MAE = 15.53316, MAPE = 9.89394
+Step 5 RMSE = 24.77527, MAE = 15.84899, MAPE = 10.37703
+Step 6 RMSE = 25.16883, MAE = 16.02220, MAPE = 10.24092
+Step 7 RMSE = 25.53841, MAE = 16.21707, MAPE = 10.44549
+Step 8 RMSE = 25.88044, MAE = 16.42099, MAPE = 10.90877
+Step 9 RMSE = 26.22602, MAE = 16.64447, MAPE = 10.94725
+Step 10 RMSE = 26.63824, MAE = 16.91087, MAPE = 10.88487
+Step 11 RMSE = 27.07507, MAE = 17.21116, MAPE = 11.01131
+Step 12 RMSE = 27.58409, MAE = 17.61464, MAPE = 11.22453
+Inference time: 4.02 s
