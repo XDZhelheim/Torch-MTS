@@ -33,6 +33,11 @@ class DCRNNRunner(AbstractRunner):
 
             output = model(x_batch, self.scaler.transform(y_batch), self.batches_seen) # !!! important: transform y_true
             y_pred = self.scaler.inverse_transform(output)
+            
+            # What form of power is this??
+            # https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_supervisor.py#L191
+            if self.batches_seen == 0:
+                optimizer = torch.optim.Adam(model.parameters(), lr=self.cfg["lr"], eps=self.cfg["eps"])
 
             self.batches_seen += 1
 

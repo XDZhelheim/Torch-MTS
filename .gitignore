@@ -130,6 +130,7 @@ temp*
 *.pt
 *_embedded.npy
 *_embedded.npz
+deprecated*
 
 train.npz
 val.npz
