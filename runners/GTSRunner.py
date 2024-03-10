@@ -5,7 +5,7 @@ import numpy as np
 from torchinfo import summary
 
 
-class DCRNNRunner(AbstractRunner):
+class GTSRunner(AbstractRunner):
     def __init__(
         self,
         cfg: dict,
@@ -31,11 +31,9 @@ class DCRNNRunner(AbstractRunner):
             x_batch = x_batch.to(self.device)
             y_batch = y_batch.to(self.device)
 
-            output = model(
-                x_batch, self.scaler.transform(y_batch), self.batches_seen
-            )  # !!! important: transform y_true
+            output, pred_adj, prior_adj = model(x_batch, self.scaler.transform(y_batch), self.batches_seen) # !!! important: transform y_true
             y_pred = self.scaler.inverse_transform(output)
-
+            
             # What form of power is this??
             # https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_supervisor.py#L191
             # Reason: parameters are created at the first iteration
@@ -55,7 +53,7 @@ class DCRNNRunner(AbstractRunner):
 
             self.batches_seen += 1
 
-            loss = criterion(y_pred, y_batch)
+            loss = criterion(y_pred, y_batch, pred_adj, prior_adj)
             batch_loss_list.append(loss.item())
 
             self.optimizer.zero_grad()
@@ -77,10 +75,10 @@ class DCRNNRunner(AbstractRunner):
             x_batch = x_batch.to(self.device)
             y_batch = y_batch.to(self.device)
 
-            output = model(x_batch)
+            output, pred_adj, prior_adj = model(x_batch)
             y_pred = self.scaler.inverse_transform(output)
 
-            loss = criterion(y_pred, y_batch)
+            loss = criterion(y_pred, y_batch, pred_adj, prior_adj)
             batch_loss_list.append(loss.item())
 
         return np.mean(batch_loss_list)
@@ -95,7 +93,7 @@ class DCRNNRunner(AbstractRunner):
             x_batch = x_batch.to(self.device)
             y_batch = y_batch.to(self.device)
 
-            output = model(x_batch)
+            output, _, _ = model(x_batch)
             y_pred = self.scaler.inverse_transform(output)
 
             y_pred = y_pred.cpu().numpy()

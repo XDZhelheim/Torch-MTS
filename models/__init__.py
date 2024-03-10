@@ -25,6 +25,7 @@ from .GMAN import GMAN
 from .STGCN import STGCN
 from .DCRNN import DCRNN
 from .STAEformer import STAEformer
+from .GTS import GTS
 
 
 def model_select(name):
@@ -83,6 +84,8 @@ def model_select(name):
         return DCRNN
     elif name in ("STAE", "STAEFORMER"):
         return STAEformer
+    elif name == "GTS":
+        return GTS
 
     else:
         raise NotImplementedError
