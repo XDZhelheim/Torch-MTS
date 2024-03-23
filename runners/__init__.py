@@ -3,6 +3,7 @@ from .MegaCRNRunner import MegaCRNRunner
 from .GCRNRunner import GCRNRunner
 from .GMANRunner import GMANRunner
 from .DCRNNRunner import DCRNNRunner
+from .GTSRunner import GTSRunner
 
 
 def runner_select(name):
@@ -18,6 +19,8 @@ def runner_select(name):
         return GMANRunner
     elif name in ("DCRNNRUNNER", "DCRNN"):
         return DCRNNRunner
+    elif name in ("GTSRUNNER", "GTS"):
+        return GTSRunner
 
     else:
         raise NotImplementedError

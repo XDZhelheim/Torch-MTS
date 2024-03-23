@@ -1,19 +1,62 @@
-PEMS03:
-  num_nodes: 358
+METRLA:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-  
   lr: 0.001
-  milestones: [40]
+  milestones: []
   clip_grad: False
-  batch_size: 64
+  batch_size: 16
   max_epochs: 200
-  use_cl: False
+  early_stop: 15
 
-  load_npz: False
+  pass_device: True
+
+  model_args:
+    num_nodes: 207
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True
+
+PEMSBAY:
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  milestones: []
+  clip_grad: False
+  batch_size: 16
+  max_epochs: 200
+  early_stop: 15
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 325
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True
+
+PEMS03:
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  milestones: []
+  clip_grad: False
+  batch_size: 16
+  max_epochs: 200
+  early_stop: 15
+
   pass_device: True
 
   model_args:
@@ -28,21 +71,16 @@ PEMS03:
     dynamic: True
 
 PEMS04:
-  num_nodes: 307
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-  
   lr: 0.001
-  milestones: [40]
+  milestones: []
   clip_grad: False
-  batch_size: 64
+  batch_size: 16
   max_epochs: 200
-  use_cl: False
+  early_stop: 15
 
-  load_npz: False
   pass_device: True
 
   model_args:
@@ -57,21 +95,16 @@ PEMS04:
     dynamic: True
 
 PEMS07:
-  num_nodes: 883
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-  
   lr: 0.001
-  milestones: [40]
+  milestones: []
   clip_grad: False
-  batch_size: 64
+  batch_size: 16
   max_epochs: 200
-  use_cl: False
+  early_stop: 15
 
-  load_npz: False
   pass_device: True
 
   model_args:
@@ -86,21 +119,16 @@ PEMS07:
     dynamic: True
 
 PEMS08:
-  num_nodes: 170
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-  
   lr: 0.001
-  milestones: [40]
+  milestones: []
   clip_grad: False
-  batch_size: 64
+  batch_size: 16
   max_epochs: 200
-  use_cl: False
+  early_stop: 15
 
-  load_npz: False
   pass_device: True
 
   model_args:

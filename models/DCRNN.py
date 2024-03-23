@@ -1,15 +1,9 @@
-"""
-This file is adapted from
-https://github.com/zezhishao/BasicTS/tree/master/basicts/archs/arch_zoo/dcrnn_arch
-"""
-
+import numpy as np
 import torch
 import torch.nn as nn
-import scipy.sparse.linalg as linalg
 import scipy.sparse as sp
-import numpy as np
+from scipy.sparse import linalg
 import pickle
-
 
 def load_pickle(pickle_file):
     try:
@@ -23,22 +17,16 @@ def load_pickle(pickle_file):
         raise
     return pickle_data
 
-def sym_adj(adj):
-    """Symmetrically normalize adjacency matrix."""
-    adj = sp.coo_matrix(adj)
-    rowsum = np.array(adj.sum(1))
-    d_inv_sqrt = np.power(rowsum, -0.5).flatten()
-    d_inv_sqrt[np.isinf(d_inv_sqrt)] = 0.
-    d_mat_inv_sqrt = sp.diags(d_inv_sqrt)
-    return adj.dot(d_mat_inv_sqrt).transpose().dot(d_mat_inv_sqrt).astype(np.float32).todense()
 
-def asym_adj(adj):
-    adj = sp.coo_matrix(adj)
-    rowsum = np.array(adj.sum(1)).flatten()
-    d_inv = np.power(rowsum, -1).flatten()
-    d_inv[np.isinf(d_inv)] = 0.
-    d_mat= sp.diags(d_inv)
-    return d_mat.dot(adj).astype(np.float32).todense()
+def load_graph_data(pkl_filename):
+    try:
+        # METRLA and PEMSBAY
+        _, _, adj_mx = load_pickle(pkl_filename)
+    except ValueError:
+        # PEMS3478
+        adj_mx = load_pickle(pkl_filename)
+    return adj_mx
+
 
 def calculate_normalized_laplacian(adj):
     """
@@ -55,6 +43,21 @@ def calculate_normalized_laplacian(adj):
     normalized_laplacian = sp.eye(adj.shape[0]) - adj.dot(d_mat_inv_sqrt).transpose().dot(d_mat_inv_sqrt).tocoo()
     return normalized_laplacian
 
+
+def calculate_random_walk_matrix(adj_mx):
+    adj_mx = sp.coo_matrix(adj_mx)
+    d = np.array(adj_mx.sum(1))
+    d_inv = np.power(d, -1).flatten()
+    d_inv[np.isinf(d_inv)] = 0.
+    d_mat_inv = sp.diags(d_inv)
+    random_walk_mx = d_mat_inv.dot(adj_mx).tocoo()
+    return random_walk_mx
+
+
+def calculate_reverse_random_walk_matrix(adj_mx):
+    return calculate_random_walk_matrix(np.transpose(adj_mx))
+
+
 def calculate_scaled_laplacian(adj_mx, lambda_max=2, undirected=True):
     if undirected:
         adj_mx = np.maximum.reduce([adj_mx, adj_mx.T])
@@ -66,37 +69,9 @@ def calculate_scaled_laplacian(adj_mx, lambda_max=2, undirected=True):
     M, _ = L.shape
     I = sp.identity(M, format='csr', dtype=L.dtype)
     L = (2 / lambda_max * L) - I
-    return L.astype(np.float32).todense()
-
-def load_adj(pkl_filename, adjtype):
-    try:
-        # METRLA and PEMSBAY
-        _, _, adj_mx = load_pickle(pkl_filename)
-    except ValueError:
-        # PEMS3478
-        adj_mx = load_pickle(pkl_filename)
-        
-    if adjtype == "scalap":
-        adj = [calculate_scaled_laplacian(adj_mx)]
-    elif adjtype == "normlap":
-        adj = [calculate_normalized_laplacian(adj_mx).astype(np.float32).todense()]
-    elif adjtype == "symnadj":
-        adj = [sym_adj(adj_mx)]
-    elif adjtype == "transition":
-        adj = [asym_adj(adj_mx)]
-    elif adjtype == "doubletransition":
-        adj = [asym_adj(adj_mx), asym_adj(np.transpose(adj_mx))]
-    elif adjtype == "identity":
-        adj = [np.diag(np.ones(adj_mx.shape[0])).astype(np.float32)]
-    else:
-        error = 0
-        assert error, "adj type not defined"
-    return adj
-
+    return L.astype(np.float32)
 
 class LayerParams:
-    """Layer parameters."""
-
     def __init__(self, rnn_network: torch.nn.Module, layer_type: str):
         self._rnn_network = rnn_network
         self._params_dict = {}
@@ -108,9 +83,8 @@ class LayerParams:
             nn_param = torch.nn.Parameter(torch.empty(*shape))
             torch.nn.init.xavier_normal_(nn_param)
             self._params_dict[shape] = nn_param
-            self._rnn_network.register_parameter(
-                '{}_weight_{}'.format(self._type, str(shape)),
-                nn_param)
+            self._rnn_network.register_parameter('{}_weight_{}'.format(self._type, str(shape)),
+                                                 nn_param)
         return self._params_dict[shape]
 
     def get_biases(self, length, bias_start=0.0):
@@ -118,39 +92,67 @@ class LayerParams:
             biases = torch.nn.Parameter(torch.empty(length))
             torch.nn.init.constant_(biases, bias_start)
             self._biases_dict[length] = biases
-            self._rnn_network.register_parameter(
-                '{}_biases_{}'.format(self._type, str(length)), biases)
+            self._rnn_network.register_parameter('{}_biases_{}'.format(self._type, str(length)),
+                                                 biases)
 
         return self._biases_dict[length]
 
 
 class DCGRUCell(torch.nn.Module):
-    """
-    Paper: Diffusion Convolutional Recurrent Neural Network: Data-Driven Traffic Forecasting
-    Link: https://arxiv.org/abs/1707.01926
-    Codes are modified from the official repo: 
-        https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_cell.py, 
-        https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_model.py
-    Watch out the input groundtruth of decoder, which may cause bugs when you try to extend this code.
-    In order to train the model on multi-GPU, we send the parameter to different gpus in the feedforward process, which might hurt the efficiency.
-    """
+    def __init__(self, num_units, adj_mx, max_diffusion_step, num_nodes, nonlinearity='tanh',
+                 filter_type="laplacian", use_gc_for_ru=True, device=None):
+        """
 
-    def __init__(self, num_units, adj_mx, max_diffusion_step, num_nodes, nonlinearity='tanh', use_gc_for_ru=True):
+        :param num_units:
+        :param adj_mx:
+        :param max_diffusion_step:
+        :param num_nodes:
+        :param nonlinearity:
+        :param filter_type: "laplacian", "random_walk", "dual_random_walk".
+        :param use_gc_for_ru: whether to use Graph convolution to calculate the reset and update gates.
+        """
+
         super().__init__()
         self._activation = torch.tanh if nonlinearity == 'tanh' else torch.relu
         # support other nonlinearities up here?
         self._num_nodes = num_nodes
         self._num_units = num_units
         self._max_diffusion_step = max_diffusion_step
+        self._supports = []
         self._use_gc_for_ru = use_gc_for_ru
-        # for support in supports:
-        # self._supports.append(self._build_sparse_matrix(support))
-        self._supports = adj_mx
+        supports = []
+        if filter_type == "laplacian":
+            supports.append(calculate_scaled_laplacian(adj_mx, lambda_max=None))
+        elif filter_type == "random_walk":
+            supports.append(calculate_random_walk_matrix(adj_mx).T)
+        elif filter_type == "dual_random_walk":
+            supports.append(calculate_random_walk_matrix(adj_mx).T)
+            supports.append(calculate_random_walk_matrix(adj_mx.T).T)
+        else:
+            supports.append(calculate_scaled_laplacian(adj_mx))
+        for support in supports:
+            self._supports.append(self._build_sparse_matrix(support, device))
 
         self._fc_params = LayerParams(self, 'fc')
         self._gconv_params = LayerParams(self, 'gconv')
 
+    @staticmethod
+    def _build_sparse_matrix(L, device):
+        L = L.tocoo()
+        indices = np.column_stack((L.row, L.col))
+        # this is to ensure row-major ordering to equal torch.sparse.sparse_reorder(L)
+        indices = indices[np.lexsort((indices[:, 0], indices[:, 1]))]
+        L = torch.sparse_coo_tensor(indices.T, L.data, L.shape).to(device)
+        return L
+
     def forward(self, inputs, hx):
+        """Gated recurrent unit (GRU) with Graph Convolution.
+        :param inputs: (B, num_nodes * input_dim)
+        :param hx: (B, num_nodes * rnn_units)
+
+        :return
+        - Output: A `2-D` tensor with shape `(B, num_nodes * rnn_units)`.
+        """
         output_size = 2 * self._num_units
         if self._use_gc_for_ru:
             fn = self._gconv
@@ -158,8 +160,7 @@ class DCGRUCell(torch.nn.Module):
             fn = self._fc
         value = torch.sigmoid(fn(inputs, hx, output_size, bias_start=1.0))
         value = torch.reshape(value, (-1, self._num_nodes, output_size))
-        r, u = torch.split(
-            tensor=value, split_size_or_sections=self._num_units, dim=-1)
+        r, u = torch.split(tensor=value, split_size_or_sections=self._num_units, dim=-1)
         r = torch.reshape(r, (-1, self._num_nodes * self._num_units))
         u = torch.reshape(u, (-1, self._num_nodes * self._num_units))
 
@@ -181,11 +182,10 @@ class DCGRUCell(torch.nn.Module):
         state = torch.reshape(state, (batch_size * self._num_nodes, -1))
         inputs_and_state = torch.cat([inputs, state], dim=-1)
         input_size = inputs_and_state.shape[-1]
-        weights = self._fc_params.get_weights(
-            (input_size, output_size)).to(inputs_and_state.device)
+        weights = self._fc_params.get_weights((input_size, output_size))
         value = torch.sigmoid(torch.matmul(inputs_and_state, weights))
         biases = self._fc_params.get_biases(output_size, bias_start)
-        value += biases.to(inputs_and_state.device)
+        value += biases
         return value
 
     def _gconv(self, inputs, state, output_size, bias_start=0.0):
@@ -198,40 +198,34 @@ class DCGRUCell(torch.nn.Module):
 
         x = inputs_and_state
         x0 = x.permute(1, 2, 0)  # (num_nodes, total_arg_size, batch_size)
-        x0 = torch.reshape(
-            x0, shape=[self._num_nodes, input_size * batch_size])
+        x0 = torch.reshape(x0, shape=[self._num_nodes, input_size * batch_size])
         x = torch.unsqueeze(x0, 0)
 
         if self._max_diffusion_step == 0:
             pass
         else:
             for support in self._supports:
-                x1 = torch.mm(support.to(x0.device), x0)
+                x1 = torch.sparse.mm(support, x0)
                 x = self._concat(x, x1)
 
                 for k in range(2, self._max_diffusion_step + 1):
-                    x2 = 2 * torch.mm(support.to(x0.device), x1) - x0
+                    x2 = 2 * torch.sparse.mm(support, x1) - x0
                     x = self._concat(x, x2)
                     x1, x0 = x2, x1
 
-        # Adds for x itself.
-        num_matrices = len(self._supports) * self._max_diffusion_step + 1
-        x = torch.reshape(
-            x, shape=[num_matrices, self._num_nodes, input_size, batch_size])
+        num_matrices = len(self._supports) * self._max_diffusion_step + 1  # Adds for x itself.
+        x = torch.reshape(x, shape=[num_matrices, self._num_nodes, input_size, batch_size])
         x = x.permute(3, 1, 2, 0)  # (batch_size, num_nodes, input_size, order)
-        x = torch.reshape(
-            x, shape=[batch_size * self._num_nodes, input_size * num_matrices])
-        weights = self._gconv_params.get_weights(
-            (input_size * num_matrices, output_size)).to(x.device)
-        # (batch_size * self._num_nodes, output_size)
-        x = torch.matmul(x, weights)
+        x = torch.reshape(x, shape=[batch_size * self._num_nodes, input_size * num_matrices])
 
-        biases = self._gconv_params.get_biases(
-            output_size, bias_start).to(x.device)
+        weights = self._gconv_params.get_weights((input_size * num_matrices, output_size)).to(x.device)
+        x = torch.matmul(x, weights)  # (batch_size * self._num_nodes, output_size)
+
+        biases = self._gconv_params.get_biases(output_size, bias_start).to(x.device)
         x += biases
         # Reshape res back to 2D: (batch_size, num_node, state_dim) -> (batch_size, num_node * state_dim)
         return torch.reshape(x, [batch_size, self._num_nodes * output_size])
-
+    
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -240,8 +234,7 @@ def count_parameters(model):
 class Seq2SeqAttrs:
     def __init__(self, adj_mx, **model_kwargs):
         self.adj_mx = adj_mx
-        self.max_diffusion_step = int(
-            model_kwargs.get("max_diffusion_step", 2))
+        self.max_diffusion_step = int(model_kwargs.get("max_diffusion_step", 2))
         self.cl_decay_steps = int(model_kwargs.get("tf_decay_steps", 2000))
         self.filter_type = model_kwargs.get("filter_type", "dual_random_walk")
         self.num_nodes = int(model_kwargs.get("num_nodes", 207))
@@ -254,16 +247,27 @@ class EncoderModel(nn.Module, Seq2SeqAttrs):
     def __init__(self, adj_mx, **model_kwargs):
         nn.Module.__init__(self)
         Seq2SeqAttrs.__init__(self, adj_mx, **model_kwargs)
-        self.input_dim = int(model_kwargs.get("input_dim", 2))
-        self.seq_len = int(model_kwargs.get("seq_len", 12))  # for the encoder
+        self.input_dim = int(model_kwargs.get('input_dim', 1))
+        self.seq_len = int(model_kwargs.get('seq_len', 12))  # for the encoder
         self.dcgru_layers = nn.ModuleList(
-            [DCGRUCell(self.rnn_units, adj_mx, self.max_diffusion_step, self.num_nodes) for _ in range(self.num_rnn_layers)])
+            [DCGRUCell(self.rnn_units, adj_mx, self.max_diffusion_step, self.num_nodes,
+                       filter_type=self.filter_type, device=model_kwargs["device"]) for _ in range(self.num_rnn_layers)])
 
     def forward(self, inputs, hidden_state=None):
+        """
+        Encoder forward pass.
+
+        :param inputs: shape (batch_size, self.num_nodes * self.input_dim)
+        :param hidden_state: (num_layers, batch_size, self.hidden_state_size)
+               optional, zeros if not provided
+        :return: output: # shape (batch_size, self.hidden_state_size)
+                 hidden_state # shape (num_layers, batch_size, self.hidden_state_size)
+                 (lower indices mean lower layers)
+        """
         batch_size, _ = inputs.size()
         if hidden_state is None:
-            hidden_state = torch.zeros(
-                (self.num_rnn_layers, batch_size, self.hidden_state_size)).to(inputs.device)
+            hidden_state = torch.zeros((self.num_rnn_layers, batch_size, self.hidden_state_size),
+                                       device=inputs.device)
         hidden_states = []
         output = inputs
         for layer_num, dcgru_layer in enumerate(self.dcgru_layers):
@@ -271,8 +275,7 @@ class EncoderModel(nn.Module, Seq2SeqAttrs):
             hidden_states.append(next_hidden_state)
             output = next_hidden_state
 
-        # runs in O(num_layers) so not too slow
-        return output, torch.stack(hidden_states)
+        return output, torch.stack(hidden_states)  # runs in O(num_layers) so not too slow
 
 
 class DecoderModel(nn.Module, Seq2SeqAttrs):
@@ -280,13 +283,24 @@ class DecoderModel(nn.Module, Seq2SeqAttrs):
         # super().__init__(is_training, adj_mx, **model_kwargs)
         nn.Module.__init__(self)
         Seq2SeqAttrs.__init__(self, adj_mx, **model_kwargs)
-        self.output_dim = int(model_kwargs.get("output_dim", 1))
-        self.horizon = int(model_kwargs.get("horizon", 12))  # for the decoder
+        self.output_dim = int(model_kwargs.get('output_dim', 1))
+        self.horizon = int(model_kwargs.get('horizon', 1))  # for the decoder
         self.projection_layer = nn.Linear(self.rnn_units, self.output_dim)
         self.dcgru_layers = nn.ModuleList(
-            [DCGRUCell(self.rnn_units, adj_mx, self.max_diffusion_step, self.num_nodes) for _ in range(self.num_rnn_layers)])
+            [DCGRUCell(self.rnn_units, adj_mx, self.max_diffusion_step, self.num_nodes,
+                       filter_type=self.filter_type, device=model_kwargs["device"]) for _ in range(self.num_rnn_layers)])
 
     def forward(self, inputs, hidden_state=None):
+        """
+        Decoder forward pass.
+
+        :param inputs: shape (batch_size, self.num_nodes * self.output_dim)
+        :param hidden_state: (num_layers, batch_size, self.hidden_state_size)
+               optional, zeros if not provided
+        :return: output: # shape (batch_size, self.num_nodes * self.output_dim)
+                 hidden_state # shape (num_layers, batch_size, self.hidden_state_size)
+                 (lower indices mean lower layers)
+        """
         hidden_states = []
         output = inputs
         for layer_num, dcgru_layer in enumerate(self.dcgru_layers):
@@ -301,51 +315,52 @@ class DecoderModel(nn.Module, Seq2SeqAttrs):
 
 
 class DCRNN(nn.Module, Seq2SeqAttrs):
-    """
-    Paper: Diffusion Convolutional Recurrent Neural Network: Data-Driven Traffic Forecasting
-    Link: https://arxiv.org/abs/1707.01926
-    Codes are modified from the official repo:
-        https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_cell.py,
-        https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_model.py
-    """
-
     def __init__(self, **model_kwargs):
         super().__init__()
         
-        adj_mx = load_adj(model_kwargs["adj_path"], "doubletransition")
-        adj_mx = [torch.tensor(i) for i in adj_mx]
+        adj_mx = load_graph_data(model_kwargs["adj_path"])
         
         Seq2SeqAttrs.__init__(self, adj_mx, **model_kwargs)
         self.encoder_model = EncoderModel(adj_mx, **model_kwargs)
         self.decoder_model = DecoderModel(adj_mx, **model_kwargs)
-        self.cl_decay_steps = int(model_kwargs.get("tf_decay_steps", 2000))
-        self.use_curriculum_learning = bool(
-            model_kwargs.get("use_teacher_forcing", False))
+        self.cl_decay_steps = int(model_kwargs.get('tf_decay_steps', 2000))
+        self.use_curriculum_learning = bool(model_kwargs.get('use_teacher_forcing', False))
 
     def _compute_sampling_threshold(self, batches_seen):
         return self.cl_decay_steps / (
-            self.cl_decay_steps + np.exp(batches_seen / self.cl_decay_steps))
+                self.cl_decay_steps + np.exp(batches_seen / self.cl_decay_steps))
 
     def encoder(self, inputs):
+        """
+        encoder forward pass on t time steps
+        :param inputs: shape (seq_len, batch_size, num_sensor * input_dim)
+        :return: encoder_hidden_state: (num_layers, batch_size, self.hidden_state_size)
+        """
         encoder_hidden_state = None
         for t in range(self.encoder_model.seq_len):
-            _, encoder_hidden_state = self.encoder_model(
-                inputs[t], encoder_hidden_state)
+            _, encoder_hidden_state = self.encoder_model(inputs[t], encoder_hidden_state)
 
         return encoder_hidden_state
 
     def decoder(self, encoder_hidden_state, labels=None, batches_seen=None):
+        """
+        Decoder forward pass
+        :param encoder_hidden_state: (num_layers, batch_size, self.hidden_state_size)
+        :param labels: (self.horizon, batch_size, self.num_nodes * self.output_dim) [optional, not exist for inference]
+        :param batches_seen: global step [optional, not exist for inference]
+        :return: output: (self.horizon, batch_size, self.num_nodes * self.output_dim)
+        """
         batch_size = encoder_hidden_state.size(1)
-        go_symbol = torch.zeros(
-            (batch_size, self.num_nodes * self.decoder_model.output_dim)).to(encoder_hidden_state.device)
+        go_symbol = torch.zeros((batch_size, self.num_nodes * self.decoder_model.output_dim),
+                                device=encoder_hidden_state.device)
         decoder_hidden_state = encoder_hidden_state
         decoder_input = go_symbol
 
         outputs = []
 
         for t in range(self.decoder_model.horizon):
-            decoder_output, decoder_hidden_state = self.decoder_model(
-                decoder_input, decoder_hidden_state)
+            decoder_output, decoder_hidden_state = self.decoder_model(decoder_input,
+                                                                      decoder_hidden_state)
             decoder_input = decoder_output
             outputs.append(decoder_output)
             if self.training and self.use_curriculum_learning:
@@ -394,6 +409,14 @@ class DCRNN(nn.Module, Seq2SeqAttrs):
             print("Parameter Number: ".format(count_parameters(self)))
             print(count_parameters(self))
         return outputs
+    
+def print_model_params(model):
+    param_count = 0
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print("%-40s\t%-30s\t%-30s" % (name, list(param.shape), param.numel()))
+            param_count += param.numel()
+    print("%-40s\t%-30s" % ("Total trainable params", param_count))
 
 
 if __name__ == "__main__":
@@ -401,6 +424,7 @@ if __name__ == "__main__":
     model = DCRNN(
         num_nodes=207,
         adj_path="../data/METRLA/adj_mx.pkl",
-    ).cpu()
-    summary(model, [[64, 12, 207, 2], [64, 12, 207, 1]], device="cpu")
-    
+        device=torch.device("cuda:0"),
+    ).to(torch.device("cuda:0"))
+    summary(model, [[64, 12, 207, 2], [64, 12, 207, 1]], device=torch.device("cuda:0"))
+    print_model_params(model)

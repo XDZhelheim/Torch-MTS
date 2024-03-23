@@ -1,0 +1,264 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 2)	y-(23974, 12, 207, 1)
+Valset:  	x-(3425, 12, 207, 2)  	y-(3425, 12, 207, 1)
+Testset:	x-(6850, 12, 207, 2)	y-(6850, 12, 207, 1)
+
+--------- GTS ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "time_of_day": true,
+    "runner": "GTS",
+    "loss": "GTS",
+    "lr": 0.005,
+    "eps": 0.001,
+    "milestones": [
+        20,
+        30,
+        40
+    ],
+    "clip_grad": 5,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "early_stop": 10,
+    "model_args": {
+        "num_nodes": 207,
+        "input_dim": 2,
+        "output_dim": 1,
+        "seq_len": 12,
+        "horizon": 12,
+        "rnn_units": 64,
+        "num_rnn_layers": 1,
+        "max_diffusion_step": 3,
+        "filter_type": "dual_random_walk",
+        "tf_decay_steps": 2000,
+        "use_teacher_forcing": true,
+        "l1_decay": 0,
+        "temp": 0.5,
+        "k": 10,
+        "dim_fc": 383552,
+        "dataset_name": "METRLA",
+        "trainset_ratio": 0.7
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+GTS                                      [64, 12, 207, 1]          --
+├─Conv1d: 1-1                            [207, 8, 23981]           88
+├─BatchNorm1d: 1-2                       [207, 8, 23981]           16
+├─Conv1d: 1-3                            [207, 16, 23972]          1,296
+├─BatchNorm1d: 1-4                       [207, 16, 23972]          32
+├─Linear: 1-5                            [207, 100]                38,355,300
+├─BatchNorm1d: 1-6                       [207, 100]                200
+├─Linear: 1-7                            [42849, 100]              20,100
+├─Linear: 1-8                            [42849, 2]                202
+├─EncoderModel: 1-9                      [64, 13248]               --
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-1               [64, 13248]               --
+├─EncoderModel: 1-10                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-2               [64, 13248]               (recursive)
+├─EncoderModel: 1-11                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-3               [64, 13248]               (recursive)
+├─EncoderModel: 1-12                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-4               [64, 13248]               (recursive)
+├─EncoderModel: 1-13                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-5               [64, 13248]               (recursive)
+├─EncoderModel: 1-14                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-6               [64, 13248]               (recursive)
+├─EncoderModel: 1-15                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-7               [64, 13248]               (recursive)
+├─EncoderModel: 1-16                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-8               [64, 13248]               (recursive)
+├─EncoderModel: 1-17                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-9               [64, 13248]               (recursive)
+├─EncoderModel: 1-18                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-10              [64, 13248]               (recursive)
+├─EncoderModel: 1-19                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-11              [64, 13248]               (recursive)
+├─EncoderModel: 1-20                     [64, 13248]               (recursive)
+│    └─ModuleList: 2-12                  --                        (recursive)
+│    │    └─DCGRUCell: 3-12              [64, 13248]               (recursive)
+├─DecoderModel: 1-21                     [64, 207]                 --
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-13              [64, 13248]               --
+│    └─Linear: 2-14                      [13248, 1]                65
+├─DecoderModel: 1-22                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-14              [64, 13248]               (recursive)
+│    └─Linear: 2-16                      [13248, 1]                (recursive)
+├─DecoderModel: 1-23                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-15              [64, 13248]               (recursive)
+│    └─Linear: 2-18                      [13248, 1]                (recursive)
+├─DecoderModel: 1-24                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-16              [64, 13248]               (recursive)
+│    └─Linear: 2-20                      [13248, 1]                (recursive)
+├─DecoderModel: 1-25                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-17              [64, 13248]               (recursive)
+│    └─Linear: 2-22                      [13248, 1]                (recursive)
+├─DecoderModel: 1-26                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-18              [64, 13248]               (recursive)
+│    └─Linear: 2-24                      [13248, 1]                (recursive)
+├─DecoderModel: 1-27                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-19              [64, 13248]               (recursive)
+│    └─Linear: 2-26                      [13248, 1]                (recursive)
+├─DecoderModel: 1-28                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-20              [64, 13248]               (recursive)
+│    └─Linear: 2-28                      [13248, 1]                (recursive)
+├─DecoderModel: 1-29                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-21              [64, 13248]               (recursive)
+│    └─Linear: 2-30                      [13248, 1]                (recursive)
+├─DecoderModel: 1-30                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-22              [64, 13248]               (recursive)
+│    └─Linear: 2-32                      [13248, 1]                (recursive)
+├─DecoderModel: 1-31                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-23              [64, 13248]               (recursive)
+│    └─Linear: 2-34                      [13248, 1]                (recursive)
+├─DecoderModel: 1-32                     [64, 207]                 (recursive)
+│    └─ModuleList: 2-35                  --                        (recursive)
+│    │    └─DCGRUCell: 3-24              [64, 13248]               (recursive)
+│    └─Linear: 2-36                      [13248, 1]                (recursive)
+==========================================================================================
+Total params: 38,377,299
+Trainable params: 38,377,299
+Non-trainable params: 0
+Total mult-adds (T): 1.04
+==========================================================================================
+Input size (MB): 1.27
+Forward/backward pass size (MB): 2091.52
+Params size (MB): 153.51
+Estimated Total Size (MB): 2246.30
+==========================================================================================
+
+Loss: GTSLoss
+
+2024-03-10 10:36:18.757736 Epoch 1  	Train Loss = 2.77192 Val Loss = 3.54619
+2024-03-10 10:37:26.758982 Epoch 2  	Train Loss = 2.45975 Val Loss = 3.49516
+2024-03-10 10:38:34.432751 Epoch 3  	Train Loss = 2.39891 Val Loss = 3.40629
+2024-03-10 10:39:41.923199 Epoch 4  	Train Loss = 2.36289 Val Loss = 3.64407
+2024-03-10 10:40:49.574368 Epoch 5  	Train Loss = 2.33029 Val Loss = 3.32967
+2024-03-10 10:41:56.102607 Epoch 6  	Train Loss = 2.30128 Val Loss = 3.23019
+2024-03-10 10:43:04.061372 Epoch 7  	Train Loss = 2.27734 Val Loss = 3.19502
+2024-03-10 10:44:11.889679 Epoch 8  	Train Loss = 2.25845 Val Loss = 3.22260
+2024-03-10 10:45:19.694556 Epoch 9  	Train Loss = 2.24954 Val Loss = 3.14463
+2024-03-10 10:46:27.548961 Epoch 10  	Train Loss = 2.23392 Val Loss = 3.11836
+2024-03-10 10:47:34.629761 Epoch 11  	Train Loss = 2.22596 Val Loss = 3.13531
+2024-03-10 10:48:42.735432 Epoch 12  	Train Loss = 2.21747 Val Loss = 3.06349
+2024-03-10 10:49:50.304341 Epoch 13  	Train Loss = 2.21042 Val Loss = 3.07095
+2024-03-10 10:50:58.109673 Epoch 14  	Train Loss = 2.20680 Val Loss = 3.09316
+2024-03-10 10:52:05.816929 Epoch 15  	Train Loss = 2.20316 Val Loss = 3.05546
+2024-03-10 10:53:13.484448 Epoch 16  	Train Loss = 2.19885 Val Loss = 3.07743
+2024-03-10 10:54:21.082370 Epoch 17  	Train Loss = 2.19669 Val Loss = 3.03052
+2024-03-10 10:55:28.778329 Epoch 18  	Train Loss = 2.19150 Val Loss = 3.02775
+2024-03-10 10:56:36.674246 Epoch 19  	Train Loss = 2.18850 Val Loss = 3.02246
+2024-03-10 10:57:44.536868 Epoch 20  	Train Loss = 2.18594 Val Loss = 3.10637
+2024-03-10 10:58:52.152864 Epoch 21  	Train Loss = 2.17451 Val Loss = 2.98775
+2024-03-10 10:59:59.746577 Epoch 22  	Train Loss = 2.17396 Val Loss = 2.98065
+2024-03-10 11:01:07.424188 Epoch 23  	Train Loss = 2.17411 Val Loss = 2.97805
+2024-03-10 11:02:14.356026 Epoch 24  	Train Loss = 2.17718 Val Loss = 2.97318
+2024-03-10 11:03:21.193228 Epoch 25  	Train Loss = 2.17717 Val Loss = 2.97029
+2024-03-10 11:04:29.088889 Epoch 26  	Train Loss = 2.18119 Val Loss = 2.97291
+2024-03-10 11:05:36.924759 Epoch 27  	Train Loss = 2.18814 Val Loss = 2.96036
+2024-03-10 11:06:44.710932 Epoch 28  	Train Loss = 2.19115 Val Loss = 2.97207
+2024-03-10 11:07:52.428866 Epoch 29  	Train Loss = 2.19590 Val Loss = 2.96469
+2024-03-10 11:09:00.117722 Epoch 30  	Train Loss = 2.20506 Val Loss = 2.96870
+2024-03-10 11:10:07.809264 Epoch 31  	Train Loss = 2.21024 Val Loss = 2.93931
+2024-03-10 11:11:15.652878 Epoch 32  	Train Loss = 2.21340 Val Loss = 2.95153
+2024-03-10 11:12:23.631540 Epoch 33  	Train Loss = 2.22613 Val Loss = 2.94185
+2024-03-10 11:13:31.517023 Epoch 34  	Train Loss = 2.23630 Val Loss = 2.93830
+2024-03-10 11:14:39.607757 Epoch 35  	Train Loss = 2.25021 Val Loss = 2.94070
+2024-03-10 11:15:47.496353 Epoch 36  	Train Loss = 2.27156 Val Loss = 2.93431
+2024-03-10 11:16:55.542668 Epoch 37  	Train Loss = 2.28411 Val Loss = 2.93444
+2024-03-10 11:18:03.359555 Epoch 38  	Train Loss = 2.30960 Val Loss = 2.92572
+2024-03-10 11:19:11.392232 Epoch 39  	Train Loss = 2.32448 Val Loss = 2.92063
+2024-03-10 11:20:19.128526 Epoch 40  	Train Loss = 2.34794 Val Loss = 2.93195
+2024-03-10 11:21:26.739228 Epoch 41  	Train Loss = 2.39111 Val Loss = 2.91337
+2024-03-10 11:22:34.611755 Epoch 42  	Train Loss = 2.41075 Val Loss = 2.91475
+2024-03-10 11:23:42.606888 Epoch 43  	Train Loss = 2.46206 Val Loss = 2.91102
+2024-03-10 11:24:50.292344 Epoch 44  	Train Loss = 2.49874 Val Loss = 2.91930
+2024-03-10 11:25:58.311528 Epoch 45  	Train Loss = 2.53867 Val Loss = 2.90925
+2024-03-10 11:27:06.407482 Epoch 46  	Train Loss = 2.56951 Val Loss = 2.90189
+2024-03-10 11:28:14.204672 Epoch 47  	Train Loss = 2.60439 Val Loss = 2.89983
+2024-03-10 11:29:22.455757 Epoch 48  	Train Loss = 2.64633 Val Loss = 2.91244
+2024-03-10 11:30:30.400121 Epoch 49  	Train Loss = 2.69199 Val Loss = 2.90178
+2024-03-10 11:31:38.353197 Epoch 50  	Train Loss = 2.73419 Val Loss = 2.90008
+2024-03-10 11:32:46.402509 Epoch 51  	Train Loss = 2.76987 Val Loss = 2.90326
+2024-03-10 11:33:54.533752 Epoch 52  	Train Loss = 2.80105 Val Loss = 2.90095
+2024-03-10 11:35:02.476509 Epoch 53  	Train Loss = 2.82551 Val Loss = 2.89961
+2024-03-10 11:36:09.403962 Epoch 54  	Train Loss = 2.85809 Val Loss = 2.89928
+2024-03-10 11:37:17.287297 Epoch 55  	Train Loss = 2.87906 Val Loss = 2.89823
+2024-03-10 11:38:25.320180 Epoch 56  	Train Loss = 2.90069 Val Loss = 2.90076
+2024-03-10 11:39:33.371214 Epoch 57  	Train Loss = 2.89816 Val Loss = 2.89404
+2024-03-10 11:40:41.249591 Epoch 58  	Train Loss = 2.92011 Val Loss = 2.89054
+2024-03-10 11:41:49.209644 Epoch 59  	Train Loss = 2.93609 Val Loss = 2.89554
+2024-03-10 11:42:57.147052 Epoch 60  	Train Loss = 2.94438 Val Loss = 2.88705
+2024-03-10 11:44:04.483566 Epoch 61  	Train Loss = 2.95909 Val Loss = 2.89871
+2024-03-10 11:45:11.870265 Epoch 62  	Train Loss = 2.97500 Val Loss = 2.89231
+2024-03-10 11:46:19.899129 Epoch 63  	Train Loss = 2.97811 Val Loss = 2.89344
+2024-03-10 11:47:28.012907 Epoch 64  	Train Loss = 2.97883 Val Loss = 2.88724
+2024-03-10 11:48:36.102847 Epoch 65  	Train Loss = 2.98236 Val Loss = 2.89686
+2024-03-10 11:49:44.210006 Epoch 66  	Train Loss = 2.99067 Val Loss = 2.89076
+2024-03-10 11:50:52.234960 Epoch 67  	Train Loss = 2.99396 Val Loss = 2.89311
+2024-03-10 11:52:00.288716 Epoch 68  	Train Loss = 2.99506 Val Loss = 2.89113
+2024-03-10 11:53:08.316150 Epoch 69  	Train Loss = 2.99548 Val Loss = 2.88379
+2024-03-10 11:54:16.377041 Epoch 70  	Train Loss = 3.00090 Val Loss = 2.89551
+2024-03-10 11:55:24.357409 Epoch 71  	Train Loss = 2.99706 Val Loss = 2.88436
+2024-03-10 11:56:32.448224 Epoch 72  	Train Loss = 2.99792 Val Loss = 2.88573
+2024-03-10 11:57:40.364157 Epoch 73  	Train Loss = 3.00041 Val Loss = 2.88591
+2024-03-10 11:58:48.138136 Epoch 74  	Train Loss = 2.99868 Val Loss = 2.88381
+2024-03-10 11:59:56.026615 Epoch 75  	Train Loss = 2.99609 Val Loss = 2.88490
+2024-03-10 12:01:03.935200 Epoch 76  	Train Loss = 3.00188 Val Loss = 2.88574
+2024-03-10 12:02:12.044988 Epoch 77  	Train Loss = 3.00097 Val Loss = 2.88369
+2024-03-10 12:03:19.861211 Epoch 78  	Train Loss = 2.99930 Val Loss = 2.88751
+2024-03-10 12:04:27.789687 Epoch 79  	Train Loss = 3.00064 Val Loss = 2.87836
+2024-03-10 12:05:35.724111 Epoch 80  	Train Loss = 2.99732 Val Loss = 2.88324
+2024-03-10 12:06:43.799711 Epoch 81  	Train Loss = 2.99974 Val Loss = 2.88460
+2024-03-10 12:07:51.804381 Epoch 82  	Train Loss = 3.00000 Val Loss = 2.88106
+2024-03-10 12:08:59.470401 Epoch 83  	Train Loss = 2.99868 Val Loss = 2.88340
+2024-03-10 12:10:07.000699 Epoch 84  	Train Loss = 2.99755 Val Loss = 2.88199
+2024-03-10 12:11:14.975977 Epoch 85  	Train Loss = 2.99783 Val Loss = 2.88655
+2024-03-10 12:12:22.911851 Epoch 86  	Train Loss = 2.99705 Val Loss = 2.88580
+2024-03-10 12:13:30.946789 Epoch 87  	Train Loss = 2.99805 Val Loss = 2.88757
+2024-03-10 12:14:39.284557 Epoch 88  	Train Loss = 2.99726 Val Loss = 2.88308
+2024-03-10 12:15:47.373168 Epoch 89  	Train Loss = 2.99659 Val Loss = 2.87958
+Early stopping at epoch: 89
+Best at epoch 79:
+Train Loss = 3.00064
+Train RMSE = 6.03590, MAE = 2.97581, MAPE = 8.02689
+Val Loss = 2.87836
+Val RMSE = 6.01976, MAE = 2.89476, MAPE = 8.17190
+--------- Test ---------
+All Steps RMSE = 6.36079, MAE = 3.16020, MAPE = 8.78183
+Step 1 RMSE = 3.93278, MAE = 2.27095, MAPE = 5.44529
+Step 2 RMSE = 4.77716, MAE = 2.56933, MAPE = 6.46401
+Step 3 RMSE = 5.33347, MAE = 2.77535, MAPE = 7.23196
+Step 4 RMSE = 5.76311, MAE = 2.94049, MAPE = 7.88053
+Step 5 RMSE = 6.11601, MAE = 3.08199, MAPE = 8.43614
+Step 6 RMSE = 6.41651, MAE = 3.20355, MAPE = 8.91970
+Step 7 RMSE = 6.67705, MAE = 3.31139, MAPE = 9.35048
+Step 8 RMSE = 6.90107, MAE = 3.40527, MAPE = 9.73235
+Step 9 RMSE = 7.09126, MAE = 3.48663, MAPE = 10.06112
+Step 10 RMSE = 7.25662, MAE = 3.55879, MAPE = 10.35376
+Step 11 RMSE = 7.40763, MAE = 3.62662, MAPE = 10.62566
+Step 12 RMSE = 7.54769, MAE = 3.69211, MAPE = 10.88122
+Inference time: 7.79 s

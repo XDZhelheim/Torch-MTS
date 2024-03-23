@@ -142,17 +142,17 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
-    elif DATASET_NAME == "ELECTRICITY":
-        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
-        param_dict["train_ratio"] = 0.7
-        param_dict["valid_ratio"] = 0.1
-        param_dict["steps_per_day"] = 24
+    # elif DATASET_NAME == "ELECTRICITY":
+    #     param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+    #     param_dict["train_ratio"] = 0.7
+    #     param_dict["valid_ratio"] = 0.1
+    #     param_dict["steps_per_day"] = 24
         
-        # single step prediction on future step 3, 6, 12, 24
-        # here extract all 24 steps
-        # should specify which step to predict in model config (.yaml)
-        param_dict["history_seq_len"] = 168
-        param_dict["future_seq_len"] = 24
+    #     # single step prediction on future step 3, 6, 12, 24
+    #     # here extract all 24 steps
+    #     # should specify which step to predict in model config (.yaml)
+    #     param_dict["history_seq_len"] = 168
+    #     param_dict["future_seq_len"] = 24
     else:
         raise ValueError("Unsupported dataset.")
         

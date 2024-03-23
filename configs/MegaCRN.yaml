@@ -17,7 +17,7 @@ METRLA:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  early_stop: 30
+  early_stop: 20
 
   model_args:
     num_nodes: 207
@@ -52,7 +52,7 @@ PEMSBAY:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  early_stop: 30
+  early_stop: 20
 
   model_args:
     num_nodes: 325
@@ -87,7 +87,7 @@ PEMS03:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  early_stop: 30
+  early_stop: 20
 
   model_args:
     num_nodes: 358
@@ -122,7 +122,7 @@ PEMS04:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  early_stop: 30
+  early_stop: 20
 
   model_args:
     num_nodes: 307
@@ -157,7 +157,7 @@ PEMS07:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  early_stop: 30
+  early_stop: 20
 
   model_args:
     num_nodes: 883
@@ -192,7 +192,7 @@ PEMS08:
   clip_grad: 5
   batch_size: 64
   max_epochs: 200
-  early_stop: 30
+  early_stop: 20
 
   model_args:
     num_nodes: 170

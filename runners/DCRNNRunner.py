@@ -31,22 +31,41 @@ class DCRNNRunner(AbstractRunner):
             x_batch = x_batch.to(self.device)
             y_batch = y_batch.to(self.device)
 
-            output = model(x_batch, self.scaler.transform(y_batch), self.batches_seen) # !!! important: transform y_true
+            output = model(
+                x_batch, self.scaler.transform(y_batch), self.batches_seen
+            )  # !!! important: transform y_true
             y_pred = self.scaler.inverse_transform(output)
+
+            # What form of power is this??
+            # https://github.com/chnsh/DCRNN_PyTorch/blob/pytorch_scratch/model/pytorch/dcrnn_supervisor.py#L191
+            # Reason: parameters are created at the first iteration
+            if self.batches_seen == 0:
+                self.optimizer = torch.optim.Adam(
+                    model.parameters(),
+                    lr=self.cfg.get("lr", 0.01),
+                    weight_decay=self.cfg.get("weight_decay", 0),
+                    eps=self.cfg.get("eps", 0.001),
+                )
+                self.scheduler = torch.optim.lr_scheduler.MultiStepLR(
+                    self.optimizer,
+                    milestones=self.cfg.get("milestones", []),
+                    gamma=self.cfg.get("lr_decay_rate", 0.1),
+                    verbose=False,
+                )
 
             self.batches_seen += 1
 
             loss = criterion(y_pred, y_batch)
             batch_loss_list.append(loss.item())
 
-            optimizer.zero_grad()
+            self.optimizer.zero_grad()
             loss.backward()
             if self.clip_grad:
                 torch.nn.utils.clip_grad_norm_(model.parameters(), self.clip_grad)
-            optimizer.step()
+            self.optimizer.step()
 
         epoch_loss = np.mean(batch_loss_list)
-        scheduler.step()
+        self.scheduler.step()
 
         return epoch_loss
 

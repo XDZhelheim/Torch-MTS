@@ -36,9 +36,11 @@ def loss_select(name):
         return nn.L1Loss
     elif name in ("MSELOSS", "MSE_LOSS", "MSE"):
         return nn.MSELoss
-    
+
     elif name in ("MEGACRNLOSS", "MEGACRN"):
         return MegaCRNLoss
+    elif name in ("GTSLoss", "GTS"):
+        return GTSLoss
 
     else:
         raise NotImplementedError
@@ -106,3 +108,30 @@ class MegaCRNLoss:
 
     def __call__(self, y_pred, y_true, query, pos, neg):
         return self.forward(y_pred, y_true, query, pos, neg)
+
+
+class GTSLoss:
+    def __init__(self):
+        self.masked_mae_loss = MaskedMAELoss()
+        self.graph_loss = nn.BCELoss()
+
+    def _get_name(self):
+        return self.__class__.__name__
+
+    def forward(self, y_pred, y_true, pred_adj, prior_adj):
+        # graph loss
+        prior_label = prior_adj.view(prior_adj.shape[0] * prior_adj.shape[1]).to(
+            pred_adj.device
+        )
+        pred_label = pred_adj.view(pred_adj.shape[0] * pred_adj.shape[1])
+        loss_g = self.graph_loss(pred_label, prior_label)
+
+        # regression loss
+        loss_r = self.masked_mae_loss(y_pred, y_true)
+
+        # total loss
+        loss = loss_r + loss_g
+        return loss
+
+    def __call__(self, y_pred, y_true, pred_adj, prior_adj):
+        return self.forward(y_pred, y_true, pred_adj, prior_adj)
