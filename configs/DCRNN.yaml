@@ -63,3 +63,139 @@ PEMSBAY:
     filter_type: "dual_random_walk"
     tf_decay_steps: 2000
     use_teacher_forcing: True
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  runner: dcrnn
+
+  lr: 0.003
+  eps: 0.001
+  milestones: [80]
+  lr_decay_rate: 0.3
+  # clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 358
+    adj_path: "../data/PEMS03/adj_PEMS03.pkl"
+    input_dim: 2
+    output_dim: 1
+    seq_len: 12
+    horizon: 12
+    rnn_units: 64
+    num_rnn_layers: 2
+    max_diffusion_step: 2
+    filter_type: "dual_random_walk"
+    tf_decay_steps: 2000
+    use_teacher_forcing: True
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  runner: dcrnn
+
+  lr: 0.003
+  eps: 0.001
+  milestones: [80]
+  lr_decay_rate: 0.3
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 307
+    adj_path: "../data/PEMS04/adj_PEMS04.pkl"
+    input_dim: 2
+    output_dim: 1
+    seq_len: 12
+    horizon: 12
+    rnn_units: 64
+    num_rnn_layers: 2
+    max_diffusion_step: 2
+    filter_type: "dual_random_walk"
+    tf_decay_steps: 2000
+    use_teacher_forcing: True
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  runner: dcrnn
+
+  lr: 0.003
+  eps: 0.001
+  milestones: [80]
+  lr_decay_rate: 0.3
+  # clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 883
+    adj_path: "../data/PEMS07/adj_PEMS07.pkl"
+    input_dim: 2
+    output_dim: 1
+    seq_len: 12
+    horizon: 12
+    rnn_units: 64
+    num_rnn_layers: 2
+    max_diffusion_step: 2
+    filter_type: "dual_random_walk"
+    tf_decay_steps: 2000
+    use_teacher_forcing: True
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  runner: dcrnn
+
+  lr: 0.003
+  eps: 0.001
+  milestones: [80]
+  lr_decay_rate: 0.3
+  # clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 170
+    adj_path: "../data/PEMS08/adj_PEMS08.pkl"
+    input_dim: 2
+    output_dim: 1
+    seq_len: 12
+    horizon: 12
+    rnn_units: 64
+    num_rnn_layers: 2
+    max_diffusion_step: 2
+    filter_type: "dual_random_walk"
+    tf_decay_steps: 2000
+    use_teacher_forcing: True
