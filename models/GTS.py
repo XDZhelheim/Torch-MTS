@@ -362,7 +362,6 @@ class GTS(nn.Module, Seq2SeqAttrs):
         self.temp = model_kwargs['temp']
         
         raw_data = np.load(f"../data/{model_kwargs['dataset_name']}/data.npz")["data"][..., 0]
-        # raw_data = np.load(f"../data/METRLA/data.npz")["data"][..., 0]
         num_train = round(raw_data.shape[0]*model_kwargs["trainset_ratio"])
         raw_train_data = raw_data[:num_train]
         self.node_feats = StandardScaler().fit_transform(raw_train_data)
