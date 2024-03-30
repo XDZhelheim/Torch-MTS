@@ -26,6 +26,7 @@ from .STGCN import STGCN
 from .DCRNN import DCRNN
 from .STAEformer import STAEformer
 from .GTS import GTS
+from .DLinear import DLinear
 
 
 def model_select(name):
@@ -86,6 +87,8 @@ def model_select(name):
         return STAEformer
     elif name == "GTS":
         return GTS
+    elif name =="DLINEAR":
+        return DLinear
 
     else:
         raise NotImplementedError
