@@ -208,6 +208,8 @@ def get_dataloaders_from_tvt(
 
 def get_dataloaders_from_index_data(
     data_dir,
+    in_steps=12,
+    out_steps=12,
     tod=False,
     dow=False,
     y_tod=False,
@@ -216,8 +218,8 @@ def get_dataloaders_from_index_data(
     batch_size=64,
     log=None,
 ):
-    data = np.load(os.path.join(data_dir, "data.npz"))["data"].astype(np.float32)
-    index = np.load(os.path.join(data_dir, "index.npz"))
+    data = np.load(os.path.join(data_dir, f"data_{in_steps}_{out_steps}.npz"))["data"].astype(np.float32)
+    index = np.load(os.path.join(data_dir, f"index_{in_steps}_{out_steps}.npz"))
 
     x_features = [0]
     if tod:

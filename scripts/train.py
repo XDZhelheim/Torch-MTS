@@ -206,6 +206,8 @@ if __name__ == "__main__":
         SCALER,
     ) = get_dataloaders_from_index_data(
         data_path,
+        in_steps=cfg.get("in_steps", 12),
+        out_steps=cfg.get("out_steps", 12),
         tod=cfg.get("time_of_day"),
         dow=cfg.get("day_of_week"),
         y_tod=cfg.get("y_time_of_day"),
