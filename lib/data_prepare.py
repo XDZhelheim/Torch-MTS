@@ -218,7 +218,7 @@ def get_dataloaders_from_index_data(
     batch_size=64,
     log=None,
 ):
-    data = np.load(os.path.join(data_dir, f"data_{in_steps}_{out_steps}.npz"))["data"].astype(np.float32)
+    data = np.load(os.path.join(data_dir, f"data.npz"))["data"].astype(np.float32)
     index = np.load(os.path.join(data_dir, f"index_{in_steps}_{out_steps}.npz"))
 
     x_features = [0]

@@ -22,6 +22,7 @@ def generate_data(
     train_ratio=0.7,
     valid_ratio=0.1,
     steps_per_day=288,
+    save_data=True,
 ):
     """Preprocess and generate train/valid/test datasets.
     
@@ -102,7 +103,8 @@ def generate_data(
 
     # dump data
     np.savez_compressed(os.path.join(dataset_dir, f"index_{history_seq_len}_{future_seq_len}.npz"), train=train_index, val=valid_index, test=test_index)
-    np.savez_compressed(os.path.join(dataset_dir, f"data_{history_seq_len}_{future_seq_len}.npz"), data=processed_data)
+    if save_data:
+        np.savez_compressed(os.path.join(dataset_dir, f"data.npz"), data=processed_data)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -155,13 +157,20 @@ if __name__ == "__main__":
     for key, value in param_dict.items():
         print("|{0:>20} = {1:<45}|".format(key, str(value)))
     print("-"*(20+45+5))
+    
+    data_path = os.path.join(param_dict["dataset_dir"], "data.npz")
+    index_path = os.path.join(param_dict["dataset_dir"], f"index_{args.history_seq_len}_{args.future_seq_len}.npz")
 
-    if os.path.exists(os.path.join(param_dict["dataset_dir"], f"data_{args.history_seq_len}_{args.future_seq_len}.npz")):
+    param_dict["save_data"] = True
+    if os.path.exists(data_path) and os.path.exists(index_path):
         reply = str(input(
-            f"{os.path.join(param_dict['dataset_dir'], 'data_{args.history_seq_len}_{args.future_seq_len}.npz')} exists. Do you want to overwrite it? (y/n) "
+            f"{os.path.join(param_dict['dataset_dir'], f'data.npz and index_{args.history_seq_len}_{args.future_seq_len}.npz')} exist. Do you want to overwrite them? (y/n) "
             )).lower().strip()
         if reply[0] != "y":
             sys.exit(0)
+    elif os.path.exists(data_path) and not os.path.exists(index_path):
+        print("Generating new indices...")
+        param_dict["save_data"] = False
             
     generate_data(**param_dict)
     
