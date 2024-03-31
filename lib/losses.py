@@ -11,6 +11,8 @@ def loss_select(name):
         return MaskedMAELoss
     elif name in ("PEMS03", "PEMS04", "PEMS07", "PEMS08"):
         return nn.HuberLoss
+    elif name in ("ELECTRICITY",):
+        return nn.MSELoss
 
     elif name in (
         "MASKEDMAELOSS",

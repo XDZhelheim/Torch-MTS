@@ -5,6 +5,8 @@ from .GMANRunner import GMANRunner
 from .DCRNNRunner import DCRNNRunner
 from .GTSRunner import GTSRunner
 
+from .LTSFRunner import LTSFRunner
+
 
 def runner_select(name):
     name = name.upper()
@@ -21,6 +23,9 @@ def runner_select(name):
         return DCRNNRunner
     elif name in ("GTSRUNNER", "GTS"):
         return GTSRunner
+    
+    elif name in ("LTSF", "LONG", "LONGTERM"):
+        return LTSFRunner
 
     else:
         raise NotImplementedError
