@@ -4,11 +4,12 @@ ELECTRICITY:
   out_steps: 96
 
   lr: 0.001
-  weight_decay: 0.0001
-  milestones: [30, 50]
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
   clip_grad: 0
   batch_size: 64
-  max_epochs: 200
+  max_epochs: 10
 
   runner: ltsf
   loss: mse

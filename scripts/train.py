@@ -13,7 +13,7 @@ from lib.utils import (
     set_cpu_num,
     CustomJSONEncoder,
 )
-from lib.data_prepare import get_dataloaders_from_index_data
+from lib.data_prepare import dataloader_select
 from lib.losses import loss_select
 from models import model_select
 from runners import runner_select
@@ -80,7 +80,7 @@ if __name__ == "__main__":
         valset_loader,
         testset_loader,
         SCALER,
-    ) = get_dataloaders_from_index_data(
+    ) = dataloader_select(cfg.get("dataloader", dataset))(
         data_path,
         in_steps=cfg.get("in_steps", 12),
         out_steps=cfg.get("out_steps", 12),
@@ -88,7 +88,6 @@ if __name__ == "__main__":
         dow=cfg.get("day_of_week"),
         y_tod=cfg.get("y_time_of_day"),
         y_dow=cfg.get("y_day_of_week"),
-        pred_steps=cfg.get("pred_steps"),
         batch_size=cfg.get("batch_size", 64),
         log=log,
     )

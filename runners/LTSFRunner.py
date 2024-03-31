@@ -39,8 +39,6 @@ class LTSFRunner(AbstractRunner):
             y_batch = y_batch.to(self.device)
 
             out_batch = model(x_batch)
-            # out_batch = self.scaler.inverse_transform(out_batch)
-            y_batch = self.scaler.transform(y_batch)
 
             loss = criterion(out_batch, y_batch)
 
@@ -66,8 +64,6 @@ class LTSFRunner(AbstractRunner):
             y_batch = y_batch.to(self.device)
 
             out_batch = model(x_batch)
-            # out_batch = self.scaler.inverse_transform(out_batch)
-            y_batch = self.scaler.transform(y_batch)
             
             loss = criterion(out_batch, y_batch)
             batch_loss_list.append(loss.item())
@@ -85,8 +81,6 @@ class LTSFRunner(AbstractRunner):
             y_batch = y_batch.to(self.device)
 
             out_batch = model(x_batch)
-            # out_batch = self.scaler.inverse_transform(out_batch)
-            y_batch = self.scaler.transform(y_batch)
 
             out_batch = out_batch.cpu().numpy()
             y_batch = y_batch.cpu().numpy()
