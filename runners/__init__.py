@@ -1,4 +1,4 @@
-from .BasicRunner import BasicRunner
+from .STFRunner import STFRunner
 from .MegaCRNRunner import MegaCRNRunner
 from .GCRNRunner import GCRNRunner
 from .GMANRunner import GMANRunner
@@ -9,8 +9,8 @@ from .GTSRunner import GTSRunner
 def runner_select(name):
     name = name.upper()
 
-    if name == "BASIC":
-        return BasicRunner
+    if name in ("STF", "BASIC", "DEFAULT"):
+        return STFRunner
     elif name in ("MEGACRNRUNNER", "MEGACRN"):
         return MegaCRNRunner
     elif name in ("GCRNRUNNER", "GCRN"):

@@ -14,5 +14,13 @@ class AbstractRunner(ABC):
         pass
     
     @abstractmethod
+    def train(self):
+        pass
+    
+    @abstractmethod
+    def test_model(self):
+        pass
+    
+    @abstractmethod
     def model_summary(self):
         pass
