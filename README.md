@@ -5,6 +5,9 @@ All the codes are based on my personal coding habit and style.
 
 ## Performance Table
 
+*下面这个表整理的时候还是有bug的版本，目前不准。这个bug给test_model拖后腿了，理论上来说修完之后这些数值会变得更好，所以现在的数值能说明这些模型[最起码]能达到这样的表现。*
+*[Bug: state_dict saving](https://github.com/XDZhelheim/Torch-MTS/commit/cdc6d068ac69bf0d0c5760fa95b3fa01b3a2e8da) 简单来说就是test时候用的是训练的最后一个epoch的模型 (此时过拟合) 而不是best valid那个位置的。*
+
 ![TorchMTS-Table](https://github.com/XDZhelheim/Torch-MTS/assets/57553691/23cd6970-c0b5-4851-be32-71d646275b67)
 
 ## 几个关键点
@@ -22,15 +25,11 @@ All the codes are based on my personal coding habit and style.
 9. 可能有用也可能没用的 trick: l2 reg, grad clip
 
 ## Changelog
-* v1.1: 一个稳定版本，包含 MetaLSTM
+* v1.1: 第一个能用的版本
 * v1.2: 参考 BasicTS，重构了整个 dataset 的创建和读取
 * v1.3: 添加单独的 loss 和 runner 模块
+* v1.4: 交通预测的稳定 (或许是完全 bug-free) 版本，使用半年以上
 
 ## TODO
 
-- HA
 - 大饼：log 生成表格的脚本；支持输入 1) 多个.log 2) 模型名 3) log文件夹名；支持输出 1) .csv 2) .tex 3) .png
-
-logs:
-
-- STWA: 3478
