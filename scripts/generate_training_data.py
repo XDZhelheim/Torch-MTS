@@ -15,13 +15,14 @@ def generate_data(
     dataset_dir,
     data_file_path,
     target_channel=[0],
-    future_seq_len=12,
     history_seq_len=12,
+    future_seq_len=12,
     add_time_of_day=True,
     add_day_of_week=True,
     train_ratio=0.7,
-    valid_ratio=0.2,
+    valid_ratio=0.1,
     steps_per_day=288,
+    save_data=True,
 ):
     """Preprocess and generate train/valid/test datasets.
     
@@ -48,7 +49,7 @@ def generate_data(
     elif data_file_path.endswith("csv"):
         file_type = "csv"
         df = pd.read_csv(data_file_path)
-        df_index = pd.to_datetime(df["date"].values, format="%Y-%m-%d %H:%M").to_numpy()
+        df_index = pd.to_datetime(df["date"].values, format="%Y-%m-%d %H:%M:%S").to_numpy()
         df = df[df.columns[1:]]
         df.index = df_index
         data = np.expand_dims(df.values, axis=-1)
@@ -101,16 +102,17 @@ def generate_data(
     print("data shape: {0}".format(processed_data.shape))
 
     # dump data
-    np.savez_compressed(os.path.join(dataset_dir, "index.npz"), train=train_index, val=valid_index, test=test_index)
-    np.savez_compressed(os.path.join(dataset_dir, "data.npz"), data=processed_data)
+    np.savez_compressed(os.path.join(dataset_dir, f"index_{history_seq_len}_{future_seq_len}.npz"), train=train_index, val=valid_index, test=test_index)
+    if save_data:
+        np.savez_compressed(os.path.join(dataset_dir, f"data.npz"), data=processed_data)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, 
                         default="METRLA", help="Which dataset to run")
-    parser.add_argument("--history_seq_len", type=int,
+    parser.add_argument("-p", "--history_seq_len", type=int,
                         default=12, help="History sequence length.")
-    parser.add_argument("--future_seq_len", type=int,
+    parser.add_argument("-f", "--future_seq_len", type=int,
                         default=12, help="Future sequence length.")
     parser.add_argument("--target_channel", type=list,
                         default=[0], help="Selected channels.")
@@ -142,17 +144,16 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
-    # elif DATASET_NAME == "ELECTRICITY":
-    #     param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
-    #     param_dict["train_ratio"] = 0.7
-    #     param_dict["valid_ratio"] = 0.1
-    #     param_dict["steps_per_day"] = 24
-        
-    #     # single step prediction on future step 3, 6, 12, 24
-    #     # here extract all 24 steps
-    #     # should specify which step to predict in model config (.yaml)
-    #     param_dict["history_seq_len"] = 168
-    #     param_dict["future_seq_len"] = 24
+    elif DATASET_NAME == "ELECTRICITY":
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.7
+        param_dict["valid_ratio"] = 0.1
+        param_dict["steps_per_day"] = 24
+    elif DATASET_NAME == "WEATHER":
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.7
+        param_dict["valid_ratio"] = 0.1
+        param_dict["steps_per_day"] = 144
     else:
         raise ValueError("Unsupported dataset.")
         
@@ -161,13 +162,20 @@ if __name__ == "__main__":
     for key, value in param_dict.items():
         print("|{0:>20} = {1:<45}|".format(key, str(value)))
     print("-"*(20+45+5))
+    
+    data_path = os.path.join(param_dict["dataset_dir"], "data.npz")
+    index_path = os.path.join(param_dict["dataset_dir"], f"index_{args.history_seq_len}_{args.future_seq_len}.npz")
 
-    if os.path.exists(os.path.join(param_dict["dataset_dir"], "data.npz")):
+    param_dict["save_data"] = True
+    if os.path.exists(data_path) and os.path.exists(index_path):
         reply = str(input(
-            f"{os.path.join(param_dict['dataset_dir'], 'data.npz')} exists. Do you want to overwrite it? (y/n) "
+            f"{os.path.join(param_dict['dataset_dir'], f'data.npz and index_{args.history_seq_len}_{args.future_seq_len}.npz')} exist. Do you want to overwrite them? (y/n) "
             )).lower().strip()
         if reply[0] != "y":
             sys.exit(0)
+    elif os.path.exists(data_path) and not os.path.exists(index_path):
+        print("Generating new indices...")
+        param_dict["save_data"] = False
             
     generate_data(**param_dict)
     
