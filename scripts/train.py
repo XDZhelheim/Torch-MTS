@@ -125,6 +125,7 @@ if __name__ == "__main__":
 
     # --------------------------- print model structure -------------------------- #
 
+    print_log(f"Random seed = {args.seed}", log=log)
     print_log("---------", model_name, "---------", log=log)
     print_log(
         json.dumps(cfg, ensure_ascii=False, indent=4, cls=CustomJSONEncoder), log=log
@@ -150,6 +151,8 @@ if __name__ == "__main__":
         verbose=1,
         save=save,
     )
+    
+    print_log(f"Model checkpoint saved to: {save}", log=log)
 
     runner.test_model(model, testset_loader)
 
