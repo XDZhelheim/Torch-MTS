@@ -149,6 +149,11 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
         param_dict["steps_per_day"] = 24
+    elif DATASET_NAME == "WEATHER":
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.7
+        param_dict["valid_ratio"] = 0.1
+        param_dict["steps_per_day"] = 144
     else:
         raise ValueError("Unsupported dataset.")
         

@@ -26,7 +26,9 @@ from .STGCN import STGCN
 from .DCRNN import DCRNN
 from .STAEformer import STAEformer
 from .GTS import GTS
+
 from .DLinear import DLinear
+from .PatchTST import PatchTST
 
 
 def model_select(name):
@@ -87,8 +89,11 @@ def model_select(name):
         return STAEformer
     elif name == "GTS":
         return GTS
-    elif name =="DLINEAR":
+    
+    elif name == "DLINEAR":
         return DLinear
+    elif name == "PATCHTST":
+        return PatchTST
 
     else:
         raise NotImplementedError

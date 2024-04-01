@@ -46,10 +46,10 @@ class DLinear(nn.Module):
     """
 
     def __init__(self, 
+                 enc_in=321,
                  seq_len=336, 
                  pred_len=96, 
                  individual=False, 
-                 enc_in=321
                  ):
         super(DLinear, self).__init__()
         self.seq_len = seq_len

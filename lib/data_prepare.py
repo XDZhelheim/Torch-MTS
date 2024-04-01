@@ -367,9 +367,7 @@ def get_dataloaders_from_tvt(
         data["x_" + category] = cat_data["x"].astype(np.float32)
         data["y_" + category] = cat_data["y"][..., :1].astype(np.float32)
 
-    print_log(
-        f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log
-    )
+    print_log(f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log)
     print_log(f"Valset:  \tx-{data['x_val'].shape}  \ty-{data['y_val'].shape}", log=log)
     print_log(f"Testset:\tx-{data['x_test'].shape}\ty-{data['y_test'].shape}", log=log)
 

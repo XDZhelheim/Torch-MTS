@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 sys.path.append("..")
 from lib.utils import print_log
-from lib.metrics import MAE_MSE
+from lib.metrics import MSE_MAE
 
 
 class LTSFRunner(AbstractRunner):
@@ -146,22 +146,20 @@ class LTSFRunner(AbstractRunner):
                     break
 
         model.load_state_dict(best_state_dict)
-        train_mae, train_mse = MAE_MSE(
-            *self.predict(model, trainset_loader)
-        )
-        val_mae, val_mse= MAE_MSE(*self.predict(model, valset_loader))
+        train_mse, train_mae = MSE_MAE(*self.predict(model, trainset_loader))
+        val_mse, val_mae= MSE_MAE(*self.predict(model, valset_loader))
 
         out_str = f"Early stopping at epoch: {epoch+1}\n"
         out_str += f"Best at epoch {best_epoch+1}:\n"
         out_str += "Train Loss = %.5f\n" % train_loss_list[best_epoch]
-        out_str += "Train MAE = %.5f, MSE = %.5f\n" % (
-            train_mae,
+        out_str += "Train MSE = %.5f, MAE = %.5f\n" % (
             train_mse,
+            train_mae,
         )
         out_str += "Val Loss = %.5f\n" % val_loss_list[best_epoch]
-        out_str += "Val MAE = %.5f, MSE = %.5f" % (
-            val_mae,
+        out_str += "Val MSE = %.5f, MAE = %.5f" % (
             val_mse,
+            val_mae,
         )
         print_log(out_str, log=self.log)
 
@@ -189,11 +187,11 @@ class LTSFRunner(AbstractRunner):
 
         out_steps = y_pred.shape[1]
 
-        mae_all, mse_all = MAE_MSE(y_true, y_pred)
-        out_str = "All Steps (1-%d) MAE = %.5f, MSE = %.5f\n" % (
+        mse_all, mae_all = MSE_MAE(y_true, y_pred)
+        out_str = "All Steps (1-%d) MSE = %.5f, MAE = %.5f\n" % (
             out_steps,
-            mae_all,
             mse_all,
+            mae_all,
         )
 
         print_log(out_str, log=self.log, end="")
