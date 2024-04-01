@@ -11,6 +11,7 @@ ELECTRICITY:
   batch_size: 64
   max_epochs: 10
 
+  dataloader: ltsf
   runner: ltsf
   loss: mse
 
