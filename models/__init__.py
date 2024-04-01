@@ -8,11 +8,6 @@ from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
 from .baseline.GCRN import GCRN
 
-from .meta_param.STMetaLSTM import STMetaLSTM
-from .meta_param.STMetaGRU import STMetaGRU
-from .meta_param.STMetaAttention import STMetaAttention
-from .meta_param.STMetaGCGRU import STMetaGCGRU
-
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
 from .MTGNN import MTGNN
@@ -53,15 +48,6 @@ def model_select(name):
         return GCLSTM
     elif name == "GCGRU":
         return GCGRU
-
-    elif name == "STMETALSTM":
-        return STMetaLSTM
-    elif name == "STMETAGRU":
-        return STMetaGRU
-    elif name in ("STMETAATTN", "STMETAATTENTION", "STMETATRANSFORMER"):
-        return STMetaAttention
-    elif name == "STMETAGCGRU":
-        return STMetaGCGRU
 
     elif name == "AGCRN":
         return AGCRN
