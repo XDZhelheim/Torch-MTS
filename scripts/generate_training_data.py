@@ -22,6 +22,7 @@ def generate_data(
     train_ratio=0.7,
     valid_ratio=0.1,
     steps_per_day=288,
+    date_format="%Y-%m-%d %H:%M:%S",
     save_data=True,
 ):
     """Preprocess and generate train/valid/test datasets.
@@ -49,7 +50,7 @@ def generate_data(
     elif data_file_path.endswith("csv"):
         file_type = "csv"
         df = pd.read_csv(data_file_path)
-        df_index = pd.to_datetime(df["date"].values, format="%Y-%m-%d %H:%M:%S").to_numpy()
+        df_index = pd.to_datetime(df["date"].values, format=date_format).to_numpy()
         df = df[df.columns[1:]]
         df.index = df_index
         data = np.expand_dims(df.values, axis=-1)
@@ -144,16 +145,17 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
-    elif DATASET_NAME == "ELECTRICITY":
+    elif DATASET_NAME in ("ELECTRICITY", "WEATHER", "TRAFFIC"):
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
-        param_dict["steps_per_day"] = 24
-    elif DATASET_NAME == "WEATHER":
+        # param_dict["steps_per_day"] = 0 # unused: 24, 144, 24
+    elif DATASET_NAME == "EXCHANGE":
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
-        param_dict["steps_per_day"] = 144
+        param_dict["date_format"]="%Y/%m/%d %H:%M"
+        # param_dict["steps_per_day"] = 1 # unused
     else:
         raise ValueError("Unsupported dataset.")
         

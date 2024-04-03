@@ -7,7 +7,7 @@ INFO: Using scaled X and Y, only for LTSF!
 Random seed = 233
 --------- PatchTST ---------
 {
-    "num_nodes": 321,
+    "num_nodes": 21,
     "in_steps": 336,
     "out_steps": 96,
     "lr": 0.0001,
@@ -23,7 +23,7 @@ Random seed = 233
     "runner": "ltsf",
     "loss": "mse",
     "model_args": {
-        "enc_in": 321,
+        "enc_in": 21,
         "seq_len": 336,
         "pred_len": 96,
         "e_layers": 3,

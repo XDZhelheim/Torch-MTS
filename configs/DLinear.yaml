@@ -43,3 +43,49 @@ WEATHER:
     seq_len: 336
     pred_len: 96 # 96 192 336 720
     individual: False
+
+TRAFFIC:
+  num_nodes: 862
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 862
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+EXCHANGE:
+  num_nodes: 8
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 8
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
