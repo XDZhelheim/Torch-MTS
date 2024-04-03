@@ -145,17 +145,19 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
-    elif DATASET_NAME in ("ELECTRICITY", "WEATHER", "TRAFFIC"):
+    elif DATASET_NAME in ("ELECTRICITY", "WEATHER", "TRAFFIC", "ILI"):
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
-        # param_dict["steps_per_day"] = 0 # unused: 24, 144, 24
     elif DATASET_NAME == "EXCHANGE":
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
         param_dict["date_format"]="%Y/%m/%d %H:%M"
-        # param_dict["steps_per_day"] = 1 # unused
+    elif DATASET_NAME in ("ETTH1", "ETTH2", "ETTM1", "ETTM2"):
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.6
+        param_dict["valid_ratio"] = 0.2
     else:
         raise ValueError("Unsupported dataset.")
         
