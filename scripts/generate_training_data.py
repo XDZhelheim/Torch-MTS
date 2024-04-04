@@ -24,6 +24,7 @@ def generate_data(
     steps_per_day=288,
     date_format="%Y-%m-%d %H:%M:%S",
     save_data=True,
+    split_first=False,
 ):
     """Preprocess and generate train/valid/test datasets.
     
@@ -61,23 +62,33 @@ def generate_data(
     print("raw time series shape: {0}".format(data.shape))
 
     l, n, f = data.shape
-    num_samples = l - (history_seq_len + future_seq_len) + 1
-    train_num_short = round(num_samples * train_ratio)
-    valid_num_short = round(num_samples * valid_ratio)
-    test_num_short = num_samples - train_num_short - valid_num_short
-    print("number of training samples: {0}".format(train_num_short))
-    print("number of validation samples: {0}".format(valid_num_short))
-    print("number of test samples: {0}".format(test_num_short))
+    if split_first:
+        # first split train/val/test, then perform sliding window individually
+        split1 = round(l * train_ratio)
+        split2 = round(l * (train_ratio + valid_ratio))
+        train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
+        valid_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split1 + history_seq_len, split2 - future_seq_len + 1)]
+        test_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split2 + history_seq_len, l - future_seq_len + 1)]
+    else:
+        # first sliding window, then split (default setting)
+        # commonly used for spatiotemporal/traffic forecasting datasets
+        # actually this is not strict because it will cross the boundaries of train&val, val&test
+        # will generate more samples than split_first
+        num_samples = l - (history_seq_len + future_seq_len) + 1
+        train_num_short = round(num_samples * train_ratio)
+        valid_num_short = round(num_samples * valid_ratio)
+        test_num_short = num_samples - train_num_short - valid_num_short
 
-    index_list = []
-    for t in range(history_seq_len, num_samples + history_seq_len):
-        index = (t-history_seq_len, t, t+future_seq_len)
-        index_list.append(index)
+        index_list = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, num_samples + history_seq_len)]
 
-    train_index = index_list[:train_num_short]
-    valid_index = index_list[train_num_short: train_num_short + valid_num_short]
-    test_index = index_list[train_num_short +
-                            valid_num_short: train_num_short + valid_num_short + test_num_short]
+        train_index = index_list[:train_num_short]
+        valid_index = index_list[train_num_short : train_num_short + valid_num_short]
+        test_index = index_list[train_num_short +
+                                valid_num_short : train_num_short + valid_num_short + test_num_short]
+        
+    print("number of training samples: {0}".format(len(train_index)))
+    print("number of validation samples: {0}".format(len(valid_index)))
+    print("number of test samples: {0}".format(len(test_index)))
 
     # add external feature
     feature_list = [data]
