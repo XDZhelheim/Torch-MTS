@@ -31,6 +31,9 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--compile", action="store_true")
     parser.add_argument("--seed", type=int, default=233)
     parser.add_argument("--cpus", type=int, default=1)
+
+    parser.add_argument("-p", "--seq_len", type=int, default=0, help="seq_len for LTSF")
+    parser.add_argument("-f", "--pred_len", type=int, default=0, help="pred_len for LTSF")
     args = parser.parse_args()
 
     seed_everything(args.seed)
@@ -51,6 +54,16 @@ if __name__ == "__main__":
     with open(f"../configs/{model_name}.yaml", "r") as f:
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
+
+    # shortcut for LTSF
+    if args.seq_len > 0:
+        assert "seq_len" in cfg["model_args"], "Specifying input length is only for LTSF."
+        cfg["in_steps"] = args.seq_len
+        cfg["model_args"]["seq_len"] = args.seq_len
+    if args.pred_len > 0:
+        assert "pred_len" in cfg["model_args"], "Specifying prediction length is only for LTSF."
+        cfg["out_steps"] = args.pred_len
+        cfg["model_args"]["pred_len"] = args.pred_len
 
     # -------------------------------- load model -------------------------------- #
 
@@ -151,7 +164,7 @@ if __name__ == "__main__":
         verbose=1,
         save=save,
     )
-    
+
     print_log(f"Model checkpoint saved to: {save}", log=log)
 
     runner.test_model(model, testset_loader)

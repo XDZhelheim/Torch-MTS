@@ -1,7 +1,7 @@
-ETTH1
-Trainset:	x-(10136, 336, 7, 1)	y-(10136, 192, 7, 1)
-Valset:  	x-(3379, 336, 7, 1)  	y-(3379, 192, 7, 1)
-Testset:	x-(3378, 336, 7, 1)	y-(3378, 192, 7, 1)
+ETTM2
+Trainset:	x-(34244, 336, 7, 1)	y-(34244, 192, 7, 1)
+Valset:  	x-(11415, 336, 7, 1)  	y-(11415, 192, 7, 1)
+Testset:	x-(11414, 336, 7, 1)	y-(11414, 192, 7, 1)
 INFO: Using scaled X and Y, only for LTSF!
 
 Random seed = 233
@@ -10,7 +10,7 @@ Random seed = 233
     "num_nodes": 7,
     "in_steps": 336,
     "out_steps": 192,
-    "lr": 0.001,
+    "lr": 0.01,
     "weight_decay": 0,
     "milestones": [
         5
@@ -52,23 +52,23 @@ Estimated Total Size (MB): 2.50
 
 Loss: MSELoss
 
-2024-04-03 20:28:56.559599 Epoch 1  	Train Loss = 0.47943 Val Loss = 0.40819
-2024-04-03 20:28:56.887620 Epoch 2  	Train Loss = 0.42849 Val Loss = 0.40891
-2024-04-03 20:28:57.214166 Epoch 3  	Train Loss = 0.42395 Val Loss = 0.40062
-2024-04-03 20:28:57.545025 Epoch 4  	Train Loss = 0.42267 Val Loss = 0.39702
-2024-04-03 20:28:57.874378 Epoch 5  	Train Loss = 0.42126 Val Loss = 0.40273
-2024-04-03 20:28:58.200084 Epoch 6  	Train Loss = 0.41509 Val Loss = 0.39571
-2024-04-03 20:28:58.530193 Epoch 7  	Train Loss = 0.41404 Val Loss = 0.39624
-2024-04-03 20:28:58.889828 Epoch 8  	Train Loss = 0.41382 Val Loss = 0.39645
-2024-04-03 20:28:59.444426 Epoch 9  	Train Loss = 0.41411 Val Loss = 0.39488
-2024-04-03 20:29:00.001070 Epoch 10  	Train Loss = 0.41416 Val Loss = 0.39519
+2024-04-04 11:19:40.298918 Epoch 1  	Train Loss = 0.38825 Val Loss = 0.24520
+2024-04-04 11:19:41.419431 Epoch 2  	Train Loss = 0.36598 Val Loss = 0.24668
+2024-04-04 11:19:42.515896 Epoch 3  	Train Loss = 0.38658 Val Loss = 0.40074
+2024-04-04 11:19:43.614904 Epoch 4  	Train Loss = 0.37138 Val Loss = 0.31730
+2024-04-04 11:19:44.711788 Epoch 5  	Train Loss = 0.39128 Val Loss = 0.25133
+2024-04-04 11:19:45.890816 Epoch 6  	Train Loss = 0.29794 Val Loss = 0.19598
+2024-04-04 11:19:46.982797 Epoch 7  	Train Loss = 0.29394 Val Loss = 0.16027
+2024-04-04 11:19:48.076621 Epoch 8  	Train Loss = 0.29457 Val Loss = 0.16533
+2024-04-04 11:19:49.164242 Epoch 9  	Train Loss = 0.29537 Val Loss = 0.19913
+2024-04-04 11:19:50.493278 Epoch 10  	Train Loss = 0.29659 Val Loss = 0.18496
 Early stopping at epoch: 10
-Best at epoch 9:
-Train Loss = 0.41411
-Train MSE = 0.41311, MAE = 0.44580
-Val Loss = 0.39488
-Val MSE = 0.39491, MAE = 0.42262
-Model checkpoint saved to: ../saved_models/DLinear/DLinear-ETTH1-2024-04-03-20-28-55.pt
+Best at epoch 7:
+Train Loss = 0.29394
+Train MSE = 0.29336, MAE = 0.30641
+Val Loss = 0.16027
+Val MSE = 0.16048, MAE = 0.27790
+Model checkpoint saved to: ../saved_models/DLinear/DLinear-ETTM2-2024-04-04-11-19-37.pt
 --------- Test ---------
-All Steps (1-192) MSE = 0.47701, MAE = 0.47713
-Inference time: 0.06 s
+All Steps (1-192) MSE = 0.23015, MAE = 0.30725
+Inference time: 0.20 s
