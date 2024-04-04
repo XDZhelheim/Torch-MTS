@@ -64,6 +64,7 @@ def generate_data(
     l, n, f = data.shape
     if split_first:
         # first split train/val/test, then perform sliding window individually
+        # the most strict version
         split1 = round(l * train_ratio)
         split2 = round(l * (train_ratio + valid_ratio))
         train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
@@ -89,6 +90,10 @@ def generate_data(
     print("number of training samples: {0}".format(len(train_index)))
     print("number of validation samples: {0}".format(len(valid_index)))
     print("number of test samples: {0}".format(len(test_index)))
+    
+    # Sadly LTSF uses neither of the two approaches above
+    # Its train is strict, but val overlaps with train and test overlaps with val
+    # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L238
 
     # add external feature
     feature_list = [data]
@@ -166,6 +171,8 @@ if __name__ == "__main__":
         param_dict["valid_ratio"] = 0.1
         param_dict["date_format"]="%Y/%m/%d %H:%M"
     elif DATASET_NAME in ("ETTH1", "ETTH2", "ETTM1", "ETTM2"):
+        # They use 12 months:4 months:4 months, but the raw data is longer than 20 months!!!
+        # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L48
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
