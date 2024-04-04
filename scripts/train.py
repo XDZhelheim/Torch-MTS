@@ -32,8 +32,8 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=233)
     parser.add_argument("--cpus", type=int, default=1)
 
-    parser.add_argument("-p", "--seq_len", type=int, default=0, help="seq_len for LTSF")
-    parser.add_argument("-f", "--pred_len", type=int, default=0, help="pred_len for LTSF")
+    parser.add_argument("-s", "--seq_len", type=int, default=0, help="seq_len for LTSF")
+    parser.add_argument("-p", "--pred_len", type=int, default=0, help="pred_len for LTSF")
     args = parser.parse_args()
 
     seed_everything(args.seed)

@@ -127,9 +127,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, 
                         default="METRLA", help="Which dataset to run")
-    parser.add_argument("-p", "--history_seq_len", type=int,
+    parser.add_argument("-s", "--history_seq_len", type=int,
                         default=12, help="History sequence length.")
-    parser.add_argument("-f", "--future_seq_len", type=int,
+    parser.add_argument("-p", "--future_seq_len", type=int,
                         default=12, help="Future sequence length.")
     parser.add_argument("--target_channel", type=list,
                         default=[0], help="Selected channels.")
