@@ -149,3 +149,155 @@ EXCHANGE:
     subtract_last: 0 
     decomposition: 0 
     kernel_size: 25
+
+ETTH1:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96
+
+  lr: 0.0001
+  weight_decay: 0
+  milestones: [10]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96
+    e_layers: 3
+    n_heads: 4
+    d_model: 16
+    d_ff: 128
+    dropout: 0.3
+    fc_dropout: 0.3
+    head_dropout: 0
+    patch_len: 16 
+    stride: 8 
+    individual: 0
+    padding_patch: "end"
+    revin: 1 
+    affine: 0 
+    subtract_last: 0 
+    decomposition: 0 
+    kernel_size: 25
+
+ETTH2:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96
+
+  lr: 0.0001
+  weight_decay: 0
+  milestones: [10]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96
+    e_layers: 3
+    n_heads: 4
+    d_model: 16
+    d_ff: 128
+    dropout: 0.3
+    fc_dropout: 0.3
+    head_dropout: 0
+    patch_len: 16 
+    stride: 8 
+    individual: 0
+    padding_patch: "end"
+    revin: 1 
+    affine: 0 
+    subtract_last: 0 
+    decomposition: 0 
+    kernel_size: 25
+
+ETTM1:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96
+
+  lr: 0.0001
+  weight_decay: 0
+  milestones: [10]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96
+    e_layers: 3
+    n_heads: 16
+    d_model: 128
+    d_ff: 256
+    dropout: 0.2 
+    fc_dropout: 0.2 
+    head_dropout: 0
+    patch_len: 16 
+    stride: 8 
+    individual: 0
+    padding_patch: "end"
+    revin: 1 
+    affine: 0 
+    subtract_last: 0 
+    decomposition: 0 
+    kernel_size: 25
+
+ETTM2:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96
+
+  lr: 0.0001
+  weight_decay: 0
+  milestones: [10]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96
+    e_layers: 3
+    n_heads: 16
+    d_model: 128
+    d_ff: 256
+    dropout: 0.2 
+    fc_dropout: 0.2 
+    head_dropout: 0
+    patch_len: 16 
+    stride: 8 
+    individual: 0
+    padding_patch: "end"
+    revin: 1 
+    affine: 0 
+    subtract_last: 0 
+    decomposition: 0 
+    kernel_size: 25
