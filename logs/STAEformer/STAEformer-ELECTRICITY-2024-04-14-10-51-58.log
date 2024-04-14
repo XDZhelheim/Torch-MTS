@@ -1,0 +1,126 @@
+ELECTRICITY
+Trainset:	x-(18111, 96, 321, 3)	y-(18111, 336, 321, 1)
+Valset:  	x-(2587, 96, 321, 3)  	y-(2587, 336, 321, 1)
+Testset:	x-(5175, 96, 321, 3)	y-(5175, 336, 321, 1)
+INFO: Using scaled X and Y, only for LTSF!
+
+Random seed = 233
+--------- STAEformer ---------
+{
+    "num_nodes": 321,
+    "in_steps": 96,
+    "out_steps": 336,
+    "time_of_day": true,
+    "day_of_week": true,
+    "lr": 0.0001,
+    "weight_decay": 0,
+    "milestones": [
+        10,
+        30
+    ],
+    "lr_decay_rate": 0.1,
+    "clip_grad": 0,
+    "batch_size": 16,
+    "max_epochs": 200,
+    "dataloader": "ltsf",
+    "runner": "ltsf",
+    "loss": "mse",
+    "model_args": {
+        "num_nodes": 321,
+        "in_steps": 96,
+        "out_steps": 336,
+        "steps_per_day": 24,
+        "input_dim": 3,
+        "output_dim": 1,
+        "input_embedding_dim": 24,
+        "tod_embedding_dim": 24,
+        "dow_embedding_dim": 24,
+        "adaptive_embedding_dim": 80,
+        "feed_forward_dim": 256,
+        "num_heads": 4,
+        "num_layers": 1,
+        "dropout": 0.1
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+STAEformer                               [16, 336, 321, 1]         2,465,280
+├─Linear: 1-1                            [16, 96, 321, 24]         96
+├─Embedding: 1-2                         [16, 96, 321, 24]         576
+├─Embedding: 1-3                         [16, 96, 321, 24]         168
+├─ModuleList: 1-4                        --                        --
+│    └─SelfAttentionLayer: 2-1           [16, 96, 321, 152]        --
+│    │    └─AttentionLayer: 3-1          [16, 321, 96, 152]        93,024
+│    │    └─Dropout: 3-2                 [16, 321, 96, 152]        --
+│    │    └─LayerNorm: 3-3               [16, 321, 96, 152]        304
+│    │    └─Sequential: 3-4              [16, 321, 96, 152]        78,232
+│    │    └─Dropout: 3-5                 [16, 321, 96, 152]        --
+│    │    └─LayerNorm: 3-6               [16, 321, 96, 152]        304
+├─ModuleList: 1-5                        --                        --
+│    └─SelfAttentionLayer: 2-2           [16, 96, 321, 152]        --
+│    │    └─AttentionLayer: 3-7          [16, 96, 321, 152]        93,024
+│    │    └─Dropout: 3-8                 [16, 96, 321, 152]        --
+│    │    └─LayerNorm: 3-9               [16, 96, 321, 152]        304
+│    │    └─Sequential: 3-10             [16, 96, 321, 152]        78,232
+│    │    └─Dropout: 3-11                [16, 96, 321, 152]        --
+│    │    └─LayerNorm: 3-12              [16, 96, 321, 152]        304
+├─Linear: 1-6                            [16, 321, 336]            4,903,248
+==========================================================================================
+Total params: 7,713,096
+Trainable params: 7,713,096
+Non-trainable params: 0
+Total mult-adds (M): 83.97
+==========================================================================================
+Input size (MB): 5.92
+Forward/backward pass size (MB): 10711.15
+Params size (MB): 20.99
+Estimated Total Size (MB): 10738.06
+==========================================================================================
+
+Loss: MSELoss
+
+2024-04-14 10:58:05.116510 Epoch 1  	Train Loss = 0.24185 Val Loss = 0.17774
+2024-04-14 11:03:51.464633 Epoch 2  	Train Loss = 0.19141 Val Loss = 0.15473
+2024-04-14 11:09:36.614430 Epoch 3  	Train Loss = 0.18304 Val Loss = 0.15290
+2024-04-14 11:15:21.311572 Epoch 4  	Train Loss = 0.17555 Val Loss = 0.15255
+2024-04-14 11:21:07.586611 Epoch 5  	Train Loss = 0.16857 Val Loss = 0.15054
+2024-04-14 11:26:53.564827 Epoch 6  	Train Loss = 0.16320 Val Loss = 0.14740
+2024-04-14 11:32:40.307528 Epoch 7  	Train Loss = 0.15840 Val Loss = 0.14417
+2024-04-14 11:38:26.736664 Epoch 8  	Train Loss = 0.15449 Val Loss = 0.14501
+2024-04-14 11:44:12.377460 Epoch 9  	Train Loss = 0.15075 Val Loss = 0.15031
+2024-04-14 11:49:58.684178 Epoch 10  	Train Loss = 0.14750 Val Loss = 0.14733
+2024-04-14 11:55:45.409367 Epoch 11  	Train Loss = 0.14249 Val Loss = 0.14350
+2024-04-14 12:01:31.601906 Epoch 12  	Train Loss = 0.14191 Val Loss = 0.14458
+2024-04-14 12:07:17.586937 Epoch 13  	Train Loss = 0.14143 Val Loss = 0.14770
+2024-04-14 12:13:03.020479 Epoch 14  	Train Loss = 0.14098 Val Loss = 0.14191
+2024-04-14 12:18:50.318208 Epoch 15  	Train Loss = 0.14052 Val Loss = 0.14449
+2024-04-14 12:24:49.009226 Epoch 16  	Train Loss = 0.14012 Val Loss = 0.14504
+2024-04-14 12:30:36.131849 Epoch 17  	Train Loss = 0.13972 Val Loss = 0.14280
+2024-04-14 12:36:23.154535 Epoch 18  	Train Loss = 0.13931 Val Loss = 0.14416
+2024-04-14 12:42:08.273904 Epoch 19  	Train Loss = 0.13892 Val Loss = 0.14213
+2024-04-14 12:47:53.857130 Epoch 20  	Train Loss = 0.13852 Val Loss = 0.14355
+2024-04-14 12:53:39.178835 Epoch 21  	Train Loss = 0.13816 Val Loss = 0.14338
+2024-04-14 12:59:25.269022 Epoch 22  	Train Loss = 0.13782 Val Loss = 0.14740
+2024-04-14 13:05:11.590021 Epoch 23  	Train Loss = 0.13747 Val Loss = 0.14672
+2024-04-14 13:10:59.299326 Epoch 24  	Train Loss = 0.13712 Val Loss = 0.14065
+2024-04-14 13:16:45.527482 Epoch 25  	Train Loss = 0.13675 Val Loss = 0.14296
+2024-04-14 13:22:33.090060 Epoch 26  	Train Loss = 0.13647 Val Loss = 0.14285
+2024-04-14 13:28:18.924352 Epoch 27  	Train Loss = 0.13611 Val Loss = 0.14322
+2024-04-14 13:34:05.537669 Epoch 28  	Train Loss = 0.13580 Val Loss = 0.14346
+2024-04-14 13:39:51.746323 Epoch 29  	Train Loss = 0.13550 Val Loss = 0.14397
+2024-04-14 13:45:37.841633 Epoch 30  	Train Loss = 0.13520 Val Loss = 0.14126
+2024-04-14 13:51:23.495188 Epoch 31  	Train Loss = 0.13459 Val Loss = 0.14254
+2024-04-14 13:57:08.825198 Epoch 32  	Train Loss = 0.13453 Val Loss = 0.14315
+2024-04-14 14:02:55.666947 Epoch 33  	Train Loss = 0.13448 Val Loss = 0.14359
+2024-04-14 14:08:43.878870 Epoch 34  	Train Loss = 0.13446 Val Loss = 0.14295
+Early stopping at epoch: 34
+Best at epoch 24:
+Train Loss = 0.13712
+Train MSE = 0.13513, MAE = 0.24065
+Val Loss = 0.14065
+Val MSE = 0.14054, MAE = 0.24065
+Model checkpoint saved to: ../saved_models/STAEformer/STAEformer-ELECTRICITY-2024-04-14-10-51-58.pt
+--------- Test ---------
+All Steps (1-336) MSE = 0.17535, MAE = 0.27636
+Inference time: 35.93 s

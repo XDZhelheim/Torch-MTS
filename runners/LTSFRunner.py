@@ -146,6 +146,10 @@ class LTSFRunner(AbstractRunner):
                     break
 
         model.load_state_dict(best_state_dict)
+        
+        if save:
+            torch.save(best_state_dict, save)
+            
         train_mse, train_mae = MSE_MAE(*self.predict(model, trainset_loader))
         val_mse, val_mae= MSE_MAE(*self.predict(model, valset_loader))
 
@@ -172,8 +176,6 @@ class LTSFRunner(AbstractRunner):
             plt.legend()
             plt.show()
 
-        if save:
-            torch.save(best_state_dict, save)
         return model
 
     @torch.no_grad()
