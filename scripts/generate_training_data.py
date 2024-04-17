@@ -24,7 +24,7 @@ def generate_data(
     steps_per_day=288,
     date_format="%Y-%m-%d %H:%M:%S",
     save_data=True,
-    split_first=False,
+    split="default",
 ):
     """Preprocess and generate train/valid/test datasets.
     
@@ -62,19 +62,11 @@ def generate_data(
     print("raw time series shape: {0}".format(data.shape))
 
     l, n, f = data.shape
-    if split_first:
-        # first split train/val/test, then perform sliding window individually
-        # the most strict version
-        split1 = round(l * train_ratio)
-        split2 = round(l * (train_ratio + valid_ratio))
-        train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
-        valid_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split1 + history_seq_len, split2 - future_seq_len + 1)]
-        test_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split2 + history_seq_len, l - future_seq_len + 1)]
-    else:
+    if split.upper() == "DEFAULT":
         # first sliding window, then split (default setting)
         # commonly used for spatiotemporal/traffic forecasting datasets
         # actually this is not strict because it will cross the boundaries of train&val, val&test
-        # will generate more samples than split_first
+        # will generate more samples
         num_samples = l - (history_seq_len + future_seq_len) + 1
         train_num_short = round(num_samples * train_ratio)
         valid_num_short = round(num_samples * valid_ratio)
@@ -86,15 +78,30 @@ def generate_data(
         valid_index = index_list[train_num_short : train_num_short + valid_num_short]
         test_index = index_list[train_num_short +
                                 valid_num_short : train_num_short + valid_num_short + test_num_short]
+    elif split.upper() == "STRICT":
+        # first split train/val/test, then perform sliding window individually
+        # the most strict version, least #samples
+        split1 = round(l * train_ratio)
+        split2 = round(l * (train_ratio + valid_ratio))
+        train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
+        valid_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split1 + history_seq_len, split2 - future_seq_len + 1)]
+        test_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split2 + history_seq_len, l - future_seq_len + 1)]
+    elif split.upper() == "LTSF":
+        # Sadly LTSF uses neither of the two approaches above
+        # Its train is strict, but val overlaps with train and test overlaps with val
+        # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L238
+        # Advantage: changing history_seq_len do not affect #val_samples and #test_samples
+        test_ratio = 1 - train_ratio - valid_ratio
+        split1 = int(l * train_ratio)
+        split2 = l - int(l * test_ratio)
+        train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
+        valid_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split1, split2 - future_seq_len + 1)]
+        test_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split2, l - future_seq_len + 1)]
         
     print("number of training samples: {0}".format(len(train_index)))
     print("number of validation samples: {0}".format(len(valid_index)))
     print("number of test samples: {0}".format(len(test_index)))
     
-    # Sadly LTSF uses neither of the two approaches above
-    # Its train is strict, but val overlaps with train and test overlaps with val
-    # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L238
-
     # add external feature
     feature_list = [data]
     if add_time_of_day:
@@ -165,17 +172,20 @@ if __name__ == "__main__":
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
+        param_dict["split"] = "LTSF"
     elif DATASET_NAME == "EXCHANGE":
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
         param_dict["valid_ratio"] = 0.1
-        param_dict["date_format"]="%Y/%m/%d %H:%M"
+        param_dict["date_format"] = "%Y/%m/%d %H:%M"
+        param_dict["split"] = "LTSF"
     elif DATASET_NAME in ("ETTH1", "ETTH2", "ETTM1", "ETTM2"):
         # They use 12 months:4 months:4 months, but the raw data is longer than 20 months!!!
         # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L48
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
+        param_dict["split"] = "LTSF"
     else:
         raise ValueError("Unsupported dataset.")
         
