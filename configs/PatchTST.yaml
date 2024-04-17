@@ -152,7 +152,7 @@ EXCHANGE:
 
 ILI:
   num_nodes: 7
-  in_steps: 96
+  in_steps: 36
   out_steps: 96
 
   lr: 0.01
@@ -169,7 +169,7 @@ ILI:
 
   model_args:
     enc_in: 7
-    seq_len: 96
+    seq_len: 36
     pred_len: 96
     e_layers: 3
     n_heads: 4
