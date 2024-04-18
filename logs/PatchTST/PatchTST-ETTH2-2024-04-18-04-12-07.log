@@ -1,0 +1,168 @@
+ETTH2
+Trainset:	x-(8209, 336, 7, 1)	y-(8209, 96, 7, 1)
+Valset:  	x-(2785, 336, 7, 1)  	y-(2785, 96, 7, 1)
+Testset:	x-(2785, 336, 7, 1)	y-(2785, 96, 7, 1)
+INFO: Using scaled X and Y, only for LTSF!
+
+Random seed = 233
+--------- PatchTST ---------
+{
+    "num_nodes": 7,
+    "in_steps": 336,
+    "out_steps": 96,
+    "lr": 0.0001,
+    "weight_decay": 0,
+    "milestones": [
+        10
+    ],
+    "lr_decay_rate": 0.1,
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "dataloader": "ltsf",
+    "runner": "ltsf",
+    "loss": "mse",
+    "model_args": {
+        "enc_in": 7,
+        "seq_len": 336,
+        "pred_len": 96,
+        "e_layers": 3,
+        "n_heads": 4,
+        "d_model": 16,
+        "d_ff": 128,
+        "dropout": 0.3,
+        "fc_dropout": 0.3,
+        "head_dropout": 0,
+        "patch_len": 16,
+        "stride": 8,
+        "individual": 0,
+        "padding_patch": "end",
+        "revin": 1,
+        "affine": 0,
+        "subtract_last": 0,
+        "decomposition": 0,
+        "kernel_size": 25
+    }
+}
+========================================================================================================================
+Layer (type:depth-idx)                                                 Output Shape              Param #
+========================================================================================================================
+PatchTST                                                               [64, 96, 7, 1]            --
+├─PatchTST_backbone: 1-1                                               [64, 7, 96]               --
+│    └─RevIN: 2-1                                                      [64, 336, 7]              --
+│    └─ReplicationPad1d: 2-2                                           [64, 7, 344]              --
+│    └─TSTiEncoder: 2-3                                                [64, 7, 16, 42]           672
+│    │    └─Linear: 3-1                                                [64, 7, 42, 16]           272
+│    │    └─Dropout: 3-2                                               [448, 42, 16]             --
+│    │    └─TSTEncoder: 3-3                                            [448, 42, 16]             16,179
+│    └─Flatten_Head: 2-4                                               [64, 7, 96]               --
+│    │    └─Flatten: 3-4                                               [64, 7, 672]              --
+│    │    └─Linear: 3-5                                                [64, 7, 96]               64,608
+│    │    └─Dropout: 3-6                                               [64, 7, 96]               --
+│    └─RevIN: 2-5                                                      [64, 96, 7]               --
+========================================================================================================================
+Total params: 81,731
+Trainable params: 81,728
+Non-trainable params: 3
+Total mult-adds (M): 11.40
+========================================================================================================================
+Input size (MB): 0.60
+Forward/backward pass size (MB): 111.13
+Params size (MB): 0.32
+Estimated Total Size (MB): 112.06
+========================================================================================================================
+
+Loss: MSELoss
+
+2024-04-18 04:12:11.017701 Epoch 1  	Train Loss = 0.54907 Val Loss = 0.23548
+2024-04-18 04:12:13.849814 Epoch 2  	Train Loss = 0.45511 Val Loss = 0.21888
+2024-04-18 04:12:16.622715 Epoch 3  	Train Loss = 0.43139 Val Loss = 0.21378
+2024-04-18 04:12:19.323362 Epoch 4  	Train Loss = 0.42097 Val Loss = 0.21328
+2024-04-18 04:12:22.075184 Epoch 5  	Train Loss = 0.41513 Val Loss = 0.21175
+2024-04-18 04:12:24.810270 Epoch 6  	Train Loss = 0.41137 Val Loss = 0.21187
+2024-04-18 04:12:27.561659 Epoch 7  	Train Loss = 0.40676 Val Loss = 0.21222
+2024-04-18 04:12:30.475841 Epoch 8  	Train Loss = 0.40244 Val Loss = 0.21085
+2024-04-18 04:12:33.086670 Epoch 9  	Train Loss = 0.39843 Val Loss = 0.21269
+2024-04-18 04:12:35.827921 Epoch 10  	Train Loss = 0.39497 Val Loss = 0.21099
+2024-04-18 04:12:38.615251 Epoch 11  	Train Loss = 0.39136 Val Loss = 0.21062
+2024-04-18 04:12:41.413552 Epoch 12  	Train Loss = 0.39163 Val Loss = 0.21045
+2024-04-18 04:12:44.255369 Epoch 13  	Train Loss = 0.39468 Val Loss = 0.21061
+2024-04-18 04:12:47.082318 Epoch 14  	Train Loss = 0.39134 Val Loss = 0.21035
+2024-04-18 04:12:49.957318 Epoch 15  	Train Loss = 0.38953 Val Loss = 0.21032
+2024-04-18 04:12:52.857993 Epoch 16  	Train Loss = 0.39136 Val Loss = 0.21033
+2024-04-18 04:12:55.513741 Epoch 17  	Train Loss = 0.39093 Val Loss = 0.21046
+2024-04-18 04:12:58.189103 Epoch 18  	Train Loss = 0.39042 Val Loss = 0.20993
+2024-04-18 04:13:00.837327 Epoch 19  	Train Loss = 0.39212 Val Loss = 0.21011
+2024-04-18 04:13:03.485619 Epoch 20  	Train Loss = 0.38953 Val Loss = 0.21019
+2024-04-18 04:13:06.201526 Epoch 21  	Train Loss = 0.38830 Val Loss = 0.20991
+2024-04-18 04:13:08.954353 Epoch 22  	Train Loss = 0.38898 Val Loss = 0.20976
+2024-04-18 04:13:11.989609 Epoch 23  	Train Loss = 0.38925 Val Loss = 0.21009
+2024-04-18 04:13:14.675002 Epoch 24  	Train Loss = 0.38690 Val Loss = 0.20984
+2024-04-18 04:13:17.452777 Epoch 25  	Train Loss = 0.38716 Val Loss = 0.20976
+2024-04-18 04:13:20.288685 Epoch 26  	Train Loss = 0.38814 Val Loss = 0.20981
+2024-04-18 04:13:23.047014 Epoch 27  	Train Loss = 0.38839 Val Loss = 0.20976
+2024-04-18 04:13:26.011073 Epoch 28  	Train Loss = 0.38555 Val Loss = 0.21000
+2024-04-18 04:13:28.879488 Epoch 29  	Train Loss = 0.38610 Val Loss = 0.20986
+2024-04-18 04:13:31.691849 Epoch 30  	Train Loss = 0.38693 Val Loss = 0.20976
+2024-04-18 04:13:34.472697 Epoch 31  	Train Loss = 0.38564 Val Loss = 0.20959
+2024-04-18 04:13:37.338641 Epoch 32  	Train Loss = 0.38602 Val Loss = 0.20958
+2024-04-18 04:13:40.198236 Epoch 33  	Train Loss = 0.38417 Val Loss = 0.20960
+2024-04-18 04:13:42.928007 Epoch 34  	Train Loss = 0.38852 Val Loss = 0.20955
+2024-04-18 04:13:45.638578 Epoch 35  	Train Loss = 0.38382 Val Loss = 0.20941
+2024-04-18 04:13:48.314623 Epoch 36  	Train Loss = 0.38619 Val Loss = 0.20996
+2024-04-18 04:13:51.221712 Epoch 37  	Train Loss = 0.38414 Val Loss = 0.20950
+2024-04-18 04:13:54.022389 Epoch 38  	Train Loss = 0.38462 Val Loss = 0.20939
+2024-04-18 04:13:56.694388 Epoch 39  	Train Loss = 0.38412 Val Loss = 0.20945
+2024-04-18 04:13:59.576267 Epoch 40  	Train Loss = 0.38270 Val Loss = 0.20952
+2024-04-18 04:14:02.375603 Epoch 41  	Train Loss = 0.38372 Val Loss = 0.20950
+2024-04-18 04:14:05.135514 Epoch 42  	Train Loss = 0.38354 Val Loss = 0.20923
+2024-04-18 04:14:07.892164 Epoch 43  	Train Loss = 0.38562 Val Loss = 0.20958
+2024-04-18 04:14:10.607816 Epoch 44  	Train Loss = 0.38239 Val Loss = 0.20957
+2024-04-18 04:14:13.329897 Epoch 45  	Train Loss = 0.38306 Val Loss = 0.20938
+2024-04-18 04:14:16.002341 Epoch 46  	Train Loss = 0.38458 Val Loss = 0.20953
+2024-04-18 04:14:18.703674 Epoch 47  	Train Loss = 0.38151 Val Loss = 0.20931
+2024-04-18 04:14:21.594066 Epoch 48  	Train Loss = 0.38149 Val Loss = 0.20953
+2024-04-18 04:14:24.495786 Epoch 49  	Train Loss = 0.38243 Val Loss = 0.20921
+2024-04-18 04:14:27.334509 Epoch 50  	Train Loss = 0.38099 Val Loss = 0.20926
+2024-04-18 04:14:30.167480 Epoch 51  	Train Loss = 0.38174 Val Loss = 0.20906
+2024-04-18 04:14:32.965714 Epoch 52  	Train Loss = 0.37984 Val Loss = 0.20922
+2024-04-18 04:14:35.789839 Epoch 53  	Train Loss = 0.38001 Val Loss = 0.20955
+2024-04-18 04:14:38.608531 Epoch 54  	Train Loss = 0.38031 Val Loss = 0.20933
+2024-04-18 04:14:41.389646 Epoch 55  	Train Loss = 0.37910 Val Loss = 0.20924
+2024-04-18 04:14:44.145804 Epoch 56  	Train Loss = 0.38465 Val Loss = 0.20935
+2024-04-18 04:14:46.790203 Epoch 57  	Train Loss = 0.37892 Val Loss = 0.20923
+2024-04-18 04:14:49.706183 Epoch 58  	Train Loss = 0.37968 Val Loss = 0.20913
+2024-04-18 04:14:52.383072 Epoch 59  	Train Loss = 0.37810 Val Loss = 0.20916
+2024-04-18 04:14:55.265838 Epoch 60  	Train Loss = 0.38144 Val Loss = 0.20894
+2024-04-18 04:14:57.944025 Epoch 61  	Train Loss = 0.37789 Val Loss = 0.20905
+2024-04-18 04:15:00.854282 Epoch 62  	Train Loss = 0.37984 Val Loss = 0.20891
+2024-04-18 04:15:03.745980 Epoch 63  	Train Loss = 0.37703 Val Loss = 0.20863
+2024-04-18 04:15:06.680568 Epoch 64  	Train Loss = 0.37832 Val Loss = 0.20895
+2024-04-18 04:15:09.518666 Epoch 65  	Train Loss = 0.37733 Val Loss = 0.20919
+2024-04-18 04:15:12.216484 Epoch 66  	Train Loss = 0.37726 Val Loss = 0.20882
+2024-04-18 04:15:15.022674 Epoch 67  	Train Loss = 0.37884 Val Loss = 0.20940
+2024-04-18 04:15:17.773573 Epoch 68  	Train Loss = 0.37694 Val Loss = 0.20896
+2024-04-18 04:15:20.421836 Epoch 69  	Train Loss = 0.37719 Val Loss = 0.20879
+2024-04-18 04:15:23.214544 Epoch 70  	Train Loss = 0.37635 Val Loss = 0.20910
+2024-04-18 04:15:26.030571 Epoch 71  	Train Loss = 0.37652 Val Loss = 0.20908
+2024-04-18 04:15:28.916686 Epoch 72  	Train Loss = 0.37552 Val Loss = 0.20834
+2024-04-18 04:15:31.768578 Epoch 73  	Train Loss = 0.37663 Val Loss = 0.20874
+2024-04-18 04:15:34.553330 Epoch 74  	Train Loss = 0.37507 Val Loss = 0.20877
+2024-04-18 04:15:37.271801 Epoch 75  	Train Loss = 0.37547 Val Loss = 0.20895
+2024-04-18 04:15:39.920449 Epoch 76  	Train Loss = 0.37467 Val Loss = 0.20879
+2024-04-18 04:15:42.568091 Epoch 77  	Train Loss = 0.37411 Val Loss = 0.20900
+2024-04-18 04:15:45.352174 Epoch 78  	Train Loss = 0.37558 Val Loss = 0.20897
+2024-04-18 04:15:48.047540 Epoch 79  	Train Loss = 0.37356 Val Loss = 0.20899
+2024-04-18 04:15:50.933775 Epoch 80  	Train Loss = 0.37569 Val Loss = 0.20905
+2024-04-18 04:15:53.567904 Epoch 81  	Train Loss = 0.37521 Val Loss = 0.20924
+2024-04-18 04:15:56.333551 Epoch 82  	Train Loss = 0.37313 Val Loss = 0.20917
+Early stopping at epoch: 82
+Best at epoch 72:
+Train Loss = 0.37552
+Train MSE = 0.36262, MAE = 0.34121
+Val Loss = 0.20834
+Val MSE = 0.20762, MAE = 0.31417
+Model checkpoint saved to: ../saved_models/PatchTST/PatchTST-ETTH2-2024-04-18-04-12-07.pt
+--------- Test ---------
+All Steps (1-96) MSE = 0.28060, MAE = 0.33965
+Inference time: 0.18 s
