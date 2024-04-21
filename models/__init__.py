@@ -2,7 +2,7 @@ from .baseline.HistoricalInertia import HistoricalInertia
 from .baseline.MLP import MLP
 from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
-from .baseline.Attention import Attention
+from .baseline.Transformer import Transformer
 from .baseline.WaveNet import WaveNet
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
@@ -37,8 +37,8 @@ def model_select(name):
         return LSTM
     elif name == "GRU":
         return GRU
-    elif name in ("ATTENTION", "ATTN", "TRANSFORMER"):
-        return Attention
+    elif name in ("ATTENTION", "ATTN", "TRANSFORMER", "TF"):
+        return Transformer
     elif name in ("TCN", "WAVENET"):
         return WaveNet
 

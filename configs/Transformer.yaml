@@ -1,0 +1,143 @@
+METRLA:
+  num_nodes: 207
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [10, 60]
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 207
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    model_dim: 64
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    with_spatial: True
+
+PEMSBAY:
+  num_nodes: 325
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [10, 40]
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 325
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    model_dim: 64
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    with_spatial: True
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [10, 40]
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 358
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    model_dim: 64
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    with_spatial: True
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [10, 40]
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 307
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    model_dim: 64
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    with_spatial: True
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [10, 40]
+  batch_size: 16
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 883
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    model_dim: 64
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    with_spatial: True
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [10, 60]
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 170
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    model_dim: 64
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    with_spatial: True

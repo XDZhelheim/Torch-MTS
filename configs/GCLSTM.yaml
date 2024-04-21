@@ -3,17 +3,12 @@ METRLA:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-  
   lr: 0.001
   weight_decay: 0
   milestones: [12, 50]
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -34,16 +29,12 @@ PEMSBAY:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-  
   lr: 0.001
   weight_decay: 0
   milestones: [12, 50]
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -70,7 +61,6 @@ PEMS03:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -97,7 +87,6 @@ PEMS04:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -124,7 +113,6 @@ PEMS07:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -151,7 +139,6 @@ PEMS08:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 

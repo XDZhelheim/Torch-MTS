@@ -1,0 +1,256 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 1)	y-(23974, 12, 207, 1)
+Valset:  	x-(3425, 12, 207, 1)  	y-(3425, 12, 207, 1)
+Testset:	x-(6850, 12, 207, 1)	y-(6850, 12, 207, 1)
+
+Random seed = 233
+--------- STGCN ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "milestones": [
+        50
+    ],
+    "clip_grad": 5,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "early_stop": 20,
+    "model_args": {
+        "n_vertex": 207,
+        "adj_path": "../data/METRLA/adj_mx.pkl",
+        "Kt": 3,
+        "Ks": 3,
+        "blocks": [
+            [
+                1
+            ],
+            [
+                64,
+                16,
+                64
+            ],
+            [
+                64,
+                16,
+                64
+            ],
+            [
+                128,
+                128
+            ],
+            [
+                12
+            ]
+        ],
+        "T": 12,
+        "act_func": "glu",
+        "graph_conv_type": "cheb_graph_conv",
+        "bias": true,
+        "droprate": 0.5
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+STGCN                                    [64, 12, 207, 1]          --
+├─Sequential: 1-1                        [64, 64, 4, 207]          --
+│    └─STConvBlock: 2-1                  [64, 64, 8, 207]          --
+│    │    └─TemporalConvLayer: 3-1       [64, 64, 10, 207]         640
+│    │    └─GraphConvLayer: 3-2          [64, 16, 10, 207]         1,824
+│    │    └─ReLU: 3-3                    [64, 16, 10, 207]         --
+│    │    └─TemporalConvLayer: 3-4       [64, 64, 8, 207]          7,360
+│    │    └─LayerNorm: 3-5               [64, 8, 207, 64]          26,496
+│    │    └─Dropout: 3-6                 [64, 64, 8, 207]          --
+│    └─STConvBlock: 2-2                  [64, 64, 4, 207]          --
+│    │    └─TemporalConvLayer: 3-7       [64, 64, 6, 207]          28,864
+│    │    └─GraphConvLayer: 3-8          [64, 16, 6, 207]          1,824
+│    │    └─ReLU: 3-9                    [64, 16, 6, 207]          --
+│    │    └─TemporalConvLayer: 3-10      [64, 64, 4, 207]          7,360
+│    │    └─LayerNorm: 3-11              [64, 4, 207, 64]          26,496
+│    │    └─Dropout: 3-12                [64, 64, 4, 207]          --
+├─OutputBlock: 1-2                       [64, 12, 1, 207]          --
+│    └─TemporalConvLayer: 2-3            [64, 128, 1, 207]         --
+│    │    └─Align: 3-13                  [64, 128, 4, 207]         8,320
+│    │    └─CausalConv2d: 3-14           [64, 256, 1, 207]         65,792
+│    │    └─Sigmoid: 3-15                [64, 128, 1, 207]         --
+│    └─LayerNorm: 2-4                    [64, 1, 207, 128]         52,992
+│    └─Linear: 2-5                       [64, 1, 207, 128]         16,512
+│    └─ReLU: 2-6                         [64, 1, 207, 128]         --
+│    └─Linear: 2-7                       [64, 1, 207, 12]          1,548
+==========================================================================================
+Total params: 246,028
+Trainable params: 246,028
+Non-trainable params: 0
+Total mult-adds (G): 4.46
+==========================================================================================
+Input size (MB): 0.64
+Forward/backward pass size (MB): 571.04
+Params size (MB): 0.92
+Estimated Total Size (MB): 572.60
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2024-04-20 20:36:01.757822 Epoch 1  	Train Loss = 4.10751 Val Loss = 3.41078
+2024-04-20 20:36:21.450638 Epoch 2  	Train Loss = 3.58379 Val Loss = 3.31241
+2024-04-20 20:36:40.948988 Epoch 3  	Train Loss = 3.49708 Val Loss = 3.23081
+2024-04-20 20:37:00.066247 Epoch 4  	Train Loss = 3.42798 Val Loss = 3.32856
+2024-04-20 20:37:19.478827 Epoch 5  	Train Loss = 3.37748 Val Loss = 3.20405
+2024-04-20 20:37:36.507979 Epoch 6  	Train Loss = 3.33167 Val Loss = 3.05310
+2024-04-20 20:37:57.319909 Epoch 7  	Train Loss = 3.29350 Val Loss = 3.05896
+2024-04-20 20:38:18.469972 Epoch 8  	Train Loss = 3.25476 Val Loss = 3.04023
+2024-04-20 20:38:40.640288 Epoch 9  	Train Loss = 3.22818 Val Loss = 3.05226
+2024-04-20 20:39:02.728477 Epoch 10  	Train Loss = 3.19574 Val Loss = 3.06082
+2024-04-20 20:39:24.506840 Epoch 11  	Train Loss = 3.18101 Val Loss = 3.03642
+2024-04-20 20:39:46.773006 Epoch 12  	Train Loss = 3.15726 Val Loss = 2.96932
+2024-04-20 20:40:09.244331 Epoch 13  	Train Loss = 3.14443 Val Loss = 2.97063
+2024-04-20 20:40:31.668544 Epoch 14  	Train Loss = 3.12953 Val Loss = 2.94422
+2024-04-20 20:40:53.684594 Epoch 15  	Train Loss = 3.11767 Val Loss = 2.96188
+2024-04-20 20:41:15.637333 Epoch 16  	Train Loss = 3.10569 Val Loss = 2.93455
+2024-04-20 20:41:32.661168 Epoch 17  	Train Loss = 3.10069 Val Loss = 2.92496
+2024-04-20 20:41:50.070258 Epoch 18  	Train Loss = 3.08709 Val Loss = 2.92393
+2024-04-20 20:42:11.829878 Epoch 19  	Train Loss = 3.08147 Val Loss = 2.95434
+2024-04-20 20:42:34.301064 Epoch 20  	Train Loss = 3.07172 Val Loss = 2.90268
+2024-04-20 20:42:57.096205 Epoch 21  	Train Loss = 3.06499 Val Loss = 2.92965
+2024-04-20 20:43:18.761468 Epoch 22  	Train Loss = 3.05653 Val Loss = 2.94964
+2024-04-20 20:43:40.820715 Epoch 23  	Train Loss = 3.05179 Val Loss = 2.94116
+2024-04-20 20:44:02.847749 Epoch 24  	Train Loss = 3.04540 Val Loss = 2.91046
+2024-04-20 20:44:24.941910 Epoch 25  	Train Loss = 3.04173 Val Loss = 2.91789
+2024-04-20 20:44:47.300123 Epoch 26  	Train Loss = 3.03650 Val Loss = 2.91079
+2024-04-20 20:45:09.068966 Epoch 27  	Train Loss = 3.03129 Val Loss = 2.90725
+2024-04-20 20:45:31.151336 Epoch 28  	Train Loss = 3.02495 Val Loss = 2.89730
+2024-04-20 20:45:52.301320 Epoch 29  	Train Loss = 3.02173 Val Loss = 2.91277
+2024-04-20 20:46:14.383658 Epoch 30  	Train Loss = 3.02230 Val Loss = 2.90828
+2024-04-20 20:46:37.135025 Epoch 31  	Train Loss = 3.01329 Val Loss = 2.88548
+2024-04-20 20:47:00.076160 Epoch 32  	Train Loss = 3.00993 Val Loss = 2.88454
+2024-04-20 20:47:23.278491 Epoch 33  	Train Loss = 3.00512 Val Loss = 2.88622
+2024-04-20 20:47:46.069255 Epoch 34  	Train Loss = 3.00383 Val Loss = 2.89510
+2024-04-20 20:48:08.794563 Epoch 35  	Train Loss = 2.99988 Val Loss = 2.87418
+2024-04-20 20:48:30.676151 Epoch 36  	Train Loss = 3.00183 Val Loss = 2.86893
+2024-04-20 20:48:53.966870 Epoch 37  	Train Loss = 2.99696 Val Loss = 2.90578
+2024-04-20 20:49:17.137537 Epoch 38  	Train Loss = 2.98848 Val Loss = 2.90912
+2024-04-20 20:49:40.070569 Epoch 39  	Train Loss = 2.98775 Val Loss = 2.88406
+2024-04-20 20:50:02.051397 Epoch 40  	Train Loss = 2.98759 Val Loss = 2.85810
+2024-04-20 20:50:23.966790 Epoch 41  	Train Loss = 2.98058 Val Loss = 2.87082
+2024-04-20 20:50:46.087473 Epoch 42  	Train Loss = 2.97800 Val Loss = 2.86259
+2024-04-20 20:51:08.216447 Epoch 43  	Train Loss = 2.97694 Val Loss = 2.87551
+2024-04-20 20:51:29.990035 Epoch 44  	Train Loss = 2.97889 Val Loss = 2.87213
+2024-04-20 20:51:50.548125 Epoch 45  	Train Loss = 2.97549 Val Loss = 2.87894
+2024-04-20 20:52:11.859291 Epoch 46  	Train Loss = 2.97186 Val Loss = 2.85722
+2024-04-20 20:52:33.285117 Epoch 47  	Train Loss = 2.97154 Val Loss = 2.88096
+2024-04-20 20:52:53.432800 Epoch 48  	Train Loss = 2.96779 Val Loss = 2.87367
+2024-04-20 20:53:12.868358 Epoch 49  	Train Loss = 2.96953 Val Loss = 2.85900
+2024-04-20 20:53:33.612448 Epoch 50  	Train Loss = 2.96463 Val Loss = 2.89437
+2024-04-20 20:53:53.491391 Epoch 51  	Train Loss = 2.92770 Val Loss = 2.83684
+2024-04-20 20:54:15.104711 Epoch 52  	Train Loss = 2.92072 Val Loss = 2.83636
+2024-04-20 20:54:31.862542 Epoch 53  	Train Loss = 2.91933 Val Loss = 2.84693
+2024-04-20 20:54:50.360826 Epoch 54  	Train Loss = 2.91871 Val Loss = 2.83894
+2024-04-20 20:55:09.353859 Epoch 55  	Train Loss = 2.91618 Val Loss = 2.83530
+2024-04-20 20:55:24.902139 Epoch 56  	Train Loss = 2.91701 Val Loss = 2.83342
+2024-04-20 20:55:45.584620 Epoch 57  	Train Loss = 2.91661 Val Loss = 2.83895
+2024-04-20 20:56:06.522692 Epoch 58  	Train Loss = 2.91589 Val Loss = 2.83612
+2024-04-20 20:56:27.496162 Epoch 59  	Train Loss = 2.91471 Val Loss = 2.83602
+2024-04-20 20:56:47.770234 Epoch 60  	Train Loss = 2.91466 Val Loss = 2.83326
+2024-04-20 20:57:05.169688 Epoch 61  	Train Loss = 2.91466 Val Loss = 2.83481
+2024-04-20 20:57:22.313846 Epoch 62  	Train Loss = 2.91253 Val Loss = 2.83461
+2024-04-20 20:57:39.156134 Epoch 63  	Train Loss = 2.91189 Val Loss = 2.83603
+2024-04-20 20:57:56.170840 Epoch 64  	Train Loss = 2.91044 Val Loss = 2.83663
+2024-04-20 20:58:13.624052 Epoch 65  	Train Loss = 2.91044 Val Loss = 2.84131
+2024-04-20 20:58:30.849098 Epoch 66  	Train Loss = 2.90902 Val Loss = 2.83147
+2024-04-20 20:58:48.980705 Epoch 67  	Train Loss = 2.91016 Val Loss = 2.83946
+2024-04-20 20:59:07.301161 Epoch 68  	Train Loss = 2.90808 Val Loss = 2.83586
+2024-04-20 20:59:25.346039 Epoch 69  	Train Loss = 2.90795 Val Loss = 2.83554
+2024-04-20 20:59:43.561450 Epoch 70  	Train Loss = 2.90605 Val Loss = 2.83102
+2024-04-20 21:00:00.423077 Epoch 71  	Train Loss = 2.90759 Val Loss = 2.83121
+2024-04-20 21:00:21.635743 Epoch 72  	Train Loss = 2.90722 Val Loss = 2.83347
+2024-04-20 21:00:43.207190 Epoch 73  	Train Loss = 2.90714 Val Loss = 2.82827
+2024-04-20 21:01:04.524556 Epoch 74  	Train Loss = 2.90671 Val Loss = 2.83354
+2024-04-20 21:01:26.703409 Epoch 75  	Train Loss = 2.90527 Val Loss = 2.83851
+2024-04-20 21:01:48.961400 Epoch 76  	Train Loss = 2.90504 Val Loss = 2.83643
+2024-04-20 21:02:10.905963 Epoch 77  	Train Loss = 2.90584 Val Loss = 2.83204
+2024-04-20 21:02:32.935061 Epoch 78  	Train Loss = 2.90451 Val Loss = 2.83172
+2024-04-20 21:02:55.055477 Epoch 79  	Train Loss = 2.90466 Val Loss = 2.83398
+2024-04-20 21:03:16.638246 Epoch 80  	Train Loss = 2.90454 Val Loss = 2.83008
+2024-04-20 21:03:38.843521 Epoch 81  	Train Loss = 2.90334 Val Loss = 2.83398
+2024-04-20 21:04:01.008781 Epoch 82  	Train Loss = 2.90341 Val Loss = 2.83887
+2024-04-20 21:04:23.516200 Epoch 83  	Train Loss = 2.90403 Val Loss = 2.82859
+2024-04-20 21:04:45.441126 Epoch 84  	Train Loss = 2.90227 Val Loss = 2.83253
+2024-04-20 21:05:07.388518 Epoch 85  	Train Loss = 2.90212 Val Loss = 2.82857
+2024-04-20 21:05:29.409025 Epoch 86  	Train Loss = 2.90184 Val Loss = 2.83629
+2024-04-20 21:05:51.060989 Epoch 87  	Train Loss = 2.90074 Val Loss = 2.83196
+2024-04-20 21:06:12.772228 Epoch 88  	Train Loss = 2.90035 Val Loss = 2.83996
+2024-04-20 21:06:34.250461 Epoch 89  	Train Loss = 2.89964 Val Loss = 2.83294
+2024-04-20 21:06:56.528058 Epoch 90  	Train Loss = 2.89974 Val Loss = 2.83104
+2024-04-20 21:07:18.450058 Epoch 91  	Train Loss = 2.89988 Val Loss = 2.82756
+2024-04-20 21:07:38.638942 Epoch 92  	Train Loss = 2.90036 Val Loss = 2.83054
+2024-04-20 21:07:58.820510 Epoch 93  	Train Loss = 2.89847 Val Loss = 2.83799
+2024-04-20 21:08:19.352215 Epoch 94  	Train Loss = 2.89873 Val Loss = 2.82823
+2024-04-20 21:08:39.773440 Epoch 95  	Train Loss = 2.89738 Val Loss = 2.83424
+2024-04-20 21:08:59.966242 Epoch 96  	Train Loss = 2.89872 Val Loss = 2.83427
+2024-04-20 21:09:20.185787 Epoch 97  	Train Loss = 2.89807 Val Loss = 2.83072
+2024-04-20 21:09:40.586622 Epoch 98  	Train Loss = 2.89747 Val Loss = 2.82573
+2024-04-20 21:09:59.727247 Epoch 99  	Train Loss = 2.89546 Val Loss = 2.83004
+2024-04-20 21:10:19.103351 Epoch 100  	Train Loss = 2.89585 Val Loss = 2.83452
+2024-04-20 21:10:38.254889 Epoch 101  	Train Loss = 2.89611 Val Loss = 2.82947
+2024-04-20 21:10:57.969598 Epoch 102  	Train Loss = 2.89493 Val Loss = 2.83153
+2024-04-20 21:11:16.798963 Epoch 103  	Train Loss = 2.89594 Val Loss = 2.84002
+2024-04-20 21:11:36.024747 Epoch 104  	Train Loss = 2.89575 Val Loss = 2.83324
+2024-04-20 21:11:55.816023 Epoch 105  	Train Loss = 2.89461 Val Loss = 2.82546
+2024-04-20 21:12:16.434335 Epoch 106  	Train Loss = 2.89481 Val Loss = 2.83247
+2024-04-20 21:12:37.512434 Epoch 107  	Train Loss = 2.89423 Val Loss = 2.83149
+2024-04-20 21:12:55.711656 Epoch 108  	Train Loss = 2.89409 Val Loss = 2.83243
+2024-04-20 21:13:16.972142 Epoch 109  	Train Loss = 2.89576 Val Loss = 2.83446
+2024-04-20 21:13:34.857908 Epoch 110  	Train Loss = 2.89228 Val Loss = 2.82999
+2024-04-20 21:13:56.760074 Epoch 111  	Train Loss = 2.89271 Val Loss = 2.82669
+2024-04-20 21:14:18.999665 Epoch 112  	Train Loss = 2.89283 Val Loss = 2.83362
+2024-04-20 21:14:40.359030 Epoch 113  	Train Loss = 2.89291 Val Loss = 2.82681
+2024-04-20 21:14:57.686865 Epoch 114  	Train Loss = 2.89198 Val Loss = 2.83445
+2024-04-20 21:15:16.259116 Epoch 115  	Train Loss = 2.89293 Val Loss = 2.83150
+2024-04-20 21:15:37.644108 Epoch 116  	Train Loss = 2.89124 Val Loss = 2.82902
+2024-04-20 21:15:57.104617 Epoch 117  	Train Loss = 2.89023 Val Loss = 2.83161
+2024-04-20 21:16:19.124498 Epoch 118  	Train Loss = 2.89135 Val Loss = 2.82501
+2024-04-20 21:16:38.421798 Epoch 119  	Train Loss = 2.89095 Val Loss = 2.83048
+2024-04-20 21:16:57.430884 Epoch 120  	Train Loss = 2.89060 Val Loss = 2.82682
+2024-04-20 21:17:16.704241 Epoch 121  	Train Loss = 2.89085 Val Loss = 2.82585
+2024-04-20 21:17:36.100647 Epoch 122  	Train Loss = 2.88909 Val Loss = 2.83430
+2024-04-20 21:17:55.252251 Epoch 123  	Train Loss = 2.88995 Val Loss = 2.83336
+2024-04-20 21:18:14.427692 Epoch 124  	Train Loss = 2.88983 Val Loss = 2.83566
+2024-04-20 21:18:33.620582 Epoch 125  	Train Loss = 2.88921 Val Loss = 2.83312
+2024-04-20 21:18:53.501936 Epoch 126  	Train Loss = 2.88893 Val Loss = 2.83021
+2024-04-20 21:19:13.667048 Epoch 127  	Train Loss = 2.88866 Val Loss = 2.83193
+2024-04-20 21:19:33.102223 Epoch 128  	Train Loss = 2.88838 Val Loss = 2.82927
+2024-04-20 21:19:53.172624 Epoch 129  	Train Loss = 2.88876 Val Loss = 2.82956
+2024-04-20 21:20:12.489720 Epoch 130  	Train Loss = 2.88788 Val Loss = 2.82677
+2024-04-20 21:20:32.203722 Epoch 131  	Train Loss = 2.88668 Val Loss = 2.83676
+2024-04-20 21:20:52.285470 Epoch 132  	Train Loss = 2.88740 Val Loss = 2.83407
+2024-04-20 21:21:12.526928 Epoch 133  	Train Loss = 2.88724 Val Loss = 2.83216
+2024-04-20 21:21:32.656952 Epoch 134  	Train Loss = 2.88674 Val Loss = 2.82950
+2024-04-20 21:21:52.276604 Epoch 135  	Train Loss = 2.88686 Val Loss = 2.83463
+2024-04-20 21:22:12.502377 Epoch 136  	Train Loss = 2.88728 Val Loss = 2.83267
+2024-04-20 21:22:32.231277 Epoch 137  	Train Loss = 2.88650 Val Loss = 2.83015
+2024-04-20 21:22:51.725100 Epoch 138  	Train Loss = 2.88552 Val Loss = 2.82679
+Early stopping at epoch: 138
+Best at epoch 118:
+Train Loss = 2.89135
+Train MAE = 2.82567, RMSE = 5.77727, MAPE = 7.60681
+Val Loss = 2.82501
+Val MAE = 2.85551, RMSE = 6.02527, MAPE = 8.15195
+Model checkpoint saved to: ../saved_models/STGCN/STGCN-METRLA-2024-04-20-20-35-37.pt
+--------- Test ---------
+All Steps (1-12) MAE = 3.12548, RMSE = 6.40283, MAPE = 8.75703
+Step 1 MAE = 2.33013, RMSE = 4.12912, MAPE = 5.74153
+Step 2 MAE = 2.60686, RMSE = 4.94861, MAPE = 6.70396
+Step 3 MAE = 2.79769, RMSE = 5.47943, MAPE = 7.44109
+Step 4 MAE = 2.94775, RMSE = 5.88512, MAPE = 8.05256
+Step 5 MAE = 3.06918, RMSE = 6.21220, MAPE = 8.53946
+Step 6 MAE = 3.17094, RMSE = 6.48759, MAPE = 8.94032
+Step 7 MAE = 3.25709, RMSE = 6.71112, MAPE = 9.28327
+Step 8 MAE = 3.33320, RMSE = 6.90074, MAPE = 9.58010
+Step 9 MAE = 3.40070, RMSE = 7.06505, MAPE = 9.83736
+Step 10 MAE = 3.46455, RMSE = 7.21569, MAPE = 10.08794
+Step 11 MAE = 3.52920, RMSE = 7.35885, MAPE = 10.31470
+Step 12 MAE = 3.59852, RMSE = 7.50239, MAPE = 10.56240
+Inference time: 2.63 s

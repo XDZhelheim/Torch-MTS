@@ -9,8 +9,6 @@ METRLA:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -37,7 +35,6 @@ PEMSBAY:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -64,7 +61,6 @@ PEMS03:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -91,7 +87,6 @@ PEMS04:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -118,7 +113,6 @@ PEMS07:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
@@ -145,7 +139,6 @@ PEMS08:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   pass_device: True
 
