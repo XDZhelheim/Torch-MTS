@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+
 sys.path.append("..")
 from lib.utils import print_log
 
@@ -50,11 +51,11 @@ def print_model_metrics(model: str, dataset=None, file=None):
                     print_log("%.4f" % value, end="\t\t", log=file)
             print_log(log=file)
         print_log(log=file)
-        
+
 
 def print_model_metrics_csv(models, datasets, file=None):
     print_log("Dataset,Model,Step,MAE,RMSE,MAPE", log=file)
-    
+
     for dataset in datasets:
         for model in models:
             model_logs = os.path.join(log_path, model)
@@ -64,8 +65,34 @@ def print_model_metrics_csv(models, datasets, file=None):
                         continue
 
                 for line in get_metrics_log(os.path.join(model_logs, log)):
-                    print_log(f"{dataset.upper()},{model},{int(line[0])},{line[1]:.4f},{line[2]:.4f},{line[3]:.4f}", log=file)
+                    print_log(
+                        f"{dataset.upper()},{model},{int(line[0])},{line[1]:.4f},{line[2]:.4f},{line[3]:.4f}",
+                        log=file,
+                    )
                 print_log(log=file)
+
+
+def print_model_metrics_csv_long(models, datasets, file=None):
+    print_log(
+        "Dataset,Model,MAE_3,RMSE_3,MAPE_3,MAE_6,RMSE_6,MAPE_6,MAE_12,RMSE_12,MAPE_12,MAE_all,RMSE_all,MAPE_all",
+        log=file,
+    )
+
+    for dataset in datasets:
+        for model in models:
+            model_logs = os.path.join(log_path, model)
+            for log in sorted(os.listdir(model_logs)):
+                if dataset:
+                    if model not in log or dataset.upper() not in log:
+                        continue
+
+                print_log(f"{dataset.upper()},{model}", end=",", log=file)
+                for line in get_metrics_log(os.path.join(model_logs, log)):
+                    print_log(
+                        f"{line[1]:.4f},{line[2]:.4f},{line[3]:.4f}",
+                        end="," if line[0] else "\n",
+                        log=file,
+                    )  # if line[0]==0
 
 
 if __name__ == "__main__":
@@ -92,10 +119,17 @@ if __name__ == "__main__":
         "STAEformer",
     ]
     datasets = ["METRLA", "PEMSBAY", "PEMS03", "PEMS04", "PEMS07", "PEMS08"]
-    
-    file = open(os.path.join(log_path, "results.csv"), "a")
-    file.seek(0)
-    file.truncate()
 
-    print_model_metrics_csv(models, datasets, file=file)
+    for dataset in datasets:
+        for model in models:
+            print_model_metrics(model, dataset)
+
+    # file = open(os.path.join(log_path, "results.csv"), "a")
+    # file.seek(0)
+    # file.truncate()
+    # print_model_metrics_csv(models, datasets, file=file)
     
+    # file = open(os.path.join(log_path, "results_long.csv"), "a")
+    # file.seek(0)
+    # file.truncate()
+    # print_model_metrics_csv_long(models, datasets, file=file)
