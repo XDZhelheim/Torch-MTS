@@ -1,0 +1,56 @@
+PEMS07
+Trainset:	x-(16921, 12, 883, 1)	y-(16921, 12, 883, 1)
+Valset:  	x-(5640, 12, 883, 1)  	y-(5640, 12, 883, 1)
+Testset:	x-(5640, 12, 883, 1)	y-(5640, 12, 883, 1)
+
+Random seed = 233
+--------- HistoricalInertia ---------
+{
+    "max_epochs": 1,
+    "batch_size": 64,
+    "model_args": {
+        "in_steps": 12,
+        "out_steps": 12
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+HistoricalInertia                        [64, 12, 883, 1]          1
+==========================================================================================
+Total params: 1
+Trainable params: 1
+Non-trainable params: 0
+Total mult-adds (M): 0
+==========================================================================================
+Input size (MB): 2.71
+Forward/backward pass size (MB): 5.43
+Params size (MB): 0.00
+Estimated Total Size (MB): 8.14
+==========================================================================================
+
+Loss: HuberLoss
+
+2024-04-20 12:15:39.423717 Epoch 1  	Train Loss = 50.31635 Val Loss = 48.37543
+Early stopping at epoch: 1
+Best at epoch 1:
+Train Loss = 50.31635
+Train MAE = 51.01416, RMSE = 74.41537, MAPE = 23.73475
+Val Loss = 48.37543
+Val MAE = 49.02715, RMSE = 71.11021, MAPE = 23.33505
+Model checkpoint saved to: ../saved_models/HistoricalInertia/HistoricalInertia-PEMS07-2024-04-20-12-15-33.pt
+--------- Test ---------
+All Steps (1-12) MAE = 49.28835, RMSE = 71.34086, MAPE = 22.75359
+Step 1 MAE = 49.26122, RMSE = 71.31271, MAPE = 22.71915
+Step 2 MAE = 49.26653, RMSE = 71.31799, MAPE = 22.72506
+Step 3 MAE = 49.27197, RMSE = 71.32384, MAPE = 22.73088
+Step 4 MAE = 49.27666, RMSE = 71.32870, MAPE = 22.73652
+Step 5 MAE = 49.27932, RMSE = 71.33106, MAPE = 22.74179
+Step 6 MAE = 49.28412, RMSE = 71.33633, MAPE = 22.74798
+Step 7 MAE = 49.28989, RMSE = 71.34254, MAPE = 22.75475
+Step 8 MAE = 49.29508, RMSE = 71.34776, MAPE = 22.76201
+Step 9 MAE = 49.29982, RMSE = 71.35323, MAPE = 22.76950
+Step 10 MAE = 49.30396, RMSE = 71.35749, MAPE = 22.77630
+Step 11 MAE = 49.30919, RMSE = 71.36357, MAPE = 22.78410
+Step 12 MAE = 49.31458, RMSE = 71.36980, MAPE = 22.79165
+Inference time: 0.25 s

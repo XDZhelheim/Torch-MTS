@@ -1,0 +1,145 @@
+PEMSBAY
+Trainset:	x-(36465, 12, 325, 3)	y-(36465, 12, 325, 3)
+Valset:  	x-(5209, 12, 325, 3)  	y-(5209, 12, 325, 3)
+Testset:	x-(10419, 12, 325, 3)	y-(10419, 12, 325, 3)
+
+Random seed = 233
+--------- GMAN ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "pass_device": true,
+    "time_of_day": true,
+    "day_of_week": true,
+    "y_time_of_day": true,
+    "y_day_of_week": true,
+    "runner": "gman",
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "milestones": [
+        10,
+        15
+    ],
+    "clip_grad": 5,
+    "batch_size": 32,
+    "max_epochs": 200,
+    "early_stop": 20,
+    "model_args": {
+        "SE_file_path": "../data/PEMSBAY/SE_pemsbay.txt",
+        "timestep_in": 12,
+        "statt_layers": 1,
+        "att_heads": 8,
+        "att_dims": 8,
+        "bn_decay": 0.1,
+        "device": "cuda:0"
+    }
+}
+=========================================================================================================
+Layer (type:depth-idx)                                  Output Shape              Param #
+=========================================================================================================
+GMAN                                                    [32, 12, 325, 1]          --
+├─FC: 1-1                                               [32, 12, 325, 64]         --
+│    └─ModuleList: 2-1                                  --                        --
+│    │    └─conv2d_: 3-1                                [32, 12, 325, 64]         256
+│    │    └─conv2d_: 3-2                                [32, 12, 325, 64]         4,288
+├─STEmbedding: 1-2                                      [32, 24, 325, 64]         --
+│    └─FC: 2-2                                          [1, 1, 325, 64]           --
+│    │    └─ModuleList: 3-3                             --                        8,576
+│    └─FC: 2-3                                          [32, 24, 1, 64]           --
+│    │    └─ModuleList: 3-4                             --                        23,360
+├─ModuleList: 1-3                                       --                        --
+│    └─STAttBlock: 2-4                                  [32, 12, 325, 64]         --
+│    │    └─spatialAttention: 3-5                       [32, 12, 325, 64]         29,440
+│    │    └─temporalAttention: 3-6                      [32, 12, 325, 64]         29,440
+│    │    └─gatedFusion: 3-7                            [32, 12, 325, 64]         17,088
+├─transformAttention: 1-4                               [32, 12, 325, 64]         --
+│    └─FC: 2-5                                          [32, 12, 325, 64]         --
+│    │    └─ModuleList: 3-8                             --                        4,288
+│    └─FC: 2-6                                          [32, 12, 325, 64]         --
+│    │    └─ModuleList: 3-9                             --                        4,288
+│    └─FC: 2-7                                          [32, 12, 325, 64]         --
+│    │    └─ModuleList: 3-10                            --                        4,288
+│    └─FC: 2-8                                          [32, 12, 325, 64]         --
+│    │    └─ModuleList: 3-11                            --                        4,288
+├─ModuleList: 1-5                                       --                        --
+│    └─STAttBlock: 2-9                                  [32, 12, 325, 64]         --
+│    │    └─spatialAttention: 3-12                      [32, 12, 325, 64]         29,440
+│    │    └─temporalAttention: 3-13                     [32, 12, 325, 64]         29,440
+│    │    └─gatedFusion: 3-14                           [32, 12, 325, 64]         17,088
+├─FC: 1-6                                               [32, 12, 325, 1]          --
+│    └─ModuleList: 2-10                                 --                        --
+│    │    └─conv2d_: 3-15                               [32, 12, 325, 64]         4,288
+│    │    └─conv2d_: 3-16                               [32, 12, 325, 1]          67
+=========================================================================================================
+Total params: 209,923
+Trainable params: 209,923
+Non-trainable params: 0
+Total mult-adds (G): 21.74
+=========================================================================================================
+Input size (MB): 2.50
+Forward/backward pass size (MB): 3965.89
+Params size (MB): 0.84
+Estimated Total Size (MB): 3969.22
+=========================================================================================================
+
+Loss: MaskedMAELoss
+
+2024-04-22 09:24:49.648842 Epoch 1  	Train Loss = 2.15270 Val Loss = 1.92378
+2024-04-22 09:28:42.595479 Epoch 2  	Train Loss = 1.87803 Val Loss = 1.80706
+2024-04-22 09:32:38.061456 Epoch 3  	Train Loss = 1.81892 Val Loss = 1.89703
+2024-04-22 09:36:32.463360 Epoch 4  	Train Loss = 1.78177 Val Loss = 1.79543
+2024-04-22 09:40:27.061783 Epoch 5  	Train Loss = 1.74664 Val Loss = 1.71312
+2024-04-22 09:44:18.642436 Epoch 6  	Train Loss = 1.74354 Val Loss = 1.70326
+2024-04-22 09:48:11.878603 Epoch 7  	Train Loss = 1.73569 Val Loss = 1.68306
+2024-04-22 09:52:04.930578 Epoch 8  	Train Loss = 1.72774 Val Loss = 1.73873
+2024-04-22 09:55:58.579456 Epoch 9  	Train Loss = 1.69981 Val Loss = 1.72425
+2024-04-22 09:59:51.130859 Epoch 10  	Train Loss = 1.69937 Val Loss = 1.66417
+2024-04-22 10:03:43.177913 Epoch 11  	Train Loss = 1.63298 Val Loss = 1.58740
+2024-04-22 10:07:35.117565 Epoch 12  	Train Loss = 1.64249 Val Loss = 1.61136
+2024-04-22 10:11:27.639400 Epoch 13  	Train Loss = 1.63452 Val Loss = 1.58363
+2024-04-22 10:15:20.775883 Epoch 14  	Train Loss = 1.62695 Val Loss = 1.68623
+2024-04-22 10:19:12.773710 Epoch 15  	Train Loss = 1.62923 Val Loss = 1.60577
+2024-04-22 10:23:04.426818 Epoch 16  	Train Loss = 1.62047 Val Loss = 1.57361
+2024-04-22 10:26:56.912726 Epoch 17  	Train Loss = 1.62093 Val Loss = 1.58178
+2024-04-22 10:30:49.426632 Epoch 18  	Train Loss = 1.59966 Val Loss = 1.59638
+2024-04-22 10:34:42.054160 Epoch 19  	Train Loss = 1.61888 Val Loss = 1.57775
+2024-04-22 10:38:35.068868 Epoch 20  	Train Loss = 1.61827 Val Loss = 1.63230
+2024-04-22 10:42:29.060500 Epoch 21  	Train Loss = 1.62316 Val Loss = 1.57622
+2024-04-22 10:46:21.795608 Epoch 22  	Train Loss = 1.61258 Val Loss = 1.60622
+2024-04-22 10:50:14.232737 Epoch 23  	Train Loss = 1.60412 Val Loss = 1.58472
+2024-04-22 10:54:08.222608 Epoch 24  	Train Loss = 1.62901 Val Loss = 1.58596
+2024-04-22 10:58:01.001311 Epoch 25  	Train Loss = 1.61208 Val Loss = 1.58215
+2024-04-22 11:01:53.647448 Epoch 26  	Train Loss = 1.61532 Val Loss = 1.57860
+2024-04-22 11:05:48.029135 Epoch 27  	Train Loss = 1.61594 Val Loss = 1.59109
+2024-04-22 11:09:41.263363 Epoch 28  	Train Loss = 1.61683 Val Loss = 1.58309
+2024-04-22 11:13:34.515816 Epoch 29  	Train Loss = 1.60482 Val Loss = 1.61548
+2024-04-22 11:17:27.558385 Epoch 30  	Train Loss = 1.59937 Val Loss = 1.58105
+2024-04-22 11:21:20.023052 Epoch 31  	Train Loss = 1.61599 Val Loss = 1.69156
+2024-04-22 11:25:14.439229 Epoch 32  	Train Loss = 1.62022 Val Loss = 1.59102
+2024-04-22 11:29:07.528907 Epoch 33  	Train Loss = 1.61565 Val Loss = 1.58533
+2024-04-22 11:33:00.300217 Epoch 34  	Train Loss = 1.62785 Val Loss = 1.58757
+2024-04-22 11:36:54.864117 Epoch 35  	Train Loss = 1.62324 Val Loss = 1.58248
+2024-04-22 11:40:48.665019 Epoch 36  	Train Loss = 1.62632 Val Loss = 1.59214
+Early stopping at epoch: 36
+Best at epoch 16:
+Train Loss = 1.62047
+Train MAE = 1.38404, RMSE = 3.07495, MAPE = 2.98359
+Val Loss = 1.57361
+Val MAE = 1.57175, RMSE = 3.63604, MAPE = 3.60507
+Model checkpoint saved to: ../saved_models/GMAN/GMAN-PEMSBAY-2024-04-22-09-20-50.pt
+--------- Test ---------
+All Steps (1-12) MAE = 1.57530, RMSE = 3.60484, MAPE = 3.55022
+Step 1 MAE = 0.99502, RMSE = 1.92759, MAPE = 2.00292
+Step 2 MAE = 1.19633, RMSE = 2.46403, MAPE = 2.47903
+Step 3 MAE = 1.34994, RMSE = 2.91068, MAPE = 2.87535
+Step 4 MAE = 1.46741, RMSE = 3.25492, MAPE = 3.20283
+Step 5 MAE = 1.55768, RMSE = 3.51569, MAPE = 3.46956
+Step 6 MAE = 1.62984, RMSE = 3.71784, MAPE = 3.68706
+Step 7 MAE = 1.68789, RMSE = 3.87373, MAPE = 3.86280
+Step 8 MAE = 1.73453, RMSE = 3.99132, MAPE = 4.00035
+Step 9 MAE = 1.77366, RMSE = 4.08073, MAPE = 4.11393
+Step 10 MAE = 1.80799, RMSE = 4.15567, MAPE = 4.21318
+Step 11 MAE = 1.83754, RMSE = 4.21735, MAPE = 4.30210
+Step 12 MAE = 1.86572, RMSE = 4.27301, MAPE = 4.39353
+Inference time: 20.53 s

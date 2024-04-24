@@ -62,3 +62,10 @@ def MSE_RMSE_MAE_MAPE(y_true, y_pred):
         MAE(y_true, y_pred),
         MAPE(y_true, y_pred),
     )
+
+
+def MSE_MAE(y_true, y_pred):
+    return (
+        MSE(y_true, y_pred),
+        MAE(y_true, y_pred),
+    )

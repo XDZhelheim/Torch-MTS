@@ -1,0 +1,192 @@
+METRLA
+Trainset:	x-(23974, 12, 207, 1)	y-(23974, 12, 207, 1)
+Valset:  	x-(3425, 12, 207, 1)  	y-(3425, 12, 207, 1)
+Testset:	x-(6850, 12, 207, 1)	y-(6850, 12, 207, 1)
+
+Random seed = 233
+--------- GCLSTM ---------
+{
+    "num_nodes": 207,
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.001,
+    "weight_decay": 0,
+    "milestones": [
+        12,
+        50
+    ],
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "pass_device": true,
+    "model_args": {
+        "num_nodes": 207,
+        "input_dim": 1,
+        "output_dim": 1,
+        "horizon": 12,
+        "rnn_units": 64,
+        "num_layers": 1,
+        "cheb_k": 3,
+        "adj_path": "../data/METRLA/adj_mx.pkl",
+        "adj_type": "doubletransition",
+        "device": "cuda:0"
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+GCLSTM                                   [64, 12, 207, 1]          --
+├─Encoder: 1-1                           [64, 207, 64]             --
+│    └─ModuleList: 2-1                   --                        --
+│    │    └─LSTMCell: 3-1                [64, 207, 64]             100,096
+│    │    └─LSTMCell: 3-2                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-3                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-4                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-5                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-6                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-7                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-8                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-9                [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-10               [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-11               [64, 207, 64]             (recursive)
+│    │    └─LSTMCell: 3-12               [64, 207, 64]             (recursive)
+├─Decoder: 1-2                           [64, 207, 64]             --
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-13               [64, 207, 64]             100,096
+├─Sequential: 1-3                        [64, 207, 1]              --
+│    └─Linear: 2-3                       [64, 207, 1]              65
+├─Decoder: 1-4                           [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-14               [64, 207, 64]             (recursive)
+├─Sequential: 1-5                        [64, 207, 1]              (recursive)
+│    └─Linear: 2-5                       [64, 207, 1]              (recursive)
+├─Decoder: 1-6                           [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-15               [64, 207, 64]             (recursive)
+├─Sequential: 1-7                        [64, 207, 1]              (recursive)
+│    └─Linear: 2-7                       [64, 207, 1]              (recursive)
+├─Decoder: 1-8                           [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-16               [64, 207, 64]             (recursive)
+├─Sequential: 1-9                        [64, 207, 1]              (recursive)
+│    └─Linear: 2-9                       [64, 207, 1]              (recursive)
+├─Decoder: 1-10                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-17               [64, 207, 64]             (recursive)
+├─Sequential: 1-11                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-11                      [64, 207, 1]              (recursive)
+├─Decoder: 1-12                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-18               [64, 207, 64]             (recursive)
+├─Sequential: 1-13                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-13                      [64, 207, 1]              (recursive)
+├─Decoder: 1-14                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-19               [64, 207, 64]             (recursive)
+├─Sequential: 1-15                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-15                      [64, 207, 1]              (recursive)
+├─Decoder: 1-16                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-20               [64, 207, 64]             (recursive)
+├─Sequential: 1-17                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-17                      [64, 207, 1]              (recursive)
+├─Decoder: 1-18                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-21               [64, 207, 64]             (recursive)
+├─Sequential: 1-19                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-19                      [64, 207, 1]              (recursive)
+├─Decoder: 1-20                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-22               [64, 207, 64]             (recursive)
+├─Sequential: 1-21                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-21                      [64, 207, 1]              (recursive)
+├─Decoder: 1-22                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-23               [64, 207, 64]             (recursive)
+├─Sequential: 1-23                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-23                      [64, 207, 1]              (recursive)
+├─Decoder: 1-24                          [64, 207, 64]             (recursive)
+│    └─ModuleList: 2-24                  --                        (recursive)
+│    │    └─LSTMCell: 3-24               [64, 207, 64]             (recursive)
+├─Sequential: 1-25                       [64, 207, 1]              (recursive)
+│    └─Linear: 2-25                      [64, 207, 1]              (recursive)
+==========================================================================================
+Total params: 200,257
+Trainable params: 200,257
+Non-trainable params: 0
+Total mult-adds (M): 0.05
+==========================================================================================
+Input size (MB): 0.64
+Forward/backward pass size (MB): 652.44
+Params size (MB): 0.80
+Estimated Total Size (MB): 653.87
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2024-04-20 16:56:38.532331 Epoch 1  	Train Loss = 4.26455 Val Loss = 3.65307
+2024-04-20 16:56:54.376464 Epoch 2  	Train Loss = 3.63323 Val Loss = 3.39972
+2024-04-20 16:57:10.256509 Epoch 3  	Train Loss = 3.49041 Val Loss = 3.26901
+2024-04-20 16:57:26.114010 Epoch 4  	Train Loss = 3.40591 Val Loss = 3.15460
+2024-04-20 16:57:41.962415 Epoch 5  	Train Loss = 3.32473 Val Loss = 3.11398
+2024-04-20 16:57:57.727306 Epoch 6  	Train Loss = 3.26934 Val Loss = 3.08429
+2024-04-20 16:58:13.521095 Epoch 7  	Train Loss = 3.20361 Val Loss = 3.04017
+2024-04-20 16:58:29.068516 Epoch 8  	Train Loss = 3.15858 Val Loss = 2.99637
+2024-04-20 16:58:44.909526 Epoch 9  	Train Loss = 3.11163 Val Loss = 2.97947
+2024-04-20 16:59:00.490401 Epoch 10  	Train Loss = 3.07791 Val Loss = 2.98940
+2024-04-20 16:59:15.849077 Epoch 11  	Train Loss = 3.04563 Val Loss = 2.96849
+2024-04-20 16:59:31.660156 Epoch 12  	Train Loss = 3.02139 Val Loss = 2.94695
+2024-04-20 16:59:47.474526 Epoch 13  	Train Loss = 2.95330 Val Loss = 2.90980
+2024-04-20 17:00:02.522616 Epoch 14  	Train Loss = 2.94277 Val Loss = 2.91457
+2024-04-20 17:00:17.920939 Epoch 15  	Train Loss = 2.93834 Val Loss = 2.90980
+2024-04-20 17:00:32.833412 Epoch 16  	Train Loss = 2.93270 Val Loss = 2.92013
+2024-04-20 17:00:47.996964 Epoch 17  	Train Loss = 2.92865 Val Loss = 2.91426
+2024-04-20 17:01:03.475870 Epoch 18  	Train Loss = 2.92397 Val Loss = 2.91400
+2024-04-20 17:01:18.769562 Epoch 19  	Train Loss = 2.91968 Val Loss = 2.91596
+2024-04-20 17:01:33.721466 Epoch 20  	Train Loss = 2.91416 Val Loss = 2.91071
+2024-04-20 17:01:49.160750 Epoch 21  	Train Loss = 2.91041 Val Loss = 2.91431
+2024-04-20 17:02:04.978010 Epoch 22  	Train Loss = 2.90650 Val Loss = 2.91035
+2024-04-20 17:02:20.592671 Epoch 23  	Train Loss = 2.90278 Val Loss = 2.91215
+2024-04-20 17:02:34.873461 Epoch 24  	Train Loss = 2.89790 Val Loss = 2.90647
+2024-04-20 17:02:50.469352 Epoch 25  	Train Loss = 2.89404 Val Loss = 2.91920
+2024-04-20 17:03:06.316276 Epoch 26  	Train Loss = 2.89024 Val Loss = 2.91334
+2024-04-20 17:03:21.506068 Epoch 27  	Train Loss = 2.88674 Val Loss = 2.91531
+2024-04-20 17:03:36.060282 Epoch 28  	Train Loss = 2.88329 Val Loss = 2.91328
+2024-04-20 17:03:51.635766 Epoch 29  	Train Loss = 2.88002 Val Loss = 2.91221
+2024-04-20 17:04:07.419193 Epoch 30  	Train Loss = 2.87567 Val Loss = 2.91242
+2024-04-20 17:04:23.189526 Epoch 31  	Train Loss = 2.87234 Val Loss = 2.92314
+2024-04-20 17:04:39.030620 Epoch 32  	Train Loss = 2.87029 Val Loss = 2.91183
+2024-04-20 17:04:54.097361 Epoch 33  	Train Loss = 2.86590 Val Loss = 2.91045
+2024-04-20 17:05:09.639651 Epoch 34  	Train Loss = 2.86267 Val Loss = 2.90306
+2024-04-20 17:05:24.353509 Epoch 35  	Train Loss = 2.85999 Val Loss = 2.91103
+2024-04-20 17:05:40.052547 Epoch 36  	Train Loss = 2.85672 Val Loss = 2.91297
+2024-04-20 17:05:55.424489 Epoch 37  	Train Loss = 2.85374 Val Loss = 2.91773
+2024-04-20 17:06:11.203809 Epoch 38  	Train Loss = 2.85139 Val Loss = 2.91125
+2024-04-20 17:06:27.087045 Epoch 39  	Train Loss = 2.84930 Val Loss = 2.91424
+2024-04-20 17:06:42.897448 Epoch 40  	Train Loss = 2.84617 Val Loss = 2.91442
+2024-04-20 17:06:58.474433 Epoch 41  	Train Loss = 2.84298 Val Loss = 2.90855
+2024-04-20 17:07:13.199239 Epoch 42  	Train Loss = 2.83951 Val Loss = 2.91741
+2024-04-20 17:07:28.704181 Epoch 43  	Train Loss = 2.83701 Val Loss = 2.91477
+2024-04-20 17:07:43.422981 Epoch 44  	Train Loss = 2.83507 Val Loss = 2.91445
+Early stopping at epoch: 44
+Best at epoch 34:
+Train Loss = 2.86267
+Train MAE = 2.85812, RMSE = 5.62309, MAPE = 7.52505
+Val Loss = 2.90306
+Val MAE = 2.93477, RMSE = 6.05858, MAPE = 8.17828
+Model checkpoint saved to: ../saved_models/GCLSTM/GCLSTM-METRLA-2024-04-20-16-56-21.pt
+--------- Test ---------
+All Steps (1-12) MAE = 3.23461, RMSE = 6.49827, MAPE = 8.82296
+Step 1 MAE = 2.40533, RMSE = 4.15926, MAPE = 5.88576
+Step 2 MAE = 2.66047, RMSE = 4.90311, MAPE = 6.74137
+Step 3 MAE = 2.84191, RMSE = 5.40112, MAPE = 7.40416
+Step 4 MAE = 2.99375, RMSE = 5.81083, MAPE = 7.94311
+Step 5 MAE = 3.12617, RMSE = 6.16606, MAPE = 8.42791
+Step 6 MAE = 3.24765, RMSE = 6.48510, MAPE = 8.87119
+Step 7 MAE = 3.35852, RMSE = 6.76813, MAPE = 9.27275
+Step 8 MAE = 3.45739, RMSE = 7.01540, MAPE = 9.62996
+Step 9 MAE = 3.54964, RMSE = 7.23908, MAPE = 9.96375
+Step 10 MAE = 3.63781, RMSE = 7.44679, MAPE = 10.27834
+Step 11 MAE = 3.72453, RMSE = 7.63689, MAPE = 10.57720
+Step 12 MAE = 3.81223, RMSE = 7.82134, MAPE = 10.88017
+Inference time: 1.35 s

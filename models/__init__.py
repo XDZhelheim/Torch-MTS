@@ -2,16 +2,11 @@ from .baseline.HistoricalInertia import HistoricalInertia
 from .baseline.MLP import MLP
 from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
-from .baseline.Attention import Attention
+from .baseline.Transformer import Transformer
 from .baseline.WaveNet import WaveNet
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
 from .baseline.GCRN import GCRN
-
-from .meta_param.STMetaLSTM import STMetaLSTM
-from .meta_param.STMetaGRU import STMetaGRU
-from .meta_param.STMetaAttention import STMetaAttention
-from .meta_param.STMetaGCGRU import STMetaGCGRU
 
 from .AGCRN import AGCRN
 from .GraphWaveNet import GWNET
@@ -27,6 +22,9 @@ from .DCRNN import DCRNN
 from .STAEformer import STAEformer
 from .GTS import GTS
 
+from .DLinear import DLinear
+from .PatchTST import PatchTST
+
 
 def model_select(name):
     name = name.upper()
@@ -39,8 +37,8 @@ def model_select(name):
         return LSTM
     elif name == "GRU":
         return GRU
-    elif name in ("ATTENTION", "ATTN", "TRANSFORMER"):
-        return Attention
+    elif name in ("ATTENTION", "ATTN", "TRANSFORMER", "TF"):
+        return Transformer
     elif name in ("TCN", "WAVENET"):
         return WaveNet
 
@@ -50,15 +48,6 @@ def model_select(name):
         return GCLSTM
     elif name == "GCGRU":
         return GCGRU
-
-    elif name == "STMETALSTM":
-        return STMetaLSTM
-    elif name == "STMETAGRU":
-        return STMetaGRU
-    elif name in ("STMETAATTN", "STMETAATTENTION", "STMETATRANSFORMER"):
-        return STMetaAttention
-    elif name == "STMETAGCGRU":
-        return STMetaGCGRU
 
     elif name == "AGCRN":
         return AGCRN
@@ -86,6 +75,11 @@ def model_select(name):
         return STAEformer
     elif name == "GTS":
         return GTS
+    
+    elif name == "DLINEAR":
+        return DLinear
+    elif name == "PATCHTST":
+        return PatchTST
 
     else:
         raise NotImplementedError

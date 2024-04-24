@@ -1,0 +1,127 @@
+PEMSBAY
+Trainset:	x-(36465, 12, 325, 1)	y-(36465, 12, 325, 1)
+Valset:  	x-(5209, 12, 325, 1)  	y-(5209, 12, 325, 1)
+Testset:	x-(10419, 12, 325, 1)	y-(10419, 12, 325, 1)
+
+Random seed = 233
+--------- StemGNN ---------
+{
+    "num_nodes": 325,
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.0002,
+    "weight_decay": 0,
+    "milestones": [
+        50
+    ],
+    "lr_decay_rate": 0.5,
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "model_args": {
+        "units": 325,
+        "stack_cnt": 2,
+        "time_step": 12,
+        "horizon": 12,
+        "multi_layer": 5,
+        "dropout_rate": 0.5,
+        "leaky_rate": 0.2
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+StemGNN                                  [64, 12, 325, 1]          650
+├─GRU: 1-1                               [325, 64, 325]            330,525
+├─LeakyReLU: 1-2                         [64, 325, 325]            --
+├─Dropout: 1-3                           [64, 325, 325]            --
+├─ModuleList: 1-4                        --                        --
+│    └─StockBlockLayer: 2-1              [64, 325, 12]             14,400
+│    │    └─ModuleList: 3-1              --                        509,760
+│    │    └─Linear: 3-2                  [64, 1, 325, 60]          3,660
+│    │    └─Linear: 3-3                  [64, 325, 12]             732
+│    │    └─Linear: 3-4                  [64, 1, 1, 325, 12]       156
+│    │    └─Linear: 3-5                  [64, 1, 325, 12]          732
+│    └─StockBlockLayer: 2-2              [64, 325, 12]             14,556
+│    │    └─ModuleList: 3-6              --                        509,760
+│    │    └─Linear: 3-7                  [64, 1, 325, 60]          3,660
+│    │    └─Linear: 3-8                  [64, 325, 12]             732
+├─Sequential: 1-5                        [64, 325, 12]             --
+│    └─Linear: 2-3                       [64, 325, 12]             156
+│    └─LeakyReLU: 2-4                    [64, 325, 12]             --
+│    └─Linear: 2-5                       [64, 325, 12]             156
+==========================================================================================
+Total params: 1,389,635
+Trainable params: 1,389,635
+Non-trainable params: 0
+Total mult-adds (G): 6.94
+==========================================================================================
+Input size (MB): 1.00
+Forward/backward pass size (MB): 1044.49
+Params size (MB): 5.44
+Estimated Total Size (MB): 1050.93
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2024-04-22 17:38:25.160091 Epoch 1  	Train Loss = 3.60255 Val Loss = 2.83429
+2024-04-22 17:38:44.377484 Epoch 2  	Train Loss = 2.04182 Val Loss = 2.52916
+2024-04-22 17:39:03.512995 Epoch 3  	Train Loss = 1.96447 Val Loss = 2.71409
+2024-04-22 17:39:22.719236 Epoch 4  	Train Loss = 1.93841 Val Loss = 2.59704
+2024-04-22 17:39:41.978451 Epoch 5  	Train Loss = 1.91636 Val Loss = 2.66771
+2024-04-22 17:40:01.194657 Epoch 6  	Train Loss = 1.89311 Val Loss = 2.45287
+2024-04-22 17:40:20.415842 Epoch 7  	Train Loss = 1.86619 Val Loss = 2.38486
+2024-04-22 17:40:39.620972 Epoch 8  	Train Loss = 1.84651 Val Loss = 2.49380
+2024-04-22 17:40:58.864630 Epoch 9  	Train Loss = 1.82715 Val Loss = 2.31830
+2024-04-22 17:41:18.087843 Epoch 10  	Train Loss = 1.81899 Val Loss = 2.39771
+2024-04-22 17:41:37.308237 Epoch 11  	Train Loss = 1.80709 Val Loss = 2.39521
+2024-04-22 17:41:56.503369 Epoch 12  	Train Loss = 1.80068 Val Loss = 2.48688
+2024-04-22 17:42:15.702646 Epoch 13  	Train Loss = 1.79457 Val Loss = 2.37511
+2024-04-22 17:42:34.920963 Epoch 14  	Train Loss = 1.78945 Val Loss = 2.36770
+2024-04-22 17:42:54.136151 Epoch 15  	Train Loss = 1.77954 Val Loss = 2.31916
+2024-04-22 17:43:13.386401 Epoch 16  	Train Loss = 1.77475 Val Loss = 2.36679
+2024-04-22 17:43:32.651694 Epoch 17  	Train Loss = 1.77308 Val Loss = 2.32865
+2024-04-22 17:43:51.842511 Epoch 18  	Train Loss = 1.76334 Val Loss = 2.36959
+2024-04-22 17:44:11.047389 Epoch 19  	Train Loss = 1.76696 Val Loss = 2.14457
+2024-04-22 17:44:30.253488 Epoch 20  	Train Loss = 1.75930 Val Loss = 2.23586
+2024-04-22 17:44:49.481099 Epoch 21  	Train Loss = 1.76001 Val Loss = 2.19324
+2024-04-22 17:45:08.719664 Epoch 22  	Train Loss = 1.74959 Val Loss = 2.21351
+2024-04-22 17:45:27.962350 Epoch 23  	Train Loss = 1.74825 Val Loss = 2.14435
+2024-04-22 17:45:47.223773 Epoch 24  	Train Loss = 1.77501 Val Loss = 2.03604
+2024-04-22 17:46:06.426962 Epoch 25  	Train Loss = 1.78335 Val Loss = 2.01788
+2024-04-22 17:46:25.639929 Epoch 26  	Train Loss = 1.76877 Val Loss = 2.17158
+2024-04-22 17:46:44.813861 Epoch 27  	Train Loss = 1.74039 Val Loss = 2.15840
+2024-04-22 17:47:04.037271 Epoch 28  	Train Loss = 1.74302 Val Loss = 1.99134
+2024-04-22 17:47:23.254014 Epoch 29  	Train Loss = 1.75286 Val Loss = 1.98707
+2024-04-22 17:47:42.446211 Epoch 30  	Train Loss = 1.73968 Val Loss = 2.20536
+2024-04-22 17:48:01.700951 Epoch 31  	Train Loss = 1.72542 Val Loss = 2.21094
+2024-04-22 17:48:20.914459 Epoch 32  	Train Loss = 1.72223 Val Loss = 2.21908
+2024-04-22 17:48:40.149527 Epoch 33  	Train Loss = 1.71862 Val Loss = 2.19896
+2024-04-22 17:48:59.382896 Epoch 34  	Train Loss = 1.72593 Val Loss = 1.99355
+2024-04-22 17:49:18.594858 Epoch 35  	Train Loss = 1.71316 Val Loss = 2.21259
+2024-04-22 17:49:37.786928 Epoch 36  	Train Loss = 1.71839 Val Loss = 2.15816
+2024-04-22 17:49:57.071451 Epoch 37  	Train Loss = 1.71645 Val Loss = 2.02645
+2024-04-22 17:50:16.325002 Epoch 38  	Train Loss = 1.71317 Val Loss = 2.07214
+2024-04-22 17:50:35.544903 Epoch 39  	Train Loss = 1.70832 Val Loss = 2.05150
+Early stopping at epoch: 39
+Best at epoch 29:
+Train Loss = 1.75286
+Train MAE = 1.74922, RMSE = 3.89202, MAPE = 3.88066
+Val Loss = 1.98707
+Val MAE = 1.97139, RMSE = 4.45693, MAPE = 4.63803
+Model checkpoint saved to: ../saved_models/StemGNN/StemGNN-PEMSBAY-2024-04-22-17-38-01.pt
+--------- Test ---------
+All Steps (1-12) MAE = 1.84548, RMSE = 4.19461, MAPE = 4.24434
+Step 1 MAE = 0.95493, RMSE = 1.75780, MAPE = 1.93633
+Step 2 MAE = 1.22499, RMSE = 2.44639, MAPE = 2.53127
+Step 3 MAE = 1.44195, RMSE = 3.03884, MAPE = 3.06490
+Step 4 MAE = 1.61717, RMSE = 3.47983, MAPE = 3.53980
+Step 5 MAE = 1.75959, RMSE = 3.85492, MAPE = 3.95429
+Step 6 MAE = 1.88526, RMSE = 4.17538, MAPE = 4.34127
+Step 7 MAE = 1.99481, RMSE = 4.44489, MAPE = 4.67193
+Step 8 MAE = 2.09061, RMSE = 4.68415, MAPE = 4.94074
+Step 9 MAE = 2.17658, RMSE = 4.88904, MAPE = 5.18997
+Step 10 MAE = 2.25488, RMSE = 5.08175, MAPE = 5.39587
+Step 11 MAE = 2.33504, RMSE = 5.25738, MAPE = 5.57876
+Step 12 MAE = 2.40996, RMSE = 5.41837, MAPE = 5.78695
+Inference time: 1.98 s

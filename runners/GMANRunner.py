@@ -1,11 +1,11 @@
-from .AbstractRunner import AbstractRunner
+from .STFRunner import STFRunner
 
 import torch
 import numpy as np
 from torchinfo import summary
 
 
-class GMANRunner(AbstractRunner):
+class GMANRunner(STFRunner):
     def __init__(
         self,
         cfg: dict,
@@ -13,7 +13,7 @@ class GMANRunner(AbstractRunner):
         scaler,
         log=None,
     ):
-        super().__init__()
+        super().__init__(cfg, device, scaler, log)
 
         self.cfg = cfg
         self.device = device

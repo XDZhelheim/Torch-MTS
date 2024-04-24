@@ -3,9 +3,6 @@ METRLA:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-
   time_of_day: True
   
   lr: 0.001
@@ -14,8 +11,6 @@ METRLA:
   batch_size: 64
   max_epochs: 200
   early_stop: 20
-  use_cl: False
-  cl_step_size: 2500
 
   model_args:
     num_nodes: 207
@@ -33,9 +28,6 @@ PEMSBAY:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-
   time_of_day: True
   
   lr: 0.001
@@ -44,8 +36,6 @@ PEMSBAY:
   batch_size: 64
   max_epochs: 200
   early_stop: 20
-  use_cl: False
-  cl_step_size: 2500
 
   model_args:
     num_nodes: 325
@@ -63,9 +53,6 @@ PEMS03:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-  
   lr: 0.003
   # milestones: [50]
   # lr_decay_rate: 0.3
@@ -73,8 +60,6 @@ PEMS03:
   batch_size: 64
   max_epochs: 200
   early_stop: 20
-  use_cl: False
-  cl_step_size: 2500
 
   model_args:
     num_nodes: 358
@@ -92,9 +77,6 @@ PEMS04:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-  
   lr: 0.003
   milestones: [50]
   lr_decay_rate: 0.3
@@ -102,8 +84,6 @@ PEMS04:
   batch_size: 64
   max_epochs: 200
   early_stop: 20
-  use_cl: False
-  cl_step_size: 2500
 
   model_args:
     num_nodes: 307
@@ -121,9 +101,6 @@ PEMS07:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-  
   lr: 0.001
   # milestones: [30]
   # lr_decay_rate: 0.3
@@ -131,8 +108,6 @@ PEMS07:
   batch_size: 64
   max_epochs: 200
   early_stop: 20
-  use_cl: False
-  cl_step_size: 2500
 
   model_args:
     num_nodes: 883
@@ -150,9 +125,6 @@ PEMS08:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-  
   lr: 0.003
   # milestones: [130]
   # lr_decay_rate: 0.3
@@ -160,8 +132,6 @@ PEMS08:
   batch_size: 64
   max_epochs: 200
   early_stop: 20
-  use_cl: False
-  cl_step_size: 2500
 
   model_args:
     num_nodes: 170

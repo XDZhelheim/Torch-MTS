@@ -1,0 +1,206 @@
+ELECTRICITY:
+  num_nodes: 321
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 321
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+WEATHER:
+  num_nodes: 21
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 21
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+TRAFFIC:
+  num_nodes: 862
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 862
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+EXCHANGE:
+  num_nodes: 8
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 8
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+ILI:
+  num_nodes: 7
+  in_steps: 36
+  out_steps: 24 # 24 36 48 60
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 36
+    pred_len: 24 # 24 36 48 60
+    individual: False
+
+ETTH1:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+ETTH2:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+ETTM1:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.001
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False
+
+ETTM2:
+  num_nodes: 7
+  in_steps: 336
+  out_steps: 96 # 96 192 336 720
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [5]
+  lr_decay_rate: 0.1
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 10
+
+  dataloader: ltsf
+  runner: ltsf
+  loss: mse
+
+  model_args:
+    enc_in: 7
+    seq_len: 336
+    pred_len: 96 # 96 192 336 720
+    individual: False

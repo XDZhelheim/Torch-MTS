@@ -3,9 +3,6 @@ METRLA:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-
   time_of_day: True
   
   lr: 0.001
@@ -15,8 +12,6 @@ METRLA:
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -37,9 +32,6 @@ PEMSBAY:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.7
-  val_size: 0.1
-
   time_of_day: True
   
   lr: 0.001
@@ -49,8 +41,6 @@ PEMSBAY:
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -71,9 +61,6 @@ PEMS03:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-
   time_of_day: True
   
   lr: 0.001
@@ -83,8 +70,6 @@ PEMS03:
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -105,9 +90,6 @@ PEMS04:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-
   time_of_day: True
   
   lr: 0.001
@@ -118,8 +100,6 @@ PEMS04:
   clip_grad: False
   batch_size: 64
   max_epochs: 500
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -140,9 +120,6 @@ PEMS07:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-
   time_of_day: True
   
   lr: 0.001
@@ -152,8 +129,6 @@ PEMS07:
   clip_grad: False
   batch_size: 64
   max_epochs: 200
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 
@@ -174,9 +149,6 @@ PEMS08:
   in_steps: 12
   out_steps: 12
 
-  train_size: 0.6
-  val_size: 0.2
-
   time_of_day: True
   
   lr: 0.001
@@ -187,8 +159,6 @@ PEMS08:
   clip_grad: False
   batch_size: 64
   max_epochs: 300
-  use_cl: False
-  cl_step_size: 2500
 
   pass_device: True
 

@@ -1,0 +1,97 @@
+ETTM2
+Trainset:	x-(34129, 336, 7, 1)	y-(34129, 96, 7, 1)
+Valset:  	x-(11425, 336, 7, 1)  	y-(11425, 96, 7, 1)
+Testset:	x-(11425, 336, 7, 1)	y-(11425, 96, 7, 1)
+INFO: Using scaled X and Y, only for LTSF!
+
+Random seed = 233
+--------- PatchTST ---------
+{
+    "num_nodes": 7,
+    "in_steps": 336,
+    "out_steps": 96,
+    "lr": 0.0001,
+    "weight_decay": 0,
+    "milestones": [
+        10
+    ],
+    "lr_decay_rate": 0.1,
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "dataloader": "ltsf",
+    "runner": "ltsf",
+    "loss": "mse",
+    "model_args": {
+        "enc_in": 7,
+        "seq_len": 336,
+        "pred_len": 96,
+        "e_layers": 3,
+        "n_heads": 16,
+        "d_model": 128,
+        "d_ff": 256,
+        "dropout": 0.2,
+        "fc_dropout": 0.2,
+        "head_dropout": 0,
+        "patch_len": 16,
+        "stride": 8,
+        "individual": 0,
+        "padding_patch": "end",
+        "revin": 1,
+        "affine": 0,
+        "subtract_last": 0,
+        "decomposition": 0,
+        "kernel_size": 25
+    }
+}
+========================================================================================================================
+Layer (type:depth-idx)                                                 Output Shape              Param #
+========================================================================================================================
+PatchTST                                                               [64, 96, 7, 1]            --
+├─PatchTST_backbone: 1-1                                               [64, 7, 96]               --
+│    └─RevIN: 2-1                                                      [64, 336, 7]              --
+│    └─ReplicationPad1d: 2-2                                           [64, 7, 344]              --
+│    └─TSTiEncoder: 2-3                                                [64, 7, 128, 42]          5,376
+│    │    └─Linear: 3-1                                                [64, 7, 42, 128]          2,176
+│    │    └─Dropout: 3-2                                               [448, 42, 128]            --
+│    │    └─TSTEncoder: 3-3                                            [448, 42, 128]            397,443
+│    └─Flatten_Head: 2-4                                               [64, 7, 96]               --
+│    │    └─Flatten: 3-4                                               [64, 7, 5376]             --
+│    │    └─Linear: 3-5                                                [64, 7, 96]               516,192
+│    │    └─Dropout: 3-6                                               [64, 7, 96]               --
+│    └─RevIN: 2-5                                                      [64, 96, 7]               --
+========================================================================================================================
+Total params: 921,187
+Trainable params: 921,184
+Non-trainable params: 3
+Total mult-adds (M): 211.23
+========================================================================================================================
+Input size (MB): 0.60
+Forward/backward pass size (MB): 539.84
+Params size (MB): 3.66
+Estimated Total Size (MB): 544.10
+========================================================================================================================
+
+Loss: MSELoss
+
+2024-04-18 04:38:51.731227 Epoch 1  	Train Loss = 0.22963 Val Loss = 0.12142
+2024-04-18 04:39:06.617048 Epoch 2  	Train Loss = 0.20274 Val Loss = 0.12525
+2024-04-18 04:39:21.579620 Epoch 3  	Train Loss = 0.19103 Val Loss = 0.12601
+2024-04-18 04:39:36.460115 Epoch 4  	Train Loss = 0.18273 Val Loss = 0.12513
+2024-04-18 04:39:51.359710 Epoch 5  	Train Loss = 0.17688 Val Loss = 0.12557
+2024-04-18 04:40:06.537947 Epoch 6  	Train Loss = 0.17250 Val Loss = 0.12627
+2024-04-18 04:40:21.527959 Epoch 7  	Train Loss = 0.16826 Val Loss = 0.12763
+2024-04-18 04:40:36.671476 Epoch 8  	Train Loss = 0.16483 Val Loss = 0.12477
+2024-04-18 04:40:51.593707 Epoch 9  	Train Loss = 0.16224 Val Loss = 0.12708
+2024-04-18 04:41:06.555022 Epoch 10  	Train Loss = 0.15919 Val Loss = 0.12841
+2024-04-18 04:41:21.573472 Epoch 11  	Train Loss = 0.15332 Val Loss = 0.12537
+Early stopping at epoch: 11
+Best at epoch 1:
+Train Loss = 0.22963
+Train MSE = 0.20309, MAE = 0.25527
+Val Loss = 0.12142
+Val MSE = 0.12150, MAE = 0.23816
+Model checkpoint saved to: ../saved_models/PatchTST/PatchTST-ETTM2-2024-04-18-04-38-34.pt
+--------- Test ---------
+All Steps (1-96) MSE = 0.16908, MAE = 0.25810
+Inference time: 1.45 s

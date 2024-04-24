@@ -9,7 +9,6 @@ METRLA:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   model_args:
     units: 207
@@ -32,7 +31,6 @@ PEMSBAY:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   model_args:
     units: 325
@@ -54,7 +52,6 @@ PEMS03:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   model_args:
     units: 358
@@ -76,7 +73,6 @@ PEMS04:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   model_args:
     units: 307
@@ -98,7 +94,6 @@ PEMS07:
   clip_grad: 0
   batch_size: 64
   max_epochs: 200
-  use_cl: False
 
   model_args:
     units: 883
@@ -120,7 +115,6 @@ PEMS08:
   clip_grad: 0
   batch_size: 64
   max_epochs: 300
-  use_cl: False
 
   model_args:
     units: 170

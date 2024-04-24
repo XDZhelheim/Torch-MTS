@@ -1,0 +1,74 @@
+ETTH1
+Trainset:	x-(7585, 336, 7, 1)	y-(7585, 720, 7, 1)
+Valset:  	x-(2161, 336, 7, 1)  	y-(2161, 720, 7, 1)
+Testset:	x-(2161, 336, 7, 1)	y-(2161, 720, 7, 1)
+INFO: Using scaled X and Y, only for LTSF!
+
+Random seed = 233
+--------- DLinear ---------
+{
+    "num_nodes": 7,
+    "in_steps": 336,
+    "out_steps": 720,
+    "lr": 0.001,
+    "weight_decay": 0,
+    "milestones": [
+        5
+    ],
+    "lr_decay_rate": 0.1,
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 10,
+    "dataloader": "ltsf",
+    "runner": "ltsf",
+    "loss": "mse",
+    "model_args": {
+        "enc_in": 7,
+        "seq_len": 336,
+        "pred_len": 720,
+        "individual": false
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+DLinear                                  [64, 720, 7, 1]           --
+├─series_decomp: 1-1                     [64, 336, 7]              --
+│    └─moving_avg: 2-1                   [64, 336, 7]              --
+│    │    └─AvgPool1d: 3-1               [64, 7, 336]              --
+├─Linear: 1-2                            [64, 7, 720]              242,640
+├─Linear: 1-3                            [64, 7, 720]              242,640
+==========================================================================================
+Total params: 485,280
+Trainable params: 485,280
+Non-trainable params: 0
+Total mult-adds (M): 31.06
+==========================================================================================
+Input size (MB): 0.60
+Forward/backward pass size (MB): 5.16
+Params size (MB): 1.94
+Estimated Total Size (MB): 7.70
+==========================================================================================
+
+Loss: MSELoss
+
+2024-04-17 10:49:56.498487 Epoch 1  	Train Loss = 0.59512 Val Loss = 1.26406
+2024-04-17 10:49:56.800859 Epoch 2  	Train Loss = 0.53970 Val Loss = 1.26063
+2024-04-17 10:49:57.115345 Epoch 3  	Train Loss = 0.53549 Val Loss = 1.24400
+2024-04-17 10:49:57.452773 Epoch 4  	Train Loss = 0.53429 Val Loss = 1.26010
+2024-04-17 10:49:57.785691 Epoch 5  	Train Loss = 0.53358 Val Loss = 1.20060
+2024-04-17 10:49:58.125659 Epoch 6  	Train Loss = 0.52510 Val Loss = 1.20992
+2024-04-17 10:49:58.460307 Epoch 7  	Train Loss = 0.52396 Val Loss = 1.22653
+2024-04-17 10:49:58.798488 Epoch 8  	Train Loss = 0.52398 Val Loss = 1.22838
+2024-04-17 10:49:59.134899 Epoch 9  	Train Loss = 0.52381 Val Loss = 1.22311
+2024-04-17 10:49:59.473580 Epoch 10  	Train Loss = 0.52370 Val Loss = 1.22243
+Early stopping at epoch: 10
+Best at epoch 5:
+Train Loss = 0.53358
+Train MSE = 0.53153, MAE = 0.52308
+Val Loss = 1.20060
+Val MSE = 1.20287, MAE = 0.75107
+Model checkpoint saved to: ../saved_models/DLinear/DLinear-ETTH1-2024-04-17-10-49-55.pt
+--------- Test ---------
+All Steps (1-720) MSE = 0.50546, MAE = 0.51365
+Inference time: 0.07 s

@@ -15,13 +15,16 @@ def generate_data(
     dataset_dir,
     data_file_path,
     target_channel=[0],
-    future_seq_len=12,
     history_seq_len=12,
+    future_seq_len=12,
     add_time_of_day=True,
     add_day_of_week=True,
     train_ratio=0.7,
-    valid_ratio=0.2,
+    valid_ratio=0.1,
     steps_per_day=288,
+    date_format="%Y-%m-%d %H:%M:%S",
+    save_data=True,
+    split="default",
 ):
     """Preprocess and generate train/valid/test datasets.
     
@@ -48,7 +51,7 @@ def generate_data(
     elif data_file_path.endswith("csv"):
         file_type = "csv"
         df = pd.read_csv(data_file_path)
-        df_index = pd.to_datetime(df["date"].values, format="%Y-%m-%d %H:%M").to_numpy()
+        df_index = pd.to_datetime(df["date"].values, format=date_format).to_numpy()
         df = df[df.columns[1:]]
         df.index = df_index
         data = np.expand_dims(df.values, axis=-1)
@@ -59,24 +62,46 @@ def generate_data(
     print("raw time series shape: {0}".format(data.shape))
 
     l, n, f = data.shape
-    num_samples = l - (history_seq_len + future_seq_len) + 1
-    train_num_short = round(num_samples * train_ratio)
-    valid_num_short = round(num_samples * valid_ratio)
-    test_num_short = num_samples - train_num_short - valid_num_short
-    print("number of training samples: {0}".format(train_num_short))
-    print("number of validation samples: {0}".format(valid_num_short))
-    print("number of test samples: {0}".format(test_num_short))
+    if split.upper() == "DEFAULT":
+        # first sliding window, then split (default setting)
+        # commonly used for spatiotemporal/traffic forecasting datasets
+        # actually this is not strict because it will cross the boundaries of train&val, val&test
+        # will generate more samples
+        num_samples = l - (history_seq_len + future_seq_len) + 1
+        train_num_short = round(num_samples * train_ratio)
+        valid_num_short = round(num_samples * valid_ratio)
+        test_num_short = num_samples - train_num_short - valid_num_short
 
-    index_list = []
-    for t in range(history_seq_len, num_samples + history_seq_len):
-        index = (t-history_seq_len, t, t+future_seq_len)
-        index_list.append(index)
+        index_list = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, num_samples + history_seq_len)]
 
-    train_index = index_list[:train_num_short]
-    valid_index = index_list[train_num_short: train_num_short + valid_num_short]
-    test_index = index_list[train_num_short +
-                            valid_num_short: train_num_short + valid_num_short + test_num_short]
-
+        train_index = index_list[:train_num_short]
+        valid_index = index_list[train_num_short : train_num_short + valid_num_short]
+        test_index = index_list[train_num_short +
+                                valid_num_short : train_num_short + valid_num_short + test_num_short]
+    elif split.upper() == "STRICT":
+        # first split train/val/test, then perform sliding window individually
+        # the most strict version, least #samples
+        split1 = round(l * train_ratio)
+        split2 = round(l * (train_ratio + valid_ratio))
+        train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
+        valid_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split1 + history_seq_len, split2 - future_seq_len + 1)]
+        test_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split2 + history_seq_len, l - future_seq_len + 1)]
+    elif split.upper() == "LTSF":
+        # Sadly LTSF uses neither of the two approaches above
+        # Its train is strict, but val overlaps with train and test overlaps with val
+        # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L238
+        # Advantage: changing history_seq_len do not affect #val_samples and #test_samples
+        test_ratio = 1 - train_ratio - valid_ratio
+        split1 = int(l * train_ratio)
+        split2 = l - int(l * test_ratio)
+        train_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(history_seq_len, split1 - future_seq_len + 1)]
+        valid_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split1, split2 - future_seq_len + 1)]
+        test_index = [(t - history_seq_len, t, t + future_seq_len) for t in range(split2, l - future_seq_len + 1)]
+        
+    print("number of training samples: {0}".format(len(train_index)))
+    print("number of validation samples: {0}".format(len(valid_index)))
+    print("number of test samples: {0}".format(len(test_index)))
+    
     # add external feature
     feature_list = [data]
     if add_time_of_day:
@@ -101,16 +126,17 @@ def generate_data(
     print("data shape: {0}".format(processed_data.shape))
 
     # dump data
-    np.savez_compressed(os.path.join(dataset_dir, "index.npz"), train=train_index, val=valid_index, test=test_index)
-    np.savez_compressed(os.path.join(dataset_dir, "data.npz"), data=processed_data)
+    np.savez_compressed(os.path.join(dataset_dir, f"index_{history_seq_len}_{future_seq_len}.npz"), train=train_index, val=valid_index, test=test_index)
+    if save_data:
+        np.savez_compressed(os.path.join(dataset_dir, f"data.npz"), data=processed_data)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--dataset", type=str, 
                         default="METRLA", help="Which dataset to run")
-    parser.add_argument("--history_seq_len", type=int,
+    parser.add_argument("-s", "--history_seq_len", type=int,
                         default=12, help="History sequence length.")
-    parser.add_argument("--future_seq_len", type=int,
+    parser.add_argument("-p", "--future_seq_len", type=int,
                         default=12, help="Future sequence length.")
     parser.add_argument("--target_channel", type=list,
                         default=[0], help="Selected channels.")
@@ -142,17 +168,24 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
-    # elif DATASET_NAME == "ELECTRICITY":
-    #     param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
-    #     param_dict["train_ratio"] = 0.7
-    #     param_dict["valid_ratio"] = 0.1
-    #     param_dict["steps_per_day"] = 24
-        
-    #     # single step prediction on future step 3, 6, 12, 24
-    #     # here extract all 24 steps
-    #     # should specify which step to predict in model config (.yaml)
-    #     param_dict["history_seq_len"] = 168
-    #     param_dict["future_seq_len"] = 24
+    elif DATASET_NAME in ("ELECTRICITY", "WEATHER", "TRAFFIC", "ILI"):
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.7
+        param_dict["valid_ratio"] = 0.1
+        param_dict["split"] = "LTSF"
+    elif DATASET_NAME == "EXCHANGE":
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.7
+        param_dict["valid_ratio"] = 0.1
+        param_dict["date_format"] = "%Y/%m/%d %H:%M"
+        param_dict["split"] = "LTSF"
+    elif DATASET_NAME in ("ETTH1", "ETTH2", "ETTM1", "ETTM2"):
+        # They use 12 months:4 months:4 months, but the raw data is longer than 20 months!!!
+        # https://github.com/cure-lab/LTSF-Linear/blob/main/data_provider/data_loader.py#L48
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
+        param_dict["train_ratio"] = 0.6
+        param_dict["valid_ratio"] = 0.2
+        param_dict["split"] = "LTSF"
     else:
         raise ValueError("Unsupported dataset.")
         
@@ -161,13 +194,20 @@ if __name__ == "__main__":
     for key, value in param_dict.items():
         print("|{0:>20} = {1:<45}|".format(key, str(value)))
     print("-"*(20+45+5))
+    
+    data_path = os.path.join(param_dict["dataset_dir"], "data.npz")
+    index_path = os.path.join(param_dict["dataset_dir"], f"index_{args.history_seq_len}_{args.future_seq_len}.npz")
 
-    if os.path.exists(os.path.join(param_dict["dataset_dir"], "data.npz")):
+    param_dict["save_data"] = True
+    if os.path.exists(data_path) and os.path.exists(index_path):
         reply = str(input(
-            f"{os.path.join(param_dict['dataset_dir'], 'data.npz')} exists. Do you want to overwrite it? (y/n) "
+            f"{os.path.join(param_dict['dataset_dir'], f'data.npz and index_{args.history_seq_len}_{args.future_seq_len}.npz')} exist. Do you want to overwrite them? (y/n) "
             )).lower().strip()
         if reply[0] != "y":
             sys.exit(0)
+    elif os.path.exists(data_path) and not os.path.exists(index_path):
+        print("Generating new indices...")
+        param_dict["save_data"] = False
             
     generate_data(**param_dict)
     
