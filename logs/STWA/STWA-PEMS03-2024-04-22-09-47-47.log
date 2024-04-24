@@ -1,0 +1,232 @@
+PEMS03
+Trainset:	x-(15711, 12, 358, 1)	y-(15711, 12, 358, 1)
+Valset:  	x-(5237, 12, 358, 1)  	y-(5237, 12, 358, 1)
+Testset:	x-(5237, 12, 358, 1)	y-(5237, 12, 358, 1)
+
+Random seed = 233
+--------- STWA ---------
+{
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.001,
+    "milestones": [],
+    "clip_grad": false,
+    "batch_size": 16,
+    "max_epochs": 200,
+    "early_stop": 15,
+    "pass_device": true,
+    "model_args": {
+        "num_nodes": 358,
+        "input_dim": 1,
+        "output_dim": 1,
+        "lag": 12,
+        "horizon": 12,
+        "device": "cuda:0",
+        "channels": 16,
+        "memory_size": 16,
+        "dynamic": true
+    }
+}
+====================================================================================================
+Layer (type:depth-idx)                             Output Shape              Param #
+====================================================================================================
+STWA                                               [16, 12, 358, 1]          --
+├─Sequential: 1-1                                  [16, 358, 16]             --
+│    └─Linear: 2-1                                 [16, 358, 32]             416
+│    └─Tanh: 2-2                                   [16, 358, 32]             --
+│    └─Linear: 2-3                                 [16, 358, 32]             1,056
+│    └─Tanh: 2-4                                   [16, 358, 32]             --
+│    └─Linear: 2-5                                 [16, 358, 16]             528
+├─Sequential: 1-2                                  [16, 358, 16]             --
+│    └─Linear: 2-6                                 [16, 358, 32]             416
+│    └─Tanh: 2-7                                   [16, 358, 32]             --
+│    └─Linear: 2-8                                 [16, 358, 32]             1,056
+│    └─Tanh: 2-9                                   [16, 358, 32]             --
+│    └─Linear: 2-10                                [16, 358, 16]             528
+├─Linear: 1-3                                      [16, 12, 358, 16]         32
+├─ModuleList: 1-8                                  --                        (recursive)
+│    └─Layer: 2-11                                 [16, 12, 358, 16]         148,928
+│    │    └─ModuleList: 3-1                        --                        6,100
+│    │    └─ModuleList: 3-2                        --                        6,100
+│    │    └─TemporalAttention: 3-3                 [16, 2, 358, 16]          544
+│    │    └─SpatialAttention: 3-4                  [16, 2, 358, 16]          544
+│    │    └─Sequential: 3-5                        [16, 2, 358, 16]          544
+│    │    └─TemporalAttention: 3-6                 [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-7                  [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-8                        [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-9                 [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-10                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-11                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-12                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-13                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-14                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-15                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-16                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-17                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-18                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-19                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-20                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-21                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-22                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-23                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-24                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-25                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-26                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-27                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-28                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-29                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-30                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-31                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-32                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-33                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-34                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-35                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-36                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-37                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-38                       [16, 2, 358, 16]          (recursive)
+├─ModuleList: 1-9                                  --                        (recursive)
+│    └─Linear: 2-12                                [16, 358, 256]            49,408
+├─ModuleList: 1-8                                  --                        (recursive)
+│    └─Layer: 2-13                                 [16, 3, 358, 16]          45,824
+│    │    └─ModuleList: 3-39                       --                        6,100
+│    │    └─ModuleList: 3-40                       --                        6,100
+│    │    └─TemporalAttention: 3-41                [16, 2, 358, 16]          544
+│    │    └─SpatialAttention: 3-42                 [16, 2, 358, 16]          544
+│    │    └─Sequential: 3-43                       [16, 2, 358, 16]          544
+│    │    └─TemporalAttention: 3-44                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-45                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-46                       [16, 2, 358, 16]          (recursive)
+│    │    └─TemporalAttention: 3-47                [16, 2, 358, 16]          (recursive)
+│    │    └─SpatialAttention: 3-48                 [16, 2, 358, 16]          (recursive)
+│    │    └─Sequential: 3-49                       [16, 2, 358, 16]          (recursive)
+├─ModuleList: 1-9                                  --                        (recursive)
+│    └─Linear: 2-14                                [16, 358, 256]            12,544
+├─ModuleList: 1-8                                  --                        (recursive)
+│    └─Layer: 2-15                                 [16, 1, 358, 16]          22,912
+│    │    └─ModuleList: 3-50                       --                        6,100
+│    │    └─ModuleList: 3-51                       --                        6,100
+│    │    └─TemporalAttention: 3-52                [16, 2, 358, 16]          544
+│    │    └─SpatialAttention: 3-53                 [16, 2, 358, 16]          544
+│    │    └─Sequential: 3-54                       [16, 2, 358, 16]          544
+├─ModuleList: 1-9                                  --                        (recursive)
+│    └─Linear: 2-16                                [16, 358, 256]            4,352
+├─Sequential: 1-10                                 [16, 358, 12]             --
+│    └─Linear: 2-17                                [16, 358, 512]            131,584
+│    └─ReLU: 2-18                                  [16, 358, 512]            --
+│    └─Linear: 2-19                                [16, 358, 12]             6,156
+====================================================================================================
+Total params: 467,236
+Trainable params: 467,236
+Non-trainable params: 0
+Total mult-adds (M): 4.33
+====================================================================================================
+Input size (MB): 0.27
+Forward/backward pass size (MB): 406.37
+Params size (MB): 1.00
+Estimated Total Size (MB): 407.64
+====================================================================================================
+
+Loss: HuberLoss
+
+2024-04-22 09:50:17.450667 Epoch 1  	Train Loss = 27.13873 Val Loss = 19.39881
+2024-04-22 09:52:45.378887 Epoch 2  	Train Loss = 18.71648 Val Loss = 17.63785
+2024-04-22 09:55:13.077685 Epoch 3  	Train Loss = 17.18734 Val Loss = 17.06851
+2024-04-22 09:57:41.571000 Epoch 4  	Train Loss = 16.45744 Val Loss = 18.17973
+2024-04-22 10:00:09.800726 Epoch 5  	Train Loss = 15.96586 Val Loss = 15.98339
+2024-04-22 10:02:39.147487 Epoch 6  	Train Loss = 15.64269 Val Loss = 15.70904
+2024-04-22 10:05:06.949393 Epoch 7  	Train Loss = 15.23477 Val Loss = 15.64321
+2024-04-22 10:07:36.439687 Epoch 8  	Train Loss = 15.12096 Val Loss = 15.47678
+2024-04-22 10:10:04.514704 Epoch 9  	Train Loss = 14.84863 Val Loss = 14.98527
+2024-04-22 10:12:32.403373 Epoch 10  	Train Loss = 14.72252 Val Loss = 16.55564
+2024-04-22 10:15:00.182373 Epoch 11  	Train Loss = 14.59573 Val Loss = 14.90501
+2024-04-22 10:17:29.100625 Epoch 12  	Train Loss = 14.41552 Val Loss = 14.83693
+2024-04-22 10:19:59.364327 Epoch 13  	Train Loss = 14.34143 Val Loss = 14.68445
+2024-04-22 10:22:28.390031 Epoch 14  	Train Loss = 14.22775 Val Loss = 14.64722
+2024-04-22 10:24:56.847208 Epoch 15  	Train Loss = 14.12856 Val Loss = 14.60589
+2024-04-22 10:27:24.519233 Epoch 16  	Train Loss = 14.07060 Val Loss = 14.90366
+2024-04-22 10:29:52.178035 Epoch 17  	Train Loss = 13.99000 Val Loss = 14.62969
+2024-04-22 10:32:20.263260 Epoch 18  	Train Loss = 13.92867 Val Loss = 14.45960
+2024-04-22 10:34:48.649012 Epoch 19  	Train Loss = 13.85197 Val Loss = 14.77977
+2024-04-22 10:37:16.375649 Epoch 20  	Train Loss = 13.83864 Val Loss = 14.37095
+2024-04-22 10:39:43.902844 Epoch 21  	Train Loss = 13.78788 Val Loss = 14.39930
+2024-04-22 10:42:11.983049 Epoch 22  	Train Loss = 13.71272 Val Loss = 14.41592
+2024-04-22 10:44:39.626989 Epoch 23  	Train Loss = 13.64155 Val Loss = 14.19138
+2024-04-22 10:47:07.545889 Epoch 24  	Train Loss = 13.65970 Val Loss = 14.25908
+2024-04-22 10:49:35.400138 Epoch 25  	Train Loss = 13.62455 Val Loss = 14.31210
+2024-04-22 10:52:03.079107 Epoch 26  	Train Loss = 13.52528 Val Loss = 14.20696
+2024-04-22 10:54:31.335495 Epoch 27  	Train Loss = 13.53196 Val Loss = 14.31664
+2024-04-22 10:56:59.246135 Epoch 28  	Train Loss = 13.49215 Val Loss = 14.17843
+2024-04-22 10:59:27.496940 Epoch 29  	Train Loss = 13.45678 Val Loss = 14.11130
+2024-04-22 11:01:55.203976 Epoch 30  	Train Loss = 13.43109 Val Loss = 14.07929
+2024-04-22 11:04:24.698900 Epoch 31  	Train Loss = 13.39548 Val Loss = 14.11787
+2024-04-22 11:06:53.764686 Epoch 32  	Train Loss = 13.36802 Val Loss = 14.08255
+2024-04-22 11:09:22.425445 Epoch 33  	Train Loss = 13.32816 Val Loss = 14.20901
+2024-04-22 11:11:51.003107 Epoch 34  	Train Loss = 13.34248 Val Loss = 14.18289
+2024-04-22 11:14:19.174838 Epoch 35  	Train Loss = 13.29499 Val Loss = 14.14406
+2024-04-22 11:16:46.855976 Epoch 36  	Train Loss = 13.26252 Val Loss = 14.14114
+2024-04-22 11:19:14.370013 Epoch 37  	Train Loss = 13.23021 Val Loss = 14.00548
+2024-04-22 11:21:41.860624 Epoch 38  	Train Loss = 13.22638 Val Loss = 14.04754
+2024-04-22 11:24:09.486994 Epoch 39  	Train Loss = 13.20259 Val Loss = 13.99974
+2024-04-22 11:26:37.592602 Epoch 40  	Train Loss = 13.19900 Val Loss = 14.11707
+2024-04-22 11:29:05.375757 Epoch 41  	Train Loss = 13.14338 Val Loss = 14.13924
+2024-04-22 11:31:32.851820 Epoch 42  	Train Loss = 13.13225 Val Loss = 14.02938
+2024-04-22 11:34:00.444215 Epoch 43  	Train Loss = 13.11760 Val Loss = 13.90682
+2024-04-22 11:36:28.365621 Epoch 44  	Train Loss = 13.12331 Val Loss = 14.11962
+2024-04-22 11:38:56.490031 Epoch 45  	Train Loss = 13.07121 Val Loss = 13.94290
+2024-04-22 11:41:24.119316 Epoch 46  	Train Loss = 13.07134 Val Loss = 13.96578
+2024-04-22 11:43:51.919631 Epoch 47  	Train Loss = 13.03984 Val Loss = 13.97440
+2024-04-22 11:46:20.774581 Epoch 48  	Train Loss = 13.04944 Val Loss = 14.00138
+2024-04-22 11:48:49.098653 Epoch 49  	Train Loss = 13.00271 Val Loss = 14.48958
+2024-04-22 11:51:17.429273 Epoch 50  	Train Loss = 13.01632 Val Loss = 13.96822
+2024-04-22 11:53:45.831853 Epoch 51  	Train Loss = 12.99650 Val Loss = 13.91735
+2024-04-22 11:56:14.133940 Epoch 52  	Train Loss = 12.95836 Val Loss = 13.90178
+2024-04-22 11:58:41.830453 Epoch 53  	Train Loss = 12.95882 Val Loss = 13.92263
+2024-04-22 12:01:10.132328 Epoch 54  	Train Loss = 12.95130 Val Loss = 13.92542
+2024-04-22 12:03:37.822951 Epoch 55  	Train Loss = 12.90905 Val Loss = 13.89958
+2024-04-22 12:06:05.348710 Epoch 56  	Train Loss = 12.89787 Val Loss = 13.96968
+2024-04-22 12:08:33.681743 Epoch 57  	Train Loss = 12.90057 Val Loss = 13.93454
+2024-04-22 12:11:02.740418 Epoch 58  	Train Loss = 12.88692 Val Loss = 13.87752
+2024-04-22 12:13:31.064940 Epoch 59  	Train Loss = 12.87386 Val Loss = 13.82115
+2024-04-22 12:15:59.199903 Epoch 60  	Train Loss = 12.84664 Val Loss = 13.85260
+2024-04-22 12:18:27.069369 Epoch 61  	Train Loss = 12.83688 Val Loss = 13.87883
+2024-04-22 12:20:55.533685 Epoch 62  	Train Loss = 12.82343 Val Loss = 13.82819
+2024-04-22 12:23:23.755007 Epoch 63  	Train Loss = 12.80580 Val Loss = 13.93023
+2024-04-22 12:25:51.811505 Epoch 64  	Train Loss = 12.81228 Val Loss = 13.92958
+2024-04-22 12:28:19.853268 Epoch 65  	Train Loss = 12.79685 Val Loss = 13.76097
+2024-04-22 12:30:47.660984 Epoch 66  	Train Loss = 12.78318 Val Loss = 13.87440
+2024-04-22 12:33:16.019399 Epoch 67  	Train Loss = 12.78820 Val Loss = 13.83024
+2024-04-22 12:35:44.988749 Epoch 68  	Train Loss = 12.75472 Val Loss = 13.79481
+2024-04-22 12:38:14.575715 Epoch 69  	Train Loss = 12.75871 Val Loss = 13.90345
+2024-04-22 12:40:42.525367 Epoch 70  	Train Loss = 12.74582 Val Loss = 13.79262
+2024-04-22 12:43:10.274271 Epoch 71  	Train Loss = 12.73732 Val Loss = 13.78521
+2024-04-22 12:45:38.490593 Epoch 72  	Train Loss = 12.72610 Val Loss = 13.89343
+2024-04-22 12:48:06.224934 Epoch 73  	Train Loss = 12.71400 Val Loss = 13.81058
+2024-04-22 12:50:34.540445 Epoch 74  	Train Loss = 12.70264 Val Loss = 13.96128
+2024-04-22 12:53:02.471262 Epoch 75  	Train Loss = 12.70134 Val Loss = 13.82502
+2024-04-22 12:55:30.039325 Epoch 76  	Train Loss = 12.68615 Val Loss = 13.80132
+2024-04-22 12:57:57.659234 Epoch 77  	Train Loss = 12.67585 Val Loss = 13.81439
+2024-04-22 13:00:25.384545 Epoch 78  	Train Loss = 12.66915 Val Loss = 13.83841
+2024-04-22 13:02:52.966210 Epoch 79  	Train Loss = 12.65928 Val Loss = 13.86162
+2024-04-22 13:05:20.996060 Epoch 80  	Train Loss = 12.64351 Val Loss = 13.81301
+Early stopping at epoch: 80
+Best at epoch 65:
+Train Loss = 12.79685
+Train MAE = 13.20273, RMSE = 21.28864, MAPE = 12.70757
+Val Loss = 13.76097
+Val MAE = 14.29379, RMSE = 22.75003, MAPE = 13.62249
+Model checkpoint saved to: ../saved_models/STWA/STWA-PEMS03-2024-04-22-09-47-47.pt
+--------- Test ---------
+All Steps (1-12) MAE = 15.28189, RMSE = 26.61822, MAPE = 15.16582
+Step 1 MAE = 13.09548, RMSE = 22.48682, MAPE = 13.49128
+Step 2 MAE = 13.70453, RMSE = 23.75908, MAPE = 13.57951
+Step 3 MAE = 14.24817, RMSE = 24.80876, MAPE = 14.13164
+Step 4 MAE = 14.77191, RMSE = 25.69722, MAPE = 15.27330
+Step 5 MAE = 15.10736, RMSE = 26.34584, MAPE = 15.38740
+Step 6 MAE = 15.39342, RMSE = 26.90351, MAPE = 14.96111
+Step 7 MAE = 15.68449, RMSE = 27.36098, MAPE = 15.14108
+Step 8 MAE = 15.86190, RMSE = 27.67799, MAPE = 15.09883
+Step 9 MAE = 16.09626, RMSE = 27.98932, MAPE = 15.82550
+Step 10 MAE = 16.25552, RMSE = 28.20738, MAPE = 16.60320
+Step 11 MAE = 16.43861, RMSE = 28.46801, MAPE = 16.40928
+Step 12 MAE = 16.72494, RMSE = 28.88435, MAPE = 16.08762
+Inference time: 11.23 s
