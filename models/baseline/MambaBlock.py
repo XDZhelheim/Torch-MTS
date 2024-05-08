@@ -24,50 +24,24 @@ class RMSNorm(nn.Module):
         return output
 
 
-class MambaBlock(nn.Module):
+class SSM(nn.Module):
     def __init__(
         self,
-        model_dim,
+        input_dim,
         state_dim=16,
-        expand=2,
-        conv_kernel_size=4,
         dt_rank="auto",
         dt_min=0.001,
         dt_max=0.1,
         dt_init="random",
         dt_scale=1.0,
         dt_init_floor=1e-4,
-        rms_norm_eps=1e-5,
     ):
         super().__init__()
+        self.inner_dim = input_dim
+        self.state_dim = state_dim
+        self.dt_rank = math.ceil(self.inner_dim / 32) if dt_rank == "auto" else dt_rank
 
-        self.model_dim = model_dim  # D in paper (model_dim=input_dim=output_dim)
-        self.state_dim = state_dim  # N in paper (hidden state dim)
-        self.conv_kernel_size = conv_kernel_size  # conv1d kernel size
-        self.expand = expand  # E=2
-        self.inner_dim = self.expand * self.model_dim  # E*D = ED in paper
-        self.dt_rank = math.ceil(self.model_dim / 16) if dt_rank == "auto" else dt_rank
-        self.dt_min = dt_min
-        self.dt_max = dt_max
-        self.dt_init = dt_init
-        self.dt_scale = dt_scale
-        self.dt_init_floor = dt_init_floor
-        self.rms_norm_eps = rms_norm_eps
-
-        self.silu = nn.SiLU()
         self.softplus = nn.Softplus()
-        self.norm = RMSNorm(self.model_dim, self.rms_norm_eps)
-
-        # projects block input from D to 2*ED (two branches)
-        self.in_proj = nn.Linear(self.model_dim, 2 * self.inner_dim, bias=False)
-
-        self.conv = nn.Conv1d(
-            in_channels=self.inner_dim,
-            out_channels=self.inner_dim,
-            kernel_size=self.conv_kernel_size,
-            groups=self.inner_dim,
-            padding=self.conv_kernel_size - 1,
-        )
 
         # projects x to input-dependent delta, B, C
         self.x_proj = nn.Linear(
@@ -108,36 +82,7 @@ class MambaBlock(nn.Module):
         self.A._no_weight_decay = True
         self.D._no_weight_decay = True
 
-        # projects block output from ED back to D
-        self.out_proj = nn.Linear(self.inner_dim, self.model_dim, bias=False)
-
     def forward(self, x):
-        # x: (B, L, D)
-        L = x.shape[1]
-        residual = x
-
-        x = self.norm(x)
-
-        xz = self.in_proj(x)  # (B, L, 2*ED)
-        x, z = torch.split(xz, self.inner_dim, dim=-1)  # both (B, L, ED)
-
-        # x branch
-        x = x.transpose(1, 2)  # (B, ED, L)
-        x = self.conv(x)[:, :, :L]
-        x = x.transpose(1, 2)  # (B, L, ED)
-
-        x = self.silu(x)
-        y = self.ssm(x)
-
-        # z branch
-        z = self.silu(z)
-
-        out = y * z
-        out = self.out_proj(out)  # (B, L, D)
-
-        return out + residual
-
-    def ssm(self, x):
         # x : (B, L, ED)
         # Δ : (B, L, ED)
         # A : (ED, N)
@@ -178,6 +123,85 @@ class MambaBlock(nn.Module):
         ys = torch.stack(y_list, dim=1)  # (B, L, ED)
 
         return ys
+
+
+class MambaBlock(nn.Module):
+    def __init__(
+        self,
+        model_dim,
+        state_dim=16,
+        expand=2,
+        conv_kernel_size=4,
+        rms_norm_eps=1e-5,
+        dt_rank="auto",
+        dt_min=0.001,
+        dt_max=0.1,
+        dt_init="random",
+        dt_scale=1.0,
+        dt_init_floor=1e-4,
+    ):
+        super().__init__()
+
+        self.model_dim = model_dim  # D in paper (model_dim=input_dim=output_dim)
+        self.state_dim = state_dim  # N in paper (hidden state dim)
+        self.conv_kernel_size = conv_kernel_size  # conv1d kernel size
+        self.expand = expand  # E=2
+        self.inner_dim = self.expand * self.model_dim  # E*D = ED in paper
+        self.rms_norm_eps = rms_norm_eps
+
+        self.silu = nn.SiLU()
+        self.norm = RMSNorm(self.model_dim, self.rms_norm_eps)
+
+        # projects block input from D to 2*ED (two branches)
+        self.in_proj = nn.Linear(self.model_dim, 2 * self.inner_dim, bias=False)
+
+        self.conv = nn.Conv1d(
+            in_channels=self.inner_dim,
+            out_channels=self.inner_dim,
+            kernel_size=self.conv_kernel_size,
+            groups=self.inner_dim,
+            padding=self.conv_kernel_size - 1,
+        )
+
+        self.ssm = SSM(
+            self.inner_dim,
+            state_dim,
+            dt_rank,
+            dt_min,
+            dt_max,
+            dt_init,
+            dt_scale,
+            dt_init_floor,
+        )
+
+        # projects block output from ED back to D
+        self.out_proj = nn.Linear(self.inner_dim, self.model_dim, bias=False)
+
+    def forward(self, x):
+        # x: (B, L, D)
+        L = x.shape[1]
+        residual = x
+
+        x = self.norm(x)
+
+        xz = self.in_proj(x)  # (B, L, 2*ED)
+        x, z = torch.split(xz, self.inner_dim, dim=-1)  # both (B, L, ED)
+
+        # x branch
+        x = x.transpose(1, 2)  # (B, ED, L)
+        x = self.conv(x)[:, :, :L]
+        x = x.transpose(1, 2)  # (B, L, ED)
+
+        x = self.silu(x)
+        y = self.ssm(x)
+
+        # z branch
+        z = self.silu(z)
+
+        out = y * z
+        out = self.out_proj(out)  # (B, L, D)
+
+        return out + residual
 
 
 class MambaSeq(nn.Module):
