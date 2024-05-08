@@ -29,8 +29,9 @@ if __name__ == "__main__":
     parser.add_argument("-m", "--model", type=str, default="LSTM")
     parser.add_argument("-g", "--gpu_num", type=int, default=0)
     parser.add_argument("-c", "--compile", action="store_true")
-    parser.add_argument("--seed", type=int, default=233)
-    parser.add_argument("--cpus", type=int, default=1)
+    parser.add_argument("--seed", type=int, default=233, help="Set random seed")
+    parser.add_argument("--cpus", type=int, default=1, help="Limit number of cpu threads used")
+    parser.add_argument("--config", type=str, default=None, help="Specify .yaml config file path")
 
     parser.add_argument("-s", "--seq_len", type=int, default=0, help="seq_len for LTSF")
     parser.add_argument("-p", "--pred_len", type=int, default=0, help="pred_len for LTSF")
@@ -51,7 +52,8 @@ if __name__ == "__main__":
     model_class = model_select(model_name)
     model_name = model_class.__name__
 
-    with open(f"../configs/{model_name}.yaml", "r") as f:
+    cfg_path = args.config or f"../configs/{model_name}.yaml"
+    with open(cfg_path, "r") as f:
         cfg = yaml.safe_load(f)
     cfg = cfg[dataset]
 
