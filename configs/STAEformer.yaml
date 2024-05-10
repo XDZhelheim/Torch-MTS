@@ -191,6 +191,40 @@ PEMS03:
     num_layers: 3
     dropout: 0.1
 
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  day_of_week: True
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [20, 30]
+  lr_decay_rate: 0.1
+  batch_size: 16
+  max_epochs: 200
+  
+  loss: mask_mae
+
+  model_args:
+    num_nodes: 228
+    in_steps: 12
+    out_steps: 12
+    steps_per_day: 288
+    days_per_week: 5
+    input_dim: 3
+    output_dim: 1
+    input_embedding_dim: 24
+    tod_embedding_dim: 24
+    dow_embedding_dim: 24
+    adaptive_embedding_dim: 80
+    feed_forward_dim: 256
+    num_heads: 4
+    num_layers: 3
+    dropout: 0.1
+
 ELECTRICITY:
   num_nodes: 321
   in_steps: 96

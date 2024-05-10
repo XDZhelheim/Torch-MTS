@@ -115,6 +115,7 @@ class STAEformer(nn.Module):
         in_steps=12,
         out_steps=12,
         steps_per_day=288,
+        days_per_week=7,
         input_dim=3,
         output_dim=1,
         input_embedding_dim=24,
@@ -134,6 +135,7 @@ class STAEformer(nn.Module):
         self.in_steps = in_steps
         self.out_steps = out_steps
         self.steps_per_day = steps_per_day
+        self.days_per_week = days_per_week
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.input_embedding_dim = input_embedding_dim
@@ -156,7 +158,7 @@ class STAEformer(nn.Module):
         if tod_embedding_dim > 0:
             self.tod_embedding = nn.Embedding(steps_per_day, tod_embedding_dim)
         if dow_embedding_dim > 0:
-            self.dow_embedding = nn.Embedding(7, dow_embedding_dim)
+            self.dow_embedding = nn.Embedding(days_per_week, dow_embedding_dim)
         if spatial_embedding_dim > 0:
             self.node_emb = nn.Parameter(
                 torch.empty(self.num_nodes, self.spatial_embedding_dim)
