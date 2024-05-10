@@ -10,7 +10,16 @@ from .utils import print_log, StandardScaler, vrange
 def dataloader_select(name):
     name = name.upper()
 
-    if name in ("METRLA", "PEMSBAY", "PEMS03", "PEMS04", "PEMS07", "PEMS08", "PEMSD7M"):
+    if name in (
+        "METRLA",
+        "PEMSBAY",
+        "PEMS03",
+        "PEMS04",
+        "PEMS07",
+        "PEMS08",
+        "PEMSD7M",
+        "PEMSD7L",
+    ):
         return get_dataloaders_from_index_data
     elif name in (
         "ELECTRICITY",

@@ -169,7 +169,7 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
-    elif DATASET_NAME == "PEMSD7M":
+    elif DATASET_NAME in ("PEMSD7M", "PEMSD7L"):
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.npz")
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
