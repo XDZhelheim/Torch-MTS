@@ -248,6 +248,52 @@ class MambaSeq(nn.Module):
         return out.unsqueeze(-1)
 
 
+class MambaBN(nn.Module):
+    def __init__(
+        self,
+        num_nodes=207,
+        seq_len=12,
+        pred_len=12,
+        input_dim=1,
+        output_dim=1,
+        hidden_dim=64,
+        num_layers=3,
+    ):
+        super().__init__()
+
+        self.num_nodes = num_nodes
+        self.seq_len = seq_len
+        self.pred_len = pred_len
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        self.hidden_dim = hidden_dim
+        self.num_layers = num_layers
+
+        self.input_proj = nn.Linear(input_dim, hidden_dim)
+        self.mamba_layer = nn.Sequential(
+            *[MambaBlock(model_dim=hidden_dim) for _ in range(num_layers)]
+        )
+        self.output_proj = nn.Linear(seq_len * hidden_dim, pred_len * output_dim)
+
+    def forward(self, x):
+        # x: (B, T, N, C)
+        batch_size = x.shape[0]
+
+        x = self.input_proj(x)  # (B, T, N, H)
+        x = x.transpose(1, 2).reshape(
+            batch_size * self.num_nodes, self.seq_len, self.hidden_dim
+        )  # (B*N, T, H)
+        out = self.mamba_layer(x)  # (B*N, T, H)
+        out = self.output_proj(
+            out.view(batch_size * self.num_nodes, self.seq_len * self.hidden_dim)
+        )  # (B*N, T'*1)
+        out = out.view(
+            batch_size, self.num_nodes, self.pred_len, self.output_dim
+        ).transpose(1, 2)
+
+        return out
+
+
 def print_model_params(model):
     param_count = 0
     for name, param in model.named_parameters():
