@@ -45,3 +45,19 @@ PEMS08:
   model_args:
     in_steps: 12
     out_steps: 12
+
+PEMSD7M:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12
+
+PEMSD7L:
+  max_epochs: 1
+  batch_size: 64
+
+  model_args:
+    in_steps: 12
+    out_steps: 12

@@ -129,3 +129,47 @@ PEMS08:
     output_dim: 1
     hidden_dim: 256
     num_layers: 3
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.01
+  weight_decay: 0.0001
+  milestones: [10, 20]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 10
+
+  model_args:
+    num_nodes: 228
+    seq_len: 12
+    pred_len: 12
+    input_dim: 1
+    output_dim: 1
+    hidden_dim: 256
+    num_layers: 3
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.01
+  weight_decay: 0.0001
+  milestones: [10, 20]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 10
+
+  model_args:
+    num_nodes: 1026
+    seq_len: 12
+    pred_len: 12
+    input_dim: 1
+    output_dim: 1
+    hidden_dim: 256
+    num_layers: 3

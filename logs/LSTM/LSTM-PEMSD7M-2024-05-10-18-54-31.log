@@ -1,0 +1,127 @@
+PEMSD7M
+Trainset:	x-(7589, 12, 228, 1)	y-(7589, 12, 228, 1)
+Valset:  	x-(2530, 12, 228, 1)  	y-(2530, 12, 228, 1)
+Testset:	x-(2530, 12, 228, 1)	y-(2530, 12, 228, 1)
+
+Random seed = 233
+--------- LSTM ---------
+{
+    "num_nodes": 228,
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.01,
+    "weight_decay": 0,
+    "milestones": [
+        10,
+        20
+    ],
+    "clip_grad": 0,
+    "batch_size": 64,
+    "max_epochs": 300,
+    "model_args": {
+        "num_nodes": 228,
+        "in_steps": 12,
+        "out_steps": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "lstm_hidden_dim": 64,
+        "num_layers": 3,
+        "seq2seq": true
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+LSTM                                     [64, 12, 228, 1]          --
+├─LSTM: 1-1                              [14592, 12, 64]           83,712
+├─LSTM: 1-2                              [14592, 1, 64]            83,712
+├─Linear: 1-3                            [14592, 1, 1]             65
+├─LSTM: 1-4                              [14592, 1, 64]            (recursive)
+├─Linear: 1-5                            [14592, 1, 1]             (recursive)
+├─LSTM: 1-6                              [14592, 1, 64]            (recursive)
+├─Linear: 1-7                            [14592, 1, 1]             (recursive)
+├─LSTM: 1-8                              [14592, 1, 64]            (recursive)
+├─Linear: 1-9                            [14592, 1, 1]             (recursive)
+├─LSTM: 1-10                             [14592, 1, 64]            (recursive)
+├─Linear: 1-11                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-12                             [14592, 1, 64]            (recursive)
+├─Linear: 1-13                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-14                             [14592, 1, 64]            (recursive)
+├─Linear: 1-15                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-16                             [14592, 1, 64]            (recursive)
+├─Linear: 1-17                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-18                             [14592, 1, 64]            (recursive)
+├─Linear: 1-19                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-20                             [14592, 1, 64]            (recursive)
+├─Linear: 1-21                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-22                             [14592, 1, 64]            (recursive)
+├─Linear: 1-23                           [14592, 1, 1]             (recursive)
+├─LSTM: 1-24                             [14592, 1, 64]            (recursive)
+├─Linear: 1-25                           [14592, 1, 1]             (recursive)
+==========================================================================================
+Total params: 167,489
+Trainable params: 167,489
+Non-trainable params: 0
+Total mult-adds (G): 29.33
+==========================================================================================
+Input size (MB): 0.70
+Forward/backward pass size (MB): 180.71
+Params size (MB): 0.67
+Estimated Total Size (MB): 182.08
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2024-05-10 18:54:41.284457 Epoch 1  	Train Loss = 3.86933 Val Loss = 3.43221
+2024-05-10 18:54:49.956923 Epoch 2  	Train Loss = 3.30036 Val Loss = 3.41897
+2024-05-10 18:54:58.674488 Epoch 3  	Train Loss = 3.29679 Val Loss = 3.39418
+2024-05-10 18:55:07.238741 Epoch 4  	Train Loss = 3.23574 Val Loss = 3.38246
+2024-05-10 18:55:15.717970 Epoch 5  	Train Loss = 3.22880 Val Loss = 3.36882
+2024-05-10 18:55:24.173394 Epoch 6  	Train Loss = 3.19213 Val Loss = 3.31203
+2024-05-10 18:55:32.609249 Epoch 7  	Train Loss = 3.17674 Val Loss = 3.31004
+2024-05-10 18:55:41.046313 Epoch 8  	Train Loss = 3.17497 Val Loss = 3.31086
+2024-05-10 18:55:49.487615 Epoch 9  	Train Loss = 3.15230 Val Loss = 3.32343
+2024-05-10 18:55:57.933370 Epoch 10  	Train Loss = 3.15683 Val Loss = 3.31392
+2024-05-10 18:56:06.378392 Epoch 11  	Train Loss = 3.11609 Val Loss = 3.27232
+2024-05-10 18:56:14.819476 Epoch 12  	Train Loss = 3.11112 Val Loss = 3.27003
+2024-05-10 18:56:23.262213 Epoch 13  	Train Loss = 3.11239 Val Loss = 3.26832
+2024-05-10 18:56:31.772824 Epoch 14  	Train Loss = 3.10993 Val Loss = 3.27465
+2024-05-10 18:56:40.245720 Epoch 15  	Train Loss = 3.11027 Val Loss = 3.27555
+2024-05-10 18:56:48.698836 Epoch 16  	Train Loss = 3.10626 Val Loss = 3.26987
+2024-05-10 18:56:57.182100 Epoch 17  	Train Loss = 3.10532 Val Loss = 3.26739
+2024-05-10 18:57:05.646244 Epoch 18  	Train Loss = 3.10564 Val Loss = 3.26532
+2024-05-10 18:57:14.109079 Epoch 19  	Train Loss = 3.10598 Val Loss = 3.26991
+2024-05-10 18:57:22.584839 Epoch 20  	Train Loss = 3.10597 Val Loss = 3.27157
+2024-05-10 18:57:31.098538 Epoch 21  	Train Loss = 3.09746 Val Loss = 3.26453
+2024-05-10 18:57:39.620113 Epoch 22  	Train Loss = 3.09652 Val Loss = 3.26627
+2024-05-10 18:57:48.135032 Epoch 23  	Train Loss = 3.09908 Val Loss = 3.26746
+2024-05-10 18:57:56.674407 Epoch 24  	Train Loss = 3.09798 Val Loss = 3.26563
+2024-05-10 18:58:05.208718 Epoch 25  	Train Loss = 3.09711 Val Loss = 3.26572
+2024-05-10 18:58:13.737469 Epoch 26  	Train Loss = 3.09637 Val Loss = 3.26665
+2024-05-10 18:58:22.268839 Epoch 27  	Train Loss = 3.09656 Val Loss = 3.26805
+2024-05-10 18:58:30.802538 Epoch 28  	Train Loss = 3.09622 Val Loss = 3.26836
+2024-05-10 18:58:39.360221 Epoch 29  	Train Loss = 3.09692 Val Loss = 3.26542
+2024-05-10 18:58:47.872941 Epoch 30  	Train Loss = 3.09684 Val Loss = 3.26802
+2024-05-10 18:58:56.395689 Epoch 31  	Train Loss = 3.09696 Val Loss = 3.26540
+Early stopping at epoch: 31
+Best at epoch 21:
+Train Loss = 3.09746
+Train MAE = 3.09839, RMSE = 6.42630, MAPE = 7.59417
+Val Loss = 3.26453
+Val MAE = 3.28805, RMSE = 6.71483, MAPE = 8.56167
+Model checkpoint saved to: ../saved_models/LSTM/LSTM-PEMSD7M-2024-05-10-18-54-31.pt
+--------- Test ---------
+All Steps (1-12) MAE = 3.24287, RMSE = 6.57044, MAPE = 8.15445
+Step 1 MAE = 1.31458, RMSE = 2.28648, MAPE = 2.90600
+Step 2 MAE = 1.88713, RMSE = 3.48750, MAPE = 4.28747
+Step 3 MAE = 2.31635, RMSE = 4.42959, MAPE = 5.39826
+Step 4 MAE = 2.67313, RMSE = 5.20485, MAPE = 6.36591
+Step 5 MAE = 2.97942, RMSE = 5.85325, MAPE = 7.22925
+Step 6 MAE = 3.25717, RMSE = 6.41481, MAPE = 8.04179
+Step 7 MAE = 3.51483, RMSE = 6.91319, MAPE = 8.81272
+Step 8 MAE = 3.75694, RMSE = 7.36075, MAPE = 9.55418
+Step 9 MAE = 3.98419, RMSE = 7.76786, MAPE = 10.27201
+Step 10 MAE = 4.20189, RMSE = 8.14256, MAPE = 10.97168
+Step 11 MAE = 4.41152, RMSE = 8.49253, MAPE = 11.66214
+Step 12 MAE = 4.61722, RMSE = 8.82038, MAPE = 12.35202
+Inference time: 1.59 s

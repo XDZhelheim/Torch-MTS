@@ -142,10 +142,30 @@ PEMSD7M:
   batch_size: 64
   max_epochs: 300
 
-  loss: mask_mae
-
   model_args:
     num_nodes: 228
+    in_steps: 12
+    out_steps: 12
+    input_dim: 1
+    output_dim: 1
+    gru_hidden_dim: 64
+    num_layers: 3
+    seq2seq: True
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.01
+  weight_decay: 0
+  milestones: [10, 20]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 300
+
+  model_args:
+    num_nodes: 1026
     in_steps: 12
     out_steps: 12
     input_dim: 1
