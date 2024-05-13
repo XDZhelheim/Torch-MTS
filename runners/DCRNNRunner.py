@@ -110,10 +110,15 @@ class DCRNNRunner(STFRunner):
 
     def model_summary(self, model, dataloader):
         x_shape = next(iter(dataloader))[0].shape
-
-        return summary(
-            model,
-            x_shape,
-            verbose=0,  # avoid print twice
-            device=self.device,
+        summ = str(
+            summary(
+                model,
+                x_shape,
+                verbose=0,  # avoid print twice
+                device=self.device,
+            )
         )
+
+        params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+        return f"{summ}\nParameter Number: {params}"

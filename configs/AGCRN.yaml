@@ -143,3 +143,53 @@ PEMS08:
     num_layers: 2
     cheb_k: 2
     default_graph: True
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    num_nodes: 228
+    out_steps: 12
+    input_dim: 2
+    output_dim: 1
+    embed_dim: 10
+    rnn_units: 64
+    num_layers: 2
+    cheb_k: 2
+    default_graph: True
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    num_nodes: 1026
+    out_steps: 12
+    input_dim: 2
+    output_dim: 1
+    embed_dim: 10
+    rnn_units: 64
+    num_layers: 2
+    cheb_k: 2
+    default_graph: True

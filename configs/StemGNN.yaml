@@ -124,3 +124,45 @@ PEMS08:
     multi_layer: 5
     dropout_rate: 0.5
     leaky_rate: 0.2
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.0002
+  weight_decay: 0
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    units: 228
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.0002
+  weight_decay: 0
+  milestones: [50]
+  clip_grad: 0
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    units: 1026
+    stack_cnt: 2
+    time_step: 12
+    horizon: 12
+    multi_layer: 5
+    dropout_rate: 0.5
+    leaky_rate: 0.2

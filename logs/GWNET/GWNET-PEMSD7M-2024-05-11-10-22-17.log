@@ -1,0 +1,310 @@
+PEMSD7M
+Trainset:	x-(7589, 12, 228, 2)	y-(7589, 12, 228, 1)
+Valset:  	x-(2530, 12, 228, 2)  	y-(2530, 12, 228, 1)
+Testset:	x-(2530, 12, 228, 2)	y-(2530, 12, 228, 1)
+
+Random seed = 233
+--------- GWNET ---------
+{
+    "num_nodes": 228,
+    "in_steps": 12,
+    "out_steps": 12,
+    "time_of_day": true,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "milestones": [
+        40
+    ],
+    "clip_grad": false,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "pass_device": true,
+    "model_args": {
+        "num_nodes": 228,
+        "in_dim": 2,
+        "out_dim": 12,
+        "adj_path": "../data/PEMSD7M/adj_PEMSD7M_distance.pkl",
+        "adj_type": "doubletransition",
+        "device": "cuda:0",
+        "dropout": 0.3,
+        "gcn_bool": true,
+        "addaptadj": true,
+        "aptinit": null
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+GWNET                                    [64, 12, 228, 1]          13,008
+├─Conv2d: 1-1                            [64, 32, 228, 13]         96
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-1                       [64, 32, 228, 12]         2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-2                       [64, 32, 228, 12]         2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-3                       [64, 256, 228, 12]        8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-4                          [64, 32, 228, 12]         --
+│    │    └─nconv: 3-1                   [64, 32, 228, 12]         --
+│    │    └─nconv: 3-2                   [64, 32, 228, 12]         --
+│    │    └─nconv: 3-3                   [64, 32, 228, 12]         --
+│    │    └─nconv: 3-4                   [64, 32, 228, 12]         --
+│    │    └─nconv: 3-5                   [64, 32, 228, 12]         --
+│    │    └─nconv: 3-6                   [64, 32, 228, 12]         --
+│    │    └─linear: 3-7                  [64, 32, 228, 12]         7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-5                  [64, 32, 228, 12]         64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-6                       [64, 32, 228, 10]         2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-7                       [64, 32, 228, 10]         2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-8                       [64, 256, 228, 10]        8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-9                          [64, 32, 228, 10]         --
+│    │    └─nconv: 3-8                   [64, 32, 228, 10]         --
+│    │    └─nconv: 3-9                   [64, 32, 228, 10]         --
+│    │    └─nconv: 3-10                  [64, 32, 228, 10]         --
+│    │    └─nconv: 3-11                  [64, 32, 228, 10]         --
+│    │    └─nconv: 3-12                  [64, 32, 228, 10]         --
+│    │    └─nconv: 3-13                  [64, 32, 228, 10]         --
+│    │    └─linear: 3-14                 [64, 32, 228, 10]         7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-10                 [64, 32, 228, 10]         64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-11                      [64, 32, 228, 9]          2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-12                      [64, 32, 228, 9]          2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-13                      [64, 256, 228, 9]         8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-14                         [64, 32, 228, 9]          --
+│    │    └─nconv: 3-15                  [64, 32, 228, 9]          --
+│    │    └─nconv: 3-16                  [64, 32, 228, 9]          --
+│    │    └─nconv: 3-17                  [64, 32, 228, 9]          --
+│    │    └─nconv: 3-18                  [64, 32, 228, 9]          --
+│    │    └─nconv: 3-19                  [64, 32, 228, 9]          --
+│    │    └─nconv: 3-20                  [64, 32, 228, 9]          --
+│    │    └─linear: 3-21                 [64, 32, 228, 9]          7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-15                 [64, 32, 228, 9]          64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-16                      [64, 32, 228, 7]          2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-17                      [64, 32, 228, 7]          2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-18                      [64, 256, 228, 7]         8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-19                         [64, 32, 228, 7]          --
+│    │    └─nconv: 3-22                  [64, 32, 228, 7]          --
+│    │    └─nconv: 3-23                  [64, 32, 228, 7]          --
+│    │    └─nconv: 3-24                  [64, 32, 228, 7]          --
+│    │    └─nconv: 3-25                  [64, 32, 228, 7]          --
+│    │    └─nconv: 3-26                  [64, 32, 228, 7]          --
+│    │    └─nconv: 3-27                  [64, 32, 228, 7]          --
+│    │    └─linear: 3-28                 [64, 32, 228, 7]          7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-20                 [64, 32, 228, 7]          64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-21                      [64, 32, 228, 6]          2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-22                      [64, 32, 228, 6]          2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-23                      [64, 256, 228, 6]         8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-24                         [64, 32, 228, 6]          --
+│    │    └─nconv: 3-29                  [64, 32, 228, 6]          --
+│    │    └─nconv: 3-30                  [64, 32, 228, 6]          --
+│    │    └─nconv: 3-31                  [64, 32, 228, 6]          --
+│    │    └─nconv: 3-32                  [64, 32, 228, 6]          --
+│    │    └─nconv: 3-33                  [64, 32, 228, 6]          --
+│    │    └─nconv: 3-34                  [64, 32, 228, 6]          --
+│    │    └─linear: 3-35                 [64, 32, 228, 6]          7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-25                 [64, 32, 228, 6]          64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-26                      [64, 32, 228, 4]          2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-27                      [64, 32, 228, 4]          2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-28                      [64, 256, 228, 4]         8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-29                         [64, 32, 228, 4]          --
+│    │    └─nconv: 3-36                  [64, 32, 228, 4]          --
+│    │    └─nconv: 3-37                  [64, 32, 228, 4]          --
+│    │    └─nconv: 3-38                  [64, 32, 228, 4]          --
+│    │    └─nconv: 3-39                  [64, 32, 228, 4]          --
+│    │    └─nconv: 3-40                  [64, 32, 228, 4]          --
+│    │    └─nconv: 3-41                  [64, 32, 228, 4]          --
+│    │    └─linear: 3-42                 [64, 32, 228, 4]          7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-30                 [64, 32, 228, 4]          64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-31                      [64, 32, 228, 3]          2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-32                      [64, 32, 228, 3]          2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-33                      [64, 256, 228, 3]         8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-34                         [64, 32, 228, 3]          --
+│    │    └─nconv: 3-43                  [64, 32, 228, 3]          --
+│    │    └─nconv: 3-44                  [64, 32, 228, 3]          --
+│    │    └─nconv: 3-45                  [64, 32, 228, 3]          --
+│    │    └─nconv: 3-46                  [64, 32, 228, 3]          --
+│    │    └─nconv: 3-47                  [64, 32, 228, 3]          --
+│    │    └─nconv: 3-48                  [64, 32, 228, 3]          --
+│    │    └─linear: 3-49                 [64, 32, 228, 3]          7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-35                 [64, 32, 228, 3]          64
+├─ModuleList: 1-37                       --                        (recursive)
+│    └─Conv2d: 2-36                      [64, 32, 228, 1]          2,080
+├─ModuleList: 1-38                       --                        (recursive)
+│    └─Conv2d: 2-37                      [64, 32, 228, 1]          2,080
+├─ModuleList: 1-39                       --                        (recursive)
+│    └─Conv2d: 2-38                      [64, 256, 228, 1]         8,448
+├─ModuleList: 1-40                       --                        (recursive)
+│    └─gcn: 2-39                         [64, 32, 228, 1]          --
+│    │    └─nconv: 3-50                  [64, 32, 228, 1]          --
+│    │    └─nconv: 3-51                  [64, 32, 228, 1]          --
+│    │    └─nconv: 3-52                  [64, 32, 228, 1]          --
+│    │    └─nconv: 3-53                  [64, 32, 228, 1]          --
+│    │    └─nconv: 3-54                  [64, 32, 228, 1]          --
+│    │    └─nconv: 3-55                  [64, 32, 228, 1]          --
+│    │    └─linear: 3-56                 [64, 32, 228, 1]          7,200
+├─ModuleList: 1-41                       --                        (recursive)
+│    └─BatchNorm2d: 2-40                 [64, 32, 228, 1]          64
+├─Conv2d: 1-42                           [64, 512, 228, 1]         131,584
+├─Conv2d: 1-43                           [64, 12, 228, 1]          6,156
+==========================================================================================
+Total params: 309,820
+Trainable params: 309,820
+Non-trainable params: 0
+Total mult-adds (G): 17.06
+==========================================================================================
+Input size (MB): 1.40
+Forward/backward pass size (MB): 2440.72
+Params size (MB): 1.19
+Estimated Total Size (MB): 2443.30
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2024-05-11 10:22:28.617476 Epoch 1  	Train Loss = 3.76195 Val Loss = 3.34912
+2024-05-11 10:22:38.089268 Epoch 2  	Train Loss = 3.18138 Val Loss = 3.37855
+2024-05-11 10:22:47.580537 Epoch 3  	Train Loss = 3.12944 Val Loss = 3.18369
+2024-05-11 10:22:57.082753 Epoch 4  	Train Loss = 3.04249 Val Loss = 3.13327
+2024-05-11 10:23:06.586280 Epoch 5  	Train Loss = 2.99595 Val Loss = 3.08689
+2024-05-11 10:23:16.118236 Epoch 6  	Train Loss = 2.94925 Val Loss = 3.11958
+2024-05-11 10:23:25.666164 Epoch 7  	Train Loss = 2.93316 Val Loss = 3.08526
+2024-05-11 10:23:35.191586 Epoch 8  	Train Loss = 2.89190 Val Loss = 3.07122
+2024-05-11 10:23:44.733219 Epoch 9  	Train Loss = 2.88419 Val Loss = 3.04344
+2024-05-11 10:23:54.259614 Epoch 10  	Train Loss = 2.86654 Val Loss = 3.00903
+2024-05-11 10:24:03.825033 Epoch 11  	Train Loss = 2.83349 Val Loss = 2.96730
+2024-05-11 10:24:13.334024 Epoch 12  	Train Loss = 2.80963 Val Loss = 2.96068
+2024-05-11 10:24:22.867955 Epoch 13  	Train Loss = 2.78111 Val Loss = 2.90415
+2024-05-11 10:24:32.442639 Epoch 14  	Train Loss = 2.73796 Val Loss = 2.90040
+2024-05-11 10:24:42.004548 Epoch 15  	Train Loss = 2.71580 Val Loss = 2.85970
+2024-05-11 10:24:51.524876 Epoch 16  	Train Loss = 2.70329 Val Loss = 2.82850
+2024-05-11 10:25:01.109580 Epoch 17  	Train Loss = 2.68967 Val Loss = 2.93619
+2024-05-11 10:25:10.695393 Epoch 18  	Train Loss = 2.67263 Val Loss = 2.82328
+2024-05-11 10:25:20.231380 Epoch 19  	Train Loss = 2.66387 Val Loss = 2.81340
+2024-05-11 10:25:29.766378 Epoch 20  	Train Loss = 2.64596 Val Loss = 2.82374
+2024-05-11 10:25:39.335682 Epoch 21  	Train Loss = 2.64578 Val Loss = 2.82575
+2024-05-11 10:25:48.923939 Epoch 22  	Train Loss = 2.61722 Val Loss = 2.76329
+2024-05-11 10:25:58.487045 Epoch 23  	Train Loss = 2.59011 Val Loss = 2.80787
+2024-05-11 10:26:08.054788 Epoch 24  	Train Loss = 2.59767 Val Loss = 2.82440
+2024-05-11 10:26:17.543326 Epoch 25  	Train Loss = 2.57227 Val Loss = 2.74601
+2024-05-11 10:26:27.032307 Epoch 26  	Train Loss = 2.56277 Val Loss = 2.80094
+2024-05-11 10:26:36.497851 Epoch 27  	Train Loss = 2.55593 Val Loss = 2.71457
+2024-05-11 10:26:46.027431 Epoch 28  	Train Loss = 2.53371 Val Loss = 2.74889
+2024-05-11 10:26:55.533470 Epoch 29  	Train Loss = 2.53250 Val Loss = 2.79120
+2024-05-11 10:27:04.981245 Epoch 30  	Train Loss = 2.52334 Val Loss = 2.73448
+2024-05-11 10:27:14.429254 Epoch 31  	Train Loss = 2.51088 Val Loss = 2.72691
+2024-05-11 10:27:23.933729 Epoch 32  	Train Loss = 2.50506 Val Loss = 2.72171
+2024-05-11 10:27:33.479739 Epoch 33  	Train Loss = 2.48865 Val Loss = 2.70117
+2024-05-11 10:27:42.971503 Epoch 34  	Train Loss = 2.48546 Val Loss = 2.69910
+2024-05-11 10:27:52.466152 Epoch 35  	Train Loss = 2.49259 Val Loss = 2.72134
+2024-05-11 10:28:01.958843 Epoch 36  	Train Loss = 2.47115 Val Loss = 2.72993
+2024-05-11 10:28:11.464210 Epoch 37  	Train Loss = 2.46153 Val Loss = 2.71962
+2024-05-11 10:28:21.018921 Epoch 38  	Train Loss = 2.45601 Val Loss = 2.68237
+2024-05-11 10:28:30.516923 Epoch 39  	Train Loss = 2.44869 Val Loss = 2.71597
+2024-05-11 10:28:39.984540 Epoch 40  	Train Loss = 2.45118 Val Loss = 2.72244
+2024-05-11 10:28:49.479229 Epoch 41  	Train Loss = 2.40560 Val Loss = 2.65412
+2024-05-11 10:28:58.992288 Epoch 42  	Train Loss = 2.39308 Val Loss = 2.65622
+2024-05-11 10:29:08.458683 Epoch 43  	Train Loss = 2.39308 Val Loss = 2.65978
+2024-05-11 10:29:17.916207 Epoch 44  	Train Loss = 2.39078 Val Loss = 2.65555
+2024-05-11 10:29:27.393901 Epoch 45  	Train Loss = 2.39008 Val Loss = 2.65614
+2024-05-11 10:29:36.889674 Epoch 46  	Train Loss = 2.38628 Val Loss = 2.65360
+2024-05-11 10:29:46.410681 Epoch 47  	Train Loss = 2.38476 Val Loss = 2.65209
+2024-05-11 10:29:55.885738 Epoch 48  	Train Loss = 2.38346 Val Loss = 2.65572
+2024-05-11 10:30:05.341232 Epoch 49  	Train Loss = 2.38356 Val Loss = 2.65805
+2024-05-11 10:30:14.784614 Epoch 50  	Train Loss = 2.38432 Val Loss = 2.65358
+2024-05-11 10:30:24.246509 Epoch 51  	Train Loss = 2.37878 Val Loss = 2.65126
+2024-05-11 10:30:33.731054 Epoch 52  	Train Loss = 2.38208 Val Loss = 2.65553
+2024-05-11 10:30:43.194179 Epoch 53  	Train Loss = 2.37739 Val Loss = 2.64794
+2024-05-11 10:30:52.702881 Epoch 54  	Train Loss = 2.37723 Val Loss = 2.64632
+2024-05-11 10:31:02.204318 Epoch 55  	Train Loss = 2.37600 Val Loss = 2.64911
+2024-05-11 10:31:11.699324 Epoch 56  	Train Loss = 2.37209 Val Loss = 2.64504
+2024-05-11 10:31:21.195508 Epoch 57  	Train Loss = 2.37800 Val Loss = 2.64830
+2024-05-11 10:31:30.599588 Epoch 58  	Train Loss = 2.37198 Val Loss = 2.65710
+2024-05-11 10:31:40.042662 Epoch 59  	Train Loss = 2.37050 Val Loss = 2.64394
+2024-05-11 10:31:49.451004 Epoch 60  	Train Loss = 2.37159 Val Loss = 2.64233
+2024-05-11 10:31:58.898108 Epoch 61  	Train Loss = 2.37023 Val Loss = 2.64409
+2024-05-11 10:32:08.332830 Epoch 62  	Train Loss = 2.36880 Val Loss = 2.64572
+2024-05-11 10:32:17.748395 Epoch 63  	Train Loss = 2.36926 Val Loss = 2.64838
+2024-05-11 10:32:27.174135 Epoch 64  	Train Loss = 2.36654 Val Loss = 2.64764
+2024-05-11 10:32:36.580657 Epoch 65  	Train Loss = 2.36934 Val Loss = 2.65030
+2024-05-11 10:32:45.970046 Epoch 66  	Train Loss = 2.36403 Val Loss = 2.64513
+2024-05-11 10:32:55.405470 Epoch 67  	Train Loss = 2.36541 Val Loss = 2.64781
+2024-05-11 10:33:04.816418 Epoch 68  	Train Loss = 2.36426 Val Loss = 2.64915
+2024-05-11 10:33:14.234116 Epoch 69  	Train Loss = 2.36182 Val Loss = 2.64517
+2024-05-11 10:33:23.665145 Epoch 70  	Train Loss = 2.36214 Val Loss = 2.64064
+2024-05-11 10:33:33.127284 Epoch 71  	Train Loss = 2.35921 Val Loss = 2.65610
+2024-05-11 10:33:42.588912 Epoch 72  	Train Loss = 2.35691 Val Loss = 2.64367
+2024-05-11 10:33:52.036571 Epoch 73  	Train Loss = 2.35626 Val Loss = 2.64133
+2024-05-11 10:34:01.507282 Epoch 74  	Train Loss = 2.35672 Val Loss = 2.63909
+2024-05-11 10:34:10.964659 Epoch 75  	Train Loss = 2.35905 Val Loss = 2.64806
+2024-05-11 10:34:20.438910 Epoch 76  	Train Loss = 2.35400 Val Loss = 2.64221
+2024-05-11 10:34:29.934331 Epoch 77  	Train Loss = 2.35515 Val Loss = 2.65067
+2024-05-11 10:34:39.431932 Epoch 78  	Train Loss = 2.35265 Val Loss = 2.66288
+2024-05-11 10:34:48.898426 Epoch 79  	Train Loss = 2.35459 Val Loss = 2.64416
+2024-05-11 10:34:58.352905 Epoch 80  	Train Loss = 2.35184 Val Loss = 2.63646
+2024-05-11 10:35:07.839603 Epoch 81  	Train Loss = 2.34997 Val Loss = 2.63140
+2024-05-11 10:35:17.304960 Epoch 82  	Train Loss = 2.34777 Val Loss = 2.64255
+2024-05-11 10:35:26.743490 Epoch 83  	Train Loss = 2.34703 Val Loss = 2.63744
+2024-05-11 10:35:36.176895 Epoch 84  	Train Loss = 2.34665 Val Loss = 2.64773
+2024-05-11 10:35:45.637760 Epoch 85  	Train Loss = 2.34499 Val Loss = 2.64352
+2024-05-11 10:35:55.121725 Epoch 86  	Train Loss = 2.34346 Val Loss = 2.64093
+2024-05-11 10:36:04.572244 Epoch 87  	Train Loss = 2.34507 Val Loss = 2.63088
+2024-05-11 10:36:14.045097 Epoch 88  	Train Loss = 2.34052 Val Loss = 2.63937
+2024-05-11 10:36:23.497687 Epoch 89  	Train Loss = 2.34143 Val Loss = 2.63680
+2024-05-11 10:36:33.006974 Epoch 90  	Train Loss = 2.34130 Val Loss = 2.63431
+2024-05-11 10:36:42.475458 Epoch 91  	Train Loss = 2.34009 Val Loss = 2.64026
+2024-05-11 10:36:51.939226 Epoch 92  	Train Loss = 2.34173 Val Loss = 2.63602
+2024-05-11 10:37:01.404723 Epoch 93  	Train Loss = 2.34011 Val Loss = 2.64076
+2024-05-11 10:37:10.865743 Epoch 94  	Train Loss = 2.33541 Val Loss = 2.63637
+2024-05-11 10:37:20.323902 Epoch 95  	Train Loss = 2.33731 Val Loss = 2.63185
+2024-05-11 10:37:29.773754 Epoch 96  	Train Loss = 2.33493 Val Loss = 2.63149
+2024-05-11 10:37:39.247693 Epoch 97  	Train Loss = 2.33408 Val Loss = 2.63486
+Early stopping at epoch: 97
+Best at epoch 87:
+Train Loss = 2.34507
+Train MAE = 2.29477, RMSE = 4.66593, MAPE = 5.53157
+Val Loss = 2.63088
+Val MAE = 2.64794, RMSE = 5.36578, MAPE = 6.89672
+Model checkpoint saved to: ../saved_models/GWNET/GWNET-PEMSD7M-2024-05-11-10-22-17.pt
+--------- Test ---------
+All Steps (1-12) MAE = 2.63370, RMSE = 5.31702, MAPE = 6.66041
+Step 1 MAE = 1.27297, RMSE = 2.20242, MAPE = 2.84311
+Step 2 MAE = 1.78007, RMSE = 3.25691, MAPE = 4.11010
+Step 3 MAE = 2.12743, RMSE = 4.02700, MAPE = 5.06176
+Step 4 MAE = 2.38660, RMSE = 4.61250, MAPE = 5.83056
+Step 5 MAE = 2.58485, RMSE = 5.06193, MAPE = 6.44405
+Step 6 MAE = 2.74488, RMSE = 5.42341, MAPE = 6.94721
+Step 7 MAE = 2.87813, RMSE = 5.71983, MAPE = 7.37624
+Step 8 MAE = 2.98968, RMSE = 5.95663, MAPE = 7.72975
+Step 9 MAE = 3.08742, RMSE = 6.15137, MAPE = 8.02806
+Step 10 MAE = 3.17341, RMSE = 6.31953, MAPE = 8.29191
+Step 11 MAE = 3.25221, RMSE = 6.46644, MAPE = 8.52455
+Step 12 MAE = 3.32674, RMSE = 6.59344, MAPE = 8.73766
+Inference time: 0.88 s

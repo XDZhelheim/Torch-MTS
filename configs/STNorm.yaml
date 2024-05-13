@@ -148,3 +148,55 @@ PEMS08:
     kernel_size: 2
     blocks: 4
     layers: 2
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  lr: 0.01
+  weight_decay: 0.0001
+  clip_grad: 5
+  milestones: [10, 30]
+  lr_decay_rate: 0.1
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 228
+    tnorm_bool: True
+    snorm_bool: True
+    in_dim: 2
+    out_dim: 12
+    channels: 32
+    kernel_size: 2
+    blocks: 4
+    layers: 2
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  lr: 0.01
+  weight_decay: 0.0001
+  clip_grad: 5
+  milestones: [10, 30]
+  lr_decay_rate: 0.1
+  batch_size: 64
+  max_epochs: 200
+
+  model_args:
+    num_nodes: 1026
+    tnorm_bool: True
+    snorm_bool: True
+    in_dim: 2
+    out_dim: 12
+    channels: 32
+    kernel_size: 2
+    blocks: 4
+    layers: 2
