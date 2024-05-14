@@ -7,11 +7,21 @@ def loss_select(name):
     name = name.upper()
 
     # default loss of each dataset
-    if name in ("METRLA", "PEMSBAY"):
+    if name in ("METRLA", "PEMSBAY", "PEMSD7M", "PEMSD7L"):
         return MaskedMAELoss
     elif name in ("PEMS03", "PEMS04", "PEMS07", "PEMS08"):
         return nn.HuberLoss
-    elif name in ("ELECTRICITY",):
+    elif name in (
+        "ELECTRICITY",
+        "EXCHANGE",
+        "TRAFFIC",
+        "WEATHER",
+        "ILI",
+        "ETTH1",
+        "ETTH2",
+        "ETTM1",
+        "ETTM2",
+    ):
         return nn.MSELoss
 
     elif name in (

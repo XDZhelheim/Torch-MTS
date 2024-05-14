@@ -141,3 +141,51 @@ PEMS08:
     channels: 16
     memory_size: 16
     dynamic: True
+
+PEMSD7M:
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  milestones: []
+  clip_grad: False
+  batch_size: 16
+  max_epochs: 200
+  early_stop: 15
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 228
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True
+
+PEMSD7L:
+  in_steps: 12
+  out_steps: 12
+
+  lr: 0.001
+  milestones: []
+  clip_grad: False
+  batch_size: 16
+  max_epochs: 200
+  early_stop: 15
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 1026
+    input_dim: 1
+    output_dim: 1
+    lag: 12
+    horizon: 12
+    device: null # will be updated
+    channels: 16
+    memory_size: 16
+    dynamic: True

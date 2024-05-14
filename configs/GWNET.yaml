@@ -173,4 +173,59 @@ PEMS08:
     gcn_bool: True
     addaptadj: True
     aptinit: null
-    
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [40]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 228
+    in_dim: 2
+    out_dim: 12
+    adj_path: "../data/PEMSD7M/adj_PEMSD7M_distance.pkl"
+    adj_type: "doubletransition"
+    device: null
+    dropout: 0.3
+    gcn_bool: True
+    addaptadj: True
+    aptinit: null
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [40]
+  clip_grad: False
+  batch_size: 64
+  max_epochs: 200
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 1026
+    in_dim: 2
+    out_dim: 12
+    adj_path: "../data/PEMSD7L/adj_PEMSD7L_distance.pkl"
+    adj_type: "doubletransition"
+    device: null
+    dropout: 0.3
+    gcn_bool: True
+    addaptadj: True
+    aptinit: null

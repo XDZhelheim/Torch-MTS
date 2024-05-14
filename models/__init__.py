@@ -4,6 +4,7 @@ from .baseline.LSTM import LSTM
 from .baseline.GRU import GRU
 from .baseline.Transformer import Transformer
 from .baseline.WaveNet import WaveNet
+from .baseline.Mamba import Mamba
 from .baseline.GCLSTM import GCLSTM
 from .baseline.GCGRU import GCGRU
 from .baseline.GCRN import GCRN
@@ -41,6 +42,8 @@ def model_select(name):
         return Transformer
     elif name in ("TCN", "WAVENET"):
         return WaveNet
+    elif name == "MAMBA":
+        return Mamba
 
     elif name == "GCRN":
         return GCRN

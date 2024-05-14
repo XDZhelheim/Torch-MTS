@@ -197,3 +197,67 @@ PEMS08:
     if_time_in_day: True
     if_day_in_week: True
     num_layer: 3
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+
+  model_args:
+    num_nodes: 228
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 5
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+  day_of_week: True
+  
+  lr: 0.002
+  weight_decay: 0.0001
+  milestones: [1, 50, 80]
+  lr_decay_rate: 0.5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 30
+
+  model_args:
+    num_nodes: 1026
+    input_len: 12
+    output_len: 12
+    input_dim: 3
+    embed_dim: 32
+    node_dim: 32
+    temp_dim_tid: 32
+    temp_dim_diw: 32
+    time_of_day_size: 288
+    day_of_week_size: 5
+    if_node: True
+    if_time_in_day: True
+    if_day_in_week: True
+    num_layer: 3

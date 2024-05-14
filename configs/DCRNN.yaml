@@ -199,3 +199,69 @@ PEMS08:
     filter_type: "dual_random_walk"
     tf_decay_steps: 2000
     use_teacher_forcing: True
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  runner: dcrnn
+
+  lr: 0.01
+  eps: 0.001
+  milestones: [20, 30, 40, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 228
+    adj_path: "../data/PEMSD7M/adj_PEMSD7M_distance.pkl"
+    input_dim: 2
+    output_dim: 1
+    seq_len: 12
+    horizon: 12
+    rnn_units: 64
+    num_rnn_layers: 2
+    max_diffusion_step: 2
+    filter_type: "dual_random_walk"
+    tf_decay_steps: 2000
+    use_teacher_forcing: True
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  time_of_day: True
+
+  runner: dcrnn
+
+  lr: 0.01
+  eps: 0.001
+  milestones: [20, 30, 40, 50]
+  clip_grad: 5
+  batch_size: 64
+  max_epochs: 200
+  early_stop: 20
+
+  pass_device: True
+
+  model_args:
+    num_nodes: 1026
+    adj_path: "../data/PEMSD7L/adj_PEMSD7L_distance.pkl"
+    input_dim: 2
+    output_dim: 1
+    seq_len: 12
+    horizon: 12
+    rnn_units: 64
+    num_rnn_layers: 2
+    max_diffusion_step: 2
+    filter_type: "dual_random_walk"
+    tf_decay_steps: 2000
+    use_teacher_forcing: True

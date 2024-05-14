@@ -10,9 +10,28 @@ from .utils import print_log, StandardScaler, vrange
 def dataloader_select(name):
     name = name.upper()
 
-    if name in ("METRLA", "PEMSBAY", "PEMS03", "PEMS04", "PEMS07", "PEMS08"):
+    if name in (
+        "METRLA",
+        "PEMSBAY",
+        "PEMS03",
+        "PEMS04",
+        "PEMS07",
+        "PEMS08",
+        "PEMSD7M",
+        "PEMSD7L",
+    ):
         return get_dataloaders_from_index_data
-    elif name in ("ELECTRICITY",):
+    elif name in (
+        "ELECTRICITY",
+        "EXCHANGE",
+        "TRAFFIC",
+        "WEATHER",
+        "ILI",
+        "ETTH1",
+        "ETTH2",
+        "ETTM1",
+        "ETTM2",
+    ):
         return get_dataloaders_scaled
 
     elif name in ("ALL_SCALED", "LTSF"):
@@ -118,7 +137,7 @@ def get_dataloaders_scaled(
 ):
     """
     Warning: cannot perform inverse_transform in this version!!!
-    
+
     Therefore, not compatible with STF runners.
     """
     data = np.load(os.path.join(data_dir, f"data.npz"))["data"].astype(np.float32)
@@ -367,7 +386,9 @@ def get_dataloaders_from_tvt(
         data["x_" + category] = cat_data["x"].astype(np.float32)
         data["y_" + category] = cat_data["y"][..., :1].astype(np.float32)
 
-    print_log(f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log)
+    print_log(
+        f"Trainset:\tx-{data['x_train'].shape}\ty-{data['y_train'].shape}", log=log
+    )
     print_log(f"Valset:  \tx-{data['x_val'].shape}  \ty-{data['y_val'].shape}", log=log)
     print_log(f"Testset:\tx-{data['x_test'].shape}\ty-{data['y_test'].shape}", log=log)
 

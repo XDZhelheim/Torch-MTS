@@ -103,6 +103,7 @@ if __name__ == "__main__":
         "GRU",
         "WaveNet",
         "Transformer",
+        "Mamba",
         "GCLSTM",
         "GCGRU",
         "STGCN",
@@ -118,7 +119,7 @@ if __name__ == "__main__":
         "MegaCRN",
         "STAEformer",
     ]
-    datasets = ["METRLA", "PEMSBAY", "PEMS03", "PEMS04", "PEMS07", "PEMS08"]
+    datasets = ["METRLA", "PEMSBAY", "PEMS03", "PEMS04", "PEMS07", "PEMS08", "PEMSD7M", "PEMSD7L"]
 
     for dataset in datasets:
         for model in models:

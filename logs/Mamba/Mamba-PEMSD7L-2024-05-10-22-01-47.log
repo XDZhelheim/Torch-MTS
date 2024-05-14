@@ -1,0 +1,100 @@
+PEMSD7L
+Trainset:	x-(7589, 12, 1026, 1)	y-(7589, 12, 1026, 1)
+Valset:  	x-(2530, 12, 1026, 1)  	y-(2530, 12, 1026, 1)
+Testset:	x-(2530, 12, 1026, 1)	y-(2530, 12, 1026, 1)
+
+Random seed = 233
+--------- Mamba ---------
+{
+    "num_nodes": 1026,
+    "in_steps": 12,
+    "out_steps": 12,
+    "lr": 0.01,
+    "weight_decay": 0.0001,
+    "milestones": [
+        10,
+        20
+    ],
+    "clip_grad": 5,
+    "batch_size": 64,
+    "max_epochs": 200,
+    "early_stop": 10,
+    "model_args": {
+        "num_nodes": 1026,
+        "seq_len": 12,
+        "pred_len": 12,
+        "input_dim": 1,
+        "output_dim": 1,
+        "hidden_dim": 256,
+        "num_layers": 3
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+Mamba                                    [64, 12, 1026, 1]         --
+├─Linear: 1-1                            [64, 12, 256]             262,912
+├─MambaMain: 1-2                         [64, 12, 256]             --
+│    └─ModuleList: 2-1                   --                        --
+│    │    └─ResidualBlock: 3-1           [64, 12, 256]             438,016
+│    │    └─ResidualBlock: 3-2           [64, 12, 256]             438,016
+│    │    └─ResidualBlock: 3-3           [64, 12, 256]             438,016
+├─Linear: 1-3                            [64, 12, 1026]            263,682
+├─Conv1d: 1-4                            [64, 12, 1026]            156
+==========================================================================================
+Total params: 1,840,798
+Trainable params: 1,840,798
+Non-trainable params: 0
+Total mult-adds (M): 131.58
+==========================================================================================
+Input size (MB): 3.15
+Forward/backward pass size (MB): 55.17
+Params size (MB): 7.15
+Estimated Total Size (MB): 65.48
+==========================================================================================
+
+Loss: MaskedMAELoss
+
+2024-05-10 22:01:54.059539 Epoch 1  	Train Loss = 28.00991 Val Loss = 5.19482
+2024-05-10 22:01:57.320564 Epoch 2  	Train Loss = 4.09054 Val Loss = 4.60581
+2024-05-10 22:02:00.635917 Epoch 3  	Train Loss = 3.70370 Val Loss = 4.35094
+2024-05-10 22:02:03.963063 Epoch 4  	Train Loss = 3.51737 Val Loss = 4.32442
+2024-05-10 22:02:07.301153 Epoch 5  	Train Loss = 3.39765 Val Loss = 4.33321
+2024-05-10 22:02:10.592691 Epoch 6  	Train Loss = 3.39060 Val Loss = 4.28017
+2024-05-10 22:02:13.917178 Epoch 7  	Train Loss = 3.25549 Val Loss = 4.12658
+2024-05-10 22:02:17.278092 Epoch 8  	Train Loss = 3.14763 Val Loss = 4.16749
+2024-05-10 22:02:20.717642 Epoch 9  	Train Loss = 3.09988 Val Loss = 4.17012
+2024-05-10 22:02:24.077112 Epoch 10  	Train Loss = 3.06035 Val Loss = 4.16796
+2024-05-10 22:02:27.427171 Epoch 11  	Train Loss = 2.66524 Val Loss = 3.93172
+2024-05-10 22:02:30.756815 Epoch 12  	Train Loss = 2.51548 Val Loss = 3.97659
+2024-05-10 22:02:34.071700 Epoch 13  	Train Loss = 2.45534 Val Loss = 4.02195
+2024-05-10 22:02:37.400065 Epoch 14  	Train Loss = 2.40857 Val Loss = 4.07290
+2024-05-10 22:02:40.697099 Epoch 15  	Train Loss = 2.36563 Val Loss = 4.12898
+2024-05-10 22:02:44.068856 Epoch 16  	Train Loss = 2.32601 Val Loss = 4.18393
+2024-05-10 22:02:47.468016 Epoch 17  	Train Loss = 2.29008 Val Loss = 4.22609
+2024-05-10 22:02:50.896287 Epoch 18  	Train Loss = 2.26165 Val Loss = 4.27602
+2024-05-10 22:02:54.336983 Epoch 19  	Train Loss = 2.23726 Val Loss = 4.30831
+2024-05-10 22:02:57.732044 Epoch 20  	Train Loss = 2.20048 Val Loss = 4.34988
+2024-05-10 22:03:01.119713 Epoch 21  	Train Loss = 2.11845 Val Loss = 4.35582
+Early stopping at epoch: 21
+Best at epoch 11:
+Train Loss = 2.66524
+Train MAE = 2.54074, RMSE = 4.88464, MAPE = 6.54308
+Val Loss = 3.93172
+Val MAE = 3.95529, RMSE = 6.97572, MAPE = 10.76446
+Model checkpoint saved to: ../saved_models/Mamba/Mamba-PEMSD7L-2024-05-10-22-01-47.pt
+--------- Test ---------
+All Steps (1-12) MAE = 4.11267, RMSE = 7.17436, MAPE = 10.58719
+Step 1 MAE = 4.02321, RMSE = 6.95987, MAPE = 10.37250
+Step 2 MAE = 4.02020, RMSE = 6.97879, MAPE = 10.35007
+Step 3 MAE = 4.02545, RMSE = 7.01345, MAPE = 10.38311
+Step 4 MAE = 4.04359, RMSE = 7.05800, MAPE = 10.43427
+Step 5 MAE = 4.05371, RMSE = 7.09592, MAPE = 10.45923
+Step 6 MAE = 4.07146, RMSE = 7.13170, MAPE = 10.53009
+Step 7 MAE = 4.09781, RMSE = 7.17523, MAPE = 10.59201
+Step 8 MAE = 4.11400, RMSE = 7.21044, MAPE = 10.60791
+Step 9 MAE = 4.15145, RMSE = 7.26311, MAPE = 10.67534
+Step 10 MAE = 4.18946, RMSE = 7.31844, MAPE = 10.76896
+Step 11 MAE = 4.25175, RMSE = 7.39390, MAPE = 10.87958
+Step 12 MAE = 4.31000, RMSE = 7.47261, MAPE = 10.99328
+Inference time: 0.32 s

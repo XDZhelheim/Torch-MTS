@@ -22,6 +22,7 @@ def generate_data(
     train_ratio=0.7,
     valid_ratio=0.1,
     steps_per_day=288,
+    days_per_week=7,
     date_format="%Y-%m-%d %H:%M:%S",
     save_data=True,
     split="default",
@@ -118,7 +119,7 @@ def generate_data(
         if file_type == "hdf" or file_type == "csv":
             dow = df.index.dayofweek
         elif file_type == "npz":
-            dow = [(i // steps_per_day) % 7 for i in range(data.shape[0])]
+            dow = [(i // steps_per_day) % days_per_week for i in range(data.shape[0])]
         dow_tiled = np.tile(dow, [1, n, 1]).transpose((2, 1, 0))
         feature_list.append(dow_tiled)
 
@@ -168,6 +169,12 @@ if __name__ == "__main__":
         param_dict["train_ratio"] = 0.6
         param_dict["valid_ratio"] = 0.2
         param_dict["steps_per_day"] = 288
+    elif DATASET_NAME in ("PEMSD7M", "PEMSD7L"):
+        param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.npz")
+        param_dict["train_ratio"] = 0.6
+        param_dict["valid_ratio"] = 0.2
+        param_dict["steps_per_day"] = 288
+        param_dict["days_per_week"] = 5 # PEMSD7M only have weekdays, no weekends
     elif DATASET_NAME in ("ELECTRICITY", "WEATHER", "TRAFFIC", "ILI"):
         param_dict["data_file_path"] = os.path.join("../data/", DATASET_NAME, f"{DATASET_NAME}.csv")
         param_dict["train_ratio"] = 0.7
