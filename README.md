@@ -7,7 +7,7 @@ All the codes are based on my personal coding habit and style.
 
 Environment: PyTorch 1.13.1 & NVIDIA RTX 5000 Ada 32G
 
-![TMTS-Table-240513](https://github.com/XDZhelheim/Torch-MTS/assets/57553691/5a17bf08-b0a4-4803-84b9-ef2cb4b283eb)
+![TMTS-Table-240513](https://github.com/XDZhelheim/Torch-MTS/assets/57553691/4b8b8021-98dc-4e0f-86fb-cc2f0d2127e8)
 
 ## Tips
 
