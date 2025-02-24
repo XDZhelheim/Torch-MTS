@@ -22,6 +22,8 @@ from .STGCN import STGCN
 from .DCRNN import DCRNN
 from .STAEformer import STAEformer
 from .GTS import GTS
+from .HimNet import HimNet
+from .STDN import STDN
 
 from .DLinear import DLinear
 from .PatchTST import PatchTST
@@ -78,6 +80,10 @@ def model_select(name):
         return STAEformer
     elif name == "GTS":
         return GTS
+    elif name == "HIMNET":
+        return HimNet
+    elif name == "STDN":
+        return STDN
     
     elif name == "DLINEAR":
         return DLinear

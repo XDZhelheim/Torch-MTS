@@ -1,0 +1,266 @@
+PEMS08
+Trainset:	x-(10700, 12, 170, 3)	y-(10700, 12, 170, 3)
+Valset:  	x-(3567, 12, 170, 3)  	y-(3567, 12, 170, 3)
+Testset:	x-(3566, 12, 170, 3)	y-(3566, 12, 170, 3)
+
+Random seed = 233
+--------- HimNet ---------
+{
+    "num_nodes": 170,
+    "in_steps": 12,
+    "out_steps": 12,
+    "time_of_day": true,
+    "day_of_week": true,
+    "y_time_of_day": true,
+    "y_day_of_week": true,
+    "runner": "himnet",
+    "lr": 0.001,
+    "eps": 0.001,
+    "weight_decay": 0,
+    "milestones": [
+        40,
+        60,
+        80
+    ],
+    "clip_grad": 5,
+    "batch_size": 16,
+    "max_epochs": 200,
+    "early_stop": 20,
+    "model_args": {
+        "num_nodes": 170,
+        "input_dim": 3,
+        "output_dim": 1,
+        "tod_embedding_dim": 10,
+        "dow_embedding_dim": 2,
+        "out_steps": 12,
+        "hidden_dim": 96,
+        "num_layers": 1,
+        "cheb_k": 2,
+        "ycov_dim": 2,
+        "node_embedding_dim": 14,
+        "st_embedding_dim": 10,
+        "tf_decay_steps": 6000,
+        "use_teacher_forcing": true
+    }
+}
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+HimNet                                   [16, 12, 170, 1]          2,380
+├─Embedding: 1-1                         [16, 10]                  2,880
+├─Embedding: 1-2                         [16, 2]                   14
+├─HimEncoder: 1-3                        [16, 12, 170, 96]         --
+│    └─ModuleList: 2-1                   --                        --
+│    │    └─HimGCRU: 3-1                 [16, 170, 96]             802,368
+│    │    └─HimGCRU: 3-2                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-3                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-4                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-5                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-6                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-7                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-8                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-9                 [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-10                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-11                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-12                [16, 170, 96]             (recursive)
+├─HimEncoder: 1-4                        [16, 12, 170, 96]         --
+│    └─ModuleList: 2-2                   --                        --
+│    │    └─HimGCRU: 3-13                [16, 170, 96]             687,744
+│    │    └─HimGCRU: 3-14                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-15                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-16                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-17                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-18                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-19                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-20                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-21                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-22                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-23                [16, 170, 96]             (recursive)
+│    │    └─HimGCRU: 3-24                [16, 170, 96]             (recursive)
+├─Linear: 1-5                            [16, 170, 10]             970
+├─HimDecoder: 1-6                        [16, 170, 96]             --
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-25                [16, 170, 96]             573,120
+├─Linear: 1-7                            [16, 170, 1]              97
+├─HimDecoder: 1-8                        [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-26                [16, 170, 96]             (recursive)
+├─Linear: 1-9                            [16, 170, 1]              (recursive)
+├─HimDecoder: 1-10                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-27                [16, 170, 96]             (recursive)
+├─Linear: 1-11                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-12                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-28                [16, 170, 96]             (recursive)
+├─Linear: 1-13                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-14                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-29                [16, 170, 96]             (recursive)
+├─Linear: 1-15                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-16                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-30                [16, 170, 96]             (recursive)
+├─Linear: 1-17                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-18                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-31                [16, 170, 96]             (recursive)
+├─Linear: 1-19                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-20                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-32                [16, 170, 96]             (recursive)
+├─Linear: 1-21                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-22                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-33                [16, 170, 96]             (recursive)
+├─Linear: 1-23                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-24                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-34                [16, 170, 96]             (recursive)
+├─Linear: 1-25                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-26                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-35                [16, 170, 96]             (recursive)
+├─Linear: 1-27                           [16, 170, 1]              (recursive)
+├─HimDecoder: 1-28                       [16, 170, 96]             (recursive)
+│    └─ModuleList: 2-14                  --                        (recursive)
+│    │    └─HimGCRU: 3-36                [16, 170, 96]             (recursive)
+├─Linear: 1-29                           [16, 170, 1]              (recursive)
+==========================================================================================
+Total params: 2,069,573
+Trainable params: 2,069,573
+Non-trainable params: 0
+Total mult-adds (G): 67.34
+==========================================================================================
+Input size (MB): 0.65
+Forward/backward pass size (MB): 226.09
+Params size (MB): 8.27
+Estimated Total Size (MB): 235.01
+==========================================================================================
+
+Loss: HuberLoss
+
+2025-02-20 12:31:44.792467 Epoch 1  	Train Loss = 20.01269 Val Loss = 29.99899
+2025-02-20 12:33:45.018015 Epoch 2  	Train Loss = 14.28035 Val Loss = 28.35930
+2025-02-20 12:35:45.357149 Epoch 3  	Train Loss = 13.90579 Val Loss = 21.55536
+2025-02-20 12:37:39.271517 Epoch 4  	Train Loss = 13.64509 Val Loss = 18.71012
+2025-02-20 12:39:40.836547 Epoch 5  	Train Loss = 13.44241 Val Loss = 19.33125
+2025-02-20 12:41:42.338207 Epoch 6  	Train Loss = 13.32141 Val Loss = 18.72998
+2025-02-20 12:43:43.455225 Epoch 7  	Train Loss = 13.15753 Val Loss = 17.97327
+2025-02-20 12:45:42.902282 Epoch 8  	Train Loss = 13.08102 Val Loss = 16.62373
+2025-02-20 12:47:43.578921 Epoch 9  	Train Loss = 12.97025 Val Loss = 17.17431
+2025-02-20 12:49:46.134745 Epoch 10  	Train Loss = 12.85638 Val Loss = 18.14625
+2025-02-20 12:51:49.076576 Epoch 11  	Train Loss = 12.79049 Val Loss = 16.46621
+2025-02-20 12:53:51.855643 Epoch 12  	Train Loss = 12.72057 Val Loss = 16.24129
+2025-02-20 12:55:55.878142 Epoch 13  	Train Loss = 12.60762 Val Loss = 15.61940
+2025-02-20 12:57:56.314232 Epoch 14  	Train Loss = 12.52060 Val Loss = 16.60617
+2025-02-20 12:59:57.627029 Epoch 15  	Train Loss = 12.46225 Val Loss = 16.48033
+2025-02-20 13:01:59.764012 Epoch 16  	Train Loss = 12.36029 Val Loss = 15.16217
+2025-02-20 13:04:00.350843 Epoch 17  	Train Loss = 12.27488 Val Loss = 16.00154
+2025-02-20 13:06:03.718579 Epoch 18  	Train Loss = 12.21685 Val Loss = 15.71176
+2025-02-20 13:08:06.426231 Epoch 19  	Train Loss = 12.10257 Val Loss = 15.81369
+2025-02-20 13:10:07.078838 Epoch 20  	Train Loss = 12.05205 Val Loss = 15.35666
+2025-02-20 13:12:08.207326 Epoch 21  	Train Loss = 11.97244 Val Loss = 17.50187
+2025-02-20 13:14:07.897517 Epoch 22  	Train Loss = 11.88765 Val Loss = 15.31292
+2025-02-20 13:16:07.222581 Epoch 23  	Train Loss = 11.81228 Val Loss = 15.28763
+2025-02-20 13:18:06.309976 Epoch 24  	Train Loss = 11.74898 Val Loss = 15.21100
+2025-02-20 13:20:06.445672 Epoch 25  	Train Loss = 11.67546 Val Loss = 14.74172
+2025-02-20 13:22:07.826795 Epoch 26  	Train Loss = 11.61710 Val Loss = 15.23982
+2025-02-20 13:24:07.828467 Epoch 27  	Train Loss = 11.55432 Val Loss = 15.23148
+2025-02-20 13:26:08.585650 Epoch 28  	Train Loss = 11.50380 Val Loss = 14.64050
+2025-02-20 13:28:09.017543 Epoch 29  	Train Loss = 11.41399 Val Loss = 14.83365
+2025-02-20 13:30:09.833103 Epoch 30  	Train Loss = 11.36370 Val Loss = 14.68696
+2025-02-20 13:32:09.640737 Epoch 31  	Train Loss = 11.30623 Val Loss = 14.71948
+2025-02-20 13:34:09.484760 Epoch 32  	Train Loss = 11.27599 Val Loss = 14.70585
+2025-02-20 13:36:11.276313 Epoch 33  	Train Loss = 11.22011 Val Loss = 14.54393
+2025-02-20 13:38:14.453157 Epoch 34  	Train Loss = 11.16673 Val Loss = 14.38198
+2025-02-20 13:40:15.143037 Epoch 35  	Train Loss = 11.13365 Val Loss = 14.39103
+2025-02-20 13:42:16.101019 Epoch 36  	Train Loss = 11.09078 Val Loss = 14.83342
+2025-02-20 13:44:18.482964 Epoch 37  	Train Loss = 11.04901 Val Loss = 14.28437
+2025-02-20 13:46:19.329450 Epoch 38  	Train Loss = 11.00117 Val Loss = 14.22480
+2025-02-20 13:48:19.828438 Epoch 39  	Train Loss = 10.96833 Val Loss = 14.47464
+2025-02-20 13:50:19.601202 Epoch 40  	Train Loss = 10.91616 Val Loss = 14.09701
+2025-02-20 13:52:21.874440 Epoch 41  	Train Loss = 10.58515 Val Loss = 13.47805
+2025-02-20 13:54:22.411762 Epoch 42  	Train Loss = 10.51619 Val Loss = 13.47851
+2025-02-20 13:56:21.481850 Epoch 43  	Train Loss = 10.49445 Val Loss = 13.38570
+2025-02-20 13:58:20.112956 Epoch 44  	Train Loss = 10.47707 Val Loss = 13.43988
+2025-02-20 14:00:20.612494 Epoch 45  	Train Loss = 10.46447 Val Loss = 13.38415
+2025-02-20 14:02:20.567177 Epoch 46  	Train Loss = 10.44821 Val Loss = 13.43761
+2025-02-20 14:04:21.269101 Epoch 47  	Train Loss = 10.44082 Val Loss = 13.40705
+2025-02-20 14:06:22.256717 Epoch 48  	Train Loss = 10.42970 Val Loss = 13.37381
+2025-02-20 14:08:21.429410 Epoch 49  	Train Loss = 10.41942 Val Loss = 13.37314
+2025-02-20 14:10:24.825953 Epoch 50  	Train Loss = 10.41610 Val Loss = 13.43628
+2025-02-20 14:12:25.013915 Epoch 51  	Train Loss = 10.40545 Val Loss = 13.36891
+2025-02-20 14:14:26.096543 Epoch 52  	Train Loss = 10.40797 Val Loss = 13.37446
+2025-02-20 14:16:25.222283 Epoch 53  	Train Loss = 10.40080 Val Loss = 13.40626
+2025-02-20 14:18:24.452658 Epoch 54  	Train Loss = 10.40236 Val Loss = 13.36548
+2025-02-20 14:20:25.147342 Epoch 55  	Train Loss = 10.39615 Val Loss = 13.39326
+2025-02-20 14:22:25.301082 Epoch 56  	Train Loss = 10.38974 Val Loss = 13.36624
+2025-02-20 14:24:26.202851 Epoch 57  	Train Loss = 10.39062 Val Loss = 13.37300
+2025-02-20 14:26:26.017063 Epoch 58  	Train Loss = 10.39798 Val Loss = 13.39496
+2025-02-20 14:28:25.918513 Epoch 59  	Train Loss = 10.39048 Val Loss = 13.37446
+2025-02-20 14:30:25.297349 Epoch 60  	Train Loss = 10.40656 Val Loss = 13.37108
+2025-02-20 14:32:25.387393 Epoch 61  	Train Loss = 10.36708 Val Loss = 13.30831
+2025-02-20 14:34:24.193960 Epoch 62  	Train Loss = 10.37877 Val Loss = 13.30316
+2025-02-20 14:36:23.801314 Epoch 63  	Train Loss = 10.39161 Val Loss = 13.31702
+2025-02-20 14:38:23.477539 Epoch 64  	Train Loss = 10.41459 Val Loss = 13.30867
+2025-02-20 14:40:23.952907 Epoch 65  	Train Loss = 10.43504 Val Loss = 13.31295
+2025-02-20 14:42:24.597813 Epoch 66  	Train Loss = 10.44505 Val Loss = 13.32281
+2025-02-20 14:44:24.413538 Epoch 67  	Train Loss = 10.47385 Val Loss = 13.31054
+2025-02-20 14:46:24.031680 Epoch 68  	Train Loss = 10.48623 Val Loss = 13.29662
+2025-02-20 14:48:23.518759 Epoch 69  	Train Loss = 10.52529 Val Loss = 13.29425
+2025-02-20 14:50:23.929647 Epoch 70  	Train Loss = 10.55296 Val Loss = 13.31918
+2025-02-20 14:52:25.475459 Epoch 71  	Train Loss = 10.60249 Val Loss = 13.30859
+2025-02-20 14:54:26.974859 Epoch 72  	Train Loss = 10.62838 Val Loss = 13.31756
+2025-02-20 14:56:27.280515 Epoch 73  	Train Loss = 10.63175 Val Loss = 13.29627
+2025-02-20 14:58:30.088327 Epoch 74  	Train Loss = 10.67433 Val Loss = 13.30187
+2025-02-20 15:00:29.361597 Epoch 75  	Train Loss = 10.72072 Val Loss = 13.29780
+2025-02-20 15:02:28.946269 Epoch 76  	Train Loss = 10.77881 Val Loss = 13.30435
+2025-02-20 15:04:28.340435 Epoch 77  	Train Loss = 10.80291 Val Loss = 13.29204
+2025-02-20 15:06:27.524343 Epoch 78  	Train Loss = 10.84185 Val Loss = 13.29739
+2025-02-20 15:08:27.010815 Epoch 79  	Train Loss = 10.87703 Val Loss = 13.29671
+2025-02-20 15:10:26.776698 Epoch 80  	Train Loss = 10.93797 Val Loss = 13.30172
+2025-02-20 15:12:26.820873 Epoch 81  	Train Loss = 10.95726 Val Loss = 13.29761
+2025-02-20 15:14:26.668065 Epoch 82  	Train Loss = 11.03304 Val Loss = 13.29186
+2025-02-20 15:16:28.886788 Epoch 83  	Train Loss = 11.07018 Val Loss = 13.29423
+2025-02-20 15:18:32.048008 Epoch 84  	Train Loss = 11.09235 Val Loss = 13.29773
+2025-02-20 15:20:33.763944 Epoch 85  	Train Loss = 11.15963 Val Loss = 13.29990
+2025-02-20 15:22:35.142208 Epoch 86  	Train Loss = 11.19703 Val Loss = 13.29962
+2025-02-20 15:24:35.355976 Epoch 87  	Train Loss = 11.24970 Val Loss = 13.30028
+2025-02-20 15:26:36.867203 Epoch 88  	Train Loss = 11.30376 Val Loss = 13.30463
+2025-02-20 15:28:36.999876 Epoch 89  	Train Loss = 11.35743 Val Loss = 13.30239
+2025-02-20 15:30:37.752905 Epoch 90  	Train Loss = 11.39603 Val Loss = 13.30742
+2025-02-20 15:32:37.792758 Epoch 91  	Train Loss = 11.43011 Val Loss = 13.30614
+2025-02-20 15:34:38.049411 Epoch 92  	Train Loss = 11.48766 Val Loss = 13.30589
+2025-02-20 15:36:37.908924 Epoch 93  	Train Loss = 11.51578 Val Loss = 13.30972
+2025-02-20 15:38:39.208358 Epoch 94  	Train Loss = 11.55228 Val Loss = 13.30753
+2025-02-20 15:40:39.098833 Epoch 95  	Train Loss = 11.59319 Val Loss = 13.30832
+2025-02-20 15:42:38.841341 Epoch 96  	Train Loss = 11.61523 Val Loss = 13.30976
+2025-02-20 15:44:38.588156 Epoch 97  	Train Loss = 11.68035 Val Loss = 13.31254
+2025-02-20 15:46:39.031460 Epoch 98  	Train Loss = 11.67162 Val Loss = 13.31917
+2025-02-20 15:48:39.390953 Epoch 99  	Train Loss = 11.73234 Val Loss = 13.31431
+2025-02-20 15:50:39.010936 Epoch 100  	Train Loss = 11.75006 Val Loss = 13.31655
+2025-02-20 15:52:38.993944 Epoch 101  	Train Loss = 11.77751 Val Loss = 13.31541
+2025-02-20 15:54:41.076778 Epoch 102  	Train Loss = 11.79576 Val Loss = 13.31394
+Early stopping at epoch: 102
+Best at epoch 82:
+Train Loss = 11.03304
+Train MAE = 12.53125, RMSE = 22.70566, MAPE = 8.25026
+Val Loss = 13.29186
+Val MAE = 13.73305, RMSE = 24.38787, MAPE = 11.34405
+Model checkpoint saved to: ../saved_models/HimNet/HimNet-PEMS08-2025-02-20-12-29-46.pt
+--------- Test ---------
+All Steps (1-12) MAE = 13.56002, RMSE = 23.35897, MAPE = 9.02489
+Step 1 MAE = 11.50756, RMSE = 19.09628, MAPE = 7.86998
+Step 2 MAE = 12.22546, RMSE = 20.51599, MAPE = 8.23019
+Step 3 MAE = 12.68654, RMSE = 21.44361, MAPE = 8.48871
+Step 4 MAE = 13.05087, RMSE = 22.23150, MAPE = 8.68107
+Step 5 MAE = 13.35707, RMSE = 22.84861, MAPE = 8.87605
+Step 6 MAE = 13.61377, RMSE = 23.41844, MAPE = 9.03390
+Step 7 MAE = 13.85893, RMSE = 23.94073, MAPE = 9.17991
+Step 8 MAE = 14.08895, RMSE = 24.40976, MAPE = 9.32250
+Step 9 MAE = 14.28767, RMSE = 24.79198, MAPE = 9.45571
+Step 10 MAE = 14.48724, RMSE = 25.17422, MAPE = 9.58320
+Step 11 MAE = 14.67603, RMSE = 25.51496, MAPE = 9.72009
+Step 12 MAE = 14.88024, RMSE = 25.86867, MAPE = 9.85743
+Inference time: 13.11 s
