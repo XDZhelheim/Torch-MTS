@@ -57,3 +57,183 @@ PEMSBAY:
     att_heads: 8
     att_dims: 8
     bn_decay: 0.1
+
+PEMS03:
+  num_nodes: 358
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMS03/SE_PEMS03.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
+
+PEMS04:
+  num_nodes: 307
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMS04/SE_PEMS04.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
+
+PEMS07:
+  num_nodes: 883
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 16
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMS07/SE_PEMS07.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
+
+PEMS08:
+  num_nodes: 170
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMS08/SE_PEMS08.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
+
+PEMSD7M:
+  num_nodes: 228
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 32
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMSD7M/SE_PEMSD7M.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
+
+PEMSD7L:
+  num_nodes: 1026
+  in_steps: 12
+  out_steps: 12
+
+  pass_device: True
+
+  time_of_day: True
+  day_of_week: True
+  y_time_of_day: True
+  y_day_of_week: True
+
+  runner: gman
+
+  lr: 0.001
+  weight_decay: 0.0001
+  milestones: [10, 15]
+  clip_grad: 5
+  batch_size: 8
+  max_epochs: 200
+  early_stop: 20
+
+  model_args:
+    SE_file_path: "../data/PEMSD7L/SE_PEMSD7L.txt"
+    timestep_in: 12
+    statt_layers: 1
+    att_heads: 8
+    att_dims: 8
+    bn_decay: 0.1
