@@ -111,6 +111,7 @@ if __name__ == "__main__":
         "AGCRN",
         "GWNET",
         "MTGNN",
+        "GMAN",
         "StemGNN",
         "STNorm",
         "GTS",
@@ -118,19 +119,21 @@ if __name__ == "__main__":
         "STWA",
         "MegaCRN",
         "STAEformer",
+        "HimNet",
+        "STDN"
     ]
     datasets = ["METRLA", "PEMSBAY", "PEMS03", "PEMS04", "PEMS07", "PEMS08", "PEMSD7M", "PEMSD7L"]
 
-    for dataset in datasets:
-        for model in models:
-            print_model_metrics(model, dataset)
+    # for dataset in datasets:
+    #     for model in models:
+    #         print_model_metrics(model, dataset)
 
-    # file = open(os.path.join(log_path, "results.csv"), "a")
-    # file.seek(0)
-    # file.truncate()
-    # print_model_metrics_csv(models, datasets, file=file)
+    file = open(os.path.join(log_path, "results.csv"), "a")
+    file.seek(0)
+    file.truncate()
+    print_model_metrics_csv(models, datasets, file=file)
     
-    # file = open(os.path.join(log_path, "results_long.csv"), "a")
-    # file.seek(0)
-    # file.truncate()
-    # print_model_metrics_csv_long(models, datasets, file=file)
+    file = open(os.path.join(log_path, "results_long.csv"), "a")
+    file.seek(0)
+    file.truncate()
+    print_model_metrics_csv_long(models, datasets, file=file)
