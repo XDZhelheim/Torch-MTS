@@ -9,7 +9,6 @@ Environment: PyTorch 1.13.1 & NVIDIA RTX 5000 Ada 32G
 
 ![TMTS-Table-250225](https://github.com/user-attachments/assets/25ab75af-b6d9-4fff-aa87-cb76ed1f969b)
 
-
 ## Tips
 
 1. 不要用 sklearn 的 `StandardScaler`
