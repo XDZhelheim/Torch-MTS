@@ -129,7 +129,6 @@ if __name__ == "__main__":
         optimizer,
         milestones=cfg.get("milestones", []),
         gamma=cfg.get("lr_decay_rate", 0.1),
-        verbose=False,
     )
 
     # ----------------------------- set model runner ----------------------------- #
