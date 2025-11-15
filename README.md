@@ -24,3 +24,4 @@ Environment: PyTorch 1.13.1 & NVIDIA RTX 5000 Ada 32G
 * v1.2: 参考 BasicTS，重构了整个 dataset 的创建和读取
 * v1.3: 添加单独的 loss 和 runner 模块
 * v1.4: 交通预测的稳定 (或许是完全 bug-free) 版本，使用半年以上
+* v1.5: 添加对长序列数据集的支持，增加一些新模型和运行结果
