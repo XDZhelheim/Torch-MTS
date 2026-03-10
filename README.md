@@ -2,8 +2,6 @@
 
 A PyTorch framework for multivariate time series forecasting (MTS), mainly for personal research and experiments.
 
----
-
 ## 1. 环境搭建 🧩
 
 本项目依赖尽量保持精简，安装常用库即可。
@@ -13,8 +11,6 @@ A PyTorch framework for multivariate time series forecasting (MTS), mainly for p
 ```text
 torch numpy pandas pyyaml matplotlib torchinfo
 ```
-
----
 
 ## 2. 快速上手 🚀
 
@@ -73,15 +69,11 @@ python get_metrics.py
 
 会生成 `logs/results.csv` 和 `logs/results_long.csv`
 
----
-
 ## 3. 实验结果总表 📊
 
 运行环境：PyTorch 1.13.1 + NVIDIA RTX 5000 Ada 32G
 
 ![TMTS-Table-250225](https://github.com/user-attachments/assets/25ab75af-b6d9-4fff-aa87-cb76ed1f969b)
-
----
 
 ## 4. 目录结构 🗂️
 
@@ -97,8 +89,6 @@ Torch-MTS/
 └── scripts/        # 预处理、训练、指标汇总等脚本
 ```
 
----
-
 ## 5. 已支持模型和数据集 🧠
 
 **模型：**
@@ -111,8 +101,6 @@ Torch-MTS/
 
 - 时空预测（STF）：`METRLA`, `PEMSBAY`, `PEMS03/04/07/08`, `PEMSD7M/L`
 - 长序列预测（LTSF）：`ELECTRICITY`, `WEATHER`, `TRAFFIC`, `EXCHANGE`, `ILI`, `ETTH1/ETTH2/ETTM1/ETTM2`
-
----
 
 ## 6. 主要命令参数 ⌨️
 
@@ -135,8 +123,6 @@ Torch-MTS/
 - `-p, --future_seq_len`：预测窗口长度
 - `--target_channel`：目标特征（默认 `[0]`）
 
----
-
 ## 7. 训练流程说明 ⚙️
 
 `scripts/train.py` 主流程如下：
@@ -158,8 +144,6 @@ Torch-MTS/
 - METRLA/PEMSBAY/PEMSD7M/L：`MaskedMAELoss`
 - PEMS03/04/07/08：`HuberLoss`
 - LTSF 数据集：`MSELoss`
-
----
 
 ## 8. 数据准备细节 🧪
 
@@ -193,8 +177,6 @@ python gen_SE.py
 
 脚本会基于邻接矩阵生成 `SE_*.txt` 文件（node2vec + Word2Vec 流程）。
 
----
-
 ## 9. 实践建议（重要）✅
 
 1. 不要用 sklearn 的 `StandardScaler`
@@ -204,8 +186,6 @@ python gen_SE.py
 5. 在 forward 过程中 `inverse_transform(y_pred)` 后再与 `y_true` 计算 loss
 6. metrics 中不要修改 `y_pred, y_true` 的值（例如将很小的值置 0）
 7. 学习率调度建议使用并细调 `MultiStepLR`
-
----
 
 ## 10. Changelog 📝
 
