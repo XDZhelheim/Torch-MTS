@@ -20,7 +20,7 @@ torch numpy pandas pyyaml matplotlib torchinfo
 cd scripts
 ```
 
-### 2.1 生成数据
+### 生成数据
 
 ```bash
 python generate_training_data.py -d METRLA -s <history_seq_len> -p <future_seq_len>
@@ -34,7 +34,7 @@ python generate_training_data.py -d METRLA -s <history_seq_len> -p <future_seq_l
 常用设置下的数据文件已提前生成并随仓库提供。  
 TODO：改成动态加载，避免为每种历史长度和预测长度都生成一遍数据。
 
-### 2.2 启动训练
+### 启动训练
 
 ```bash
 python train.py -m <model> -d <dataset> -g <gpu_id>
@@ -50,13 +50,13 @@ python train.py -m STGCN -d METRLA --config ../configs/STGCN.yaml
 python train.py -m DLinear -d ETTH1 -g 0 -s 336 -p 96
 ```
 
-### 2.3 后台训练
+### 后台训练
 
 ```bash
 bash run_nohup.sh STGCN METRLA 0
 ```
 
-### 2.4 查看结果
+### 查看结果
 
 - 日志：`logs/<ModelName>/<ModelName>-<DATASET>-<timestamp>.log`
 - 权重：`saved_models/<ModelName>/<ModelName>-<DATASET>-<timestamp>.pt`
@@ -104,9 +104,9 @@ Torch-MTS/
 
 ## 6. 主要命令参数 ⌨️
 
-### 6.1 `train.py`
+### `train.py`
 
-- `-d, --dataset`：数据集名（默认 `METRLA`）
+- `-d, --dataset`：数据集名，大小写不敏感（默认 `METRLA`）
 - `-m, --model`：模型名，大小写不敏感（默认 `LSTM`）
 - `-g, --gpu_num`：GPU 编号（默认 `0`）
 - `-c, --compile`：启用 `torch.compile`（要求 torch >= 2.0）
@@ -116,7 +116,7 @@ Torch-MTS/
 - `-s, --seq_len`：覆盖 LTSF 输入长度
 - `-p, --pred_len`：覆盖 LTSF 预测长度
 
-### 6.2 `generate_training_data.py`
+### `generate_training_data.py`
 
 - `-d, --dataset`：数据集名
 - `-s, --history_seq_len`：历史窗口长度
@@ -133,13 +133,13 @@ Torch-MTS/
 4. 使用 Adam + MultiStepLR 训练，并用早停保存最佳权重
 5. 在测试集输出指标并记录日志
 
-### 7.1 Runner 机制
+### Runner 机制
 
 - `STFRunner`：用于交通/时空预测，训练与评估前会先对 `y_pred` 做 `inverse_transform` 再计算 loss/metrics
 - `LTSFRunner`：用于长序列预测，默认输出 `MSE/MAE`
 - 特定模型 runner：`DCRNNRunner`, `MegaCRNRunner`, `HimNetRunner` 等
 
-### 7.2 默认 loss 选择（`lib/losses.py`）
+### loss 选择（`lib/losses.py`）
 
 - METRLA/PEMSBAY/PEMSD7M/L：`MaskedMAELoss`
 - PEMS03/04/07/08：`HuberLoss`
