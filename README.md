@@ -4,20 +4,14 @@ A PyTorch framework for multivariate time series forecasting (MTS), mainly for p
 
 ---
 
-## 1. 环境与依赖 🧩
+## 1. 环境搭建 🧩
 
-本项目依赖尽量保持精简，安装常用科学计算与深度学习库即可。
+本项目依赖尽量保持精简，安装常用库即可。
 
 使用 conda 或 pip 安装：
 
 ```text
 torch numpy pandas pyyaml matplotlib torchinfo
-```
-
-若你需要使用 GMAN 的结构嵌入生成脚本，再额外安装：
-
-```text
-gensim networkx
 ```
 
 ---
@@ -47,17 +41,17 @@ TODO：改成动态加载，避免为每种历史长度和预测长度都生成�
 ### 2.2 启动训练
 
 ```bash
-python train.py -d <dataset> -m <model> -g <gpu_id>
+python train.py -m <model> -d <dataset> -g <gpu_id>
 ```
 
 常见用法：
 
 ```bash
 # 指定配置文件
-python train.py -d METRLA -m STGCN --config ../configs/STGCN.yaml
+python train.py -m STGCN -d METRLA --config ../configs/STGCN.yaml
 
 # LTSF 任务覆盖输入/预测长度
-python train.py -d ELECTRICITY -m DLinear -g 0 -s 336 -p 96
+python train.py -m DLinear -d ETTH1 -g 0 -s 336 -p 96
 ```
 
 ### 2.3 后台训练
@@ -77,10 +71,7 @@ bash run_nohup.sh STGCN METRLA 0
 python get_metrics.py
 ```
 
-会生成：
-
-- `logs/results.csv`
-- `logs/results_long.csv`
+会生成 `logs/results.csv` 和 `logs/results_long.csv`
 
 ---
 
@@ -119,7 +110,7 @@ Torch-MTS/
 **数据集：**
 
 - 时空预测（STF）：`METRLA`, `PEMSBAY`, `PEMS03/04/07/08`, `PEMSD7M/L`
-- 长序列预测（LTSF）：`ELECTRICITY`, `WEATHER`, `TRAFFIC`, `EXCHANGE`, `ILI`, `ETTH1/ETTH2`, `ETTM1/ETTM2`
+- 长序列预测（LTSF）：`ELECTRICITY`, `WEATHER`, `TRAFFIC`, `EXCHANGE`, `ILI`, `ETTH1/ETTH2/ETTM1/ETTM2`
 
 ---
 
@@ -160,7 +151,7 @@ Torch-MTS/
 
 - `STFRunner`：用于交通/时空预测，训练与评估前会先对 `y_pred` 做 `inverse_transform` 再计算 loss/metrics
 - `LTSFRunner`：用于长序列预测，默认输出 `MSE/MAE`
-- 特定模型 runner：`DCRNNRunner`, `GTSRunner`, `GMANRunner`, `MegaCRNRunner`, `HimNetRunner`, `STDNRunner` 等
+- 特定模型 runner：`DCRNNRunner`, `MegaCRNRunner`, `HimNetRunner` 等
 
 ### 7.2 默认 loss 选择（`lib/losses.py`）
 
@@ -185,18 +176,17 @@ Torch-MTS/
 
 脚本支持三种 train/val/test 切分策略：
 
-- `DEFAULT`：先滑窗再切分（样本更多，但会跨 train/val/test 边界）
+- `DEFAULT`：先滑窗再切分（样本更多，但会跨 train/val/test 边界），时空预测常用
 - `STRICT`：先切分再滑窗（最严格，样本最少）
-- `LTSF`：与主流 LTSF 代码保持一致（val 与 train、test 与 val 存在重叠）
+- `LTSF`：与主流 LTSF 代码保持一致（但是 val 与 train 之间, test 与 val 之间存在重叠）
 
-LTSF 数据集默认使用 `LTSF` 切分。
-
-### 8.1 GMAN 额外步骤（SE 生成）
+**GMAN 额外步骤（SE 生成）**
 
 GMAN 配置依赖 `SE_file_path`（见 `configs/GMAN.yaml`）。  
 如需生成结构嵌入，可执行：
 
 ```bash
+pip install gensim networkx
 cd scripts
 python gen_SE.py
 ```
@@ -207,12 +197,12 @@ python gen_SE.py
 
 ## 9. 实践建议（重要）✅
 
-1. 不要使用 sklearn 的 `StandardScaler`
-2. 构建 train/val/test 时，必须只用 `x_train` 的分布来构建 scaler
+1. 不要用 sklearn 的 `StandardScaler`
+2. 构建 train-val-test 的时候必须只使用 x_train 的分布构建 scaler
 3. 读取原始数据时使用 `.astype(np.float32)`，保证 ndarray/tensor 全程 `float32`
-4. **不要对任何 y 做 transform**，可避免 MAPE 爆炸等问题
-5. 在 forward 过程中先 `inverse_transform(y_pred)`，再与 `y_true` 计算 loss
-6. 指标计算时不要修改 `y_pred/y_true` 的值（例如把很小的值强行置 0）
+4. **千万不要 transform 任何 y**，可避免 MAPE 爆炸等问题
+5. 在 forward 过程中 `inverse_transform(y_pred)` 后再与 `y_true` 计算 loss
+6. metrics 中不要修改 `y_pred, y_true` 的值（例如将很小的值置 0）
 7. 学习率调度建议使用并细调 `MultiStepLR`
 
 ---
@@ -224,3 +214,5 @@ python gen_SE.py
 - v1.3：添加独立的 loss 与 runner 模块
 - v1.4：交通预测稳定版本（或许是完全 bug-free），持续使用半年以上
 - v1.5：添加长序列数据集支持，并增加新模型与实验结果
+
+> 本文档由 Copilot + GPT-5.3-Codex 生成，我又改了改，效果还行
